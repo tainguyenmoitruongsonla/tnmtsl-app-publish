@@ -1,0 +1,123 @@
+﻿<div id="BieuMauBaoCao_BieuMau16" class="sidenav p-0 ">
+    <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+        <div class="d-flex col-12 p-0 align-items-center">
+            <div class="col-10 p-0">
+                <div class="admission-title d-flex center-center">
+                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> Biểu mẫu thông tư 31/2018/TT-BTNMT/ Biểu mẫu số 16 </p>
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('BieuMauBaoCao_BieuMau16')">&times;</a>
+        </div>
+    </div>
+    <div class="p-sm-3">
+        <div class="card">
+            <div class="card-header row m-0">
+                <h5 class="card-title m-0 col-md-11">Biểu mẫu số 16. Số lượng công trình khai thác nước mặt, nước dưới đất theo mục đích sử dụng</h5>
+                <div class="row m-0 justify-content-end col-md-1">
+                    <button class="btn btn-outline-success rounded-0 px-2 py-1" title="Xuất file excel" ng-click="exportToExcel('#bieu-mau-16')">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- PHẦN ĐẦU TRANG -->
+                <!-- PHẦN ĐẦU TRANG -->
+                <div class="form-title d-flex justify-content-between col-12">
+                    <div class="col-6 col-sm-3 text-center p-0">
+                        <h5 class="font-sm-14 m-0">UBND TỈNH SƠN LA</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                        <p class="font-sm-13 d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+                    </div>
+                    <div class="col-6 col-sm-4 text-center">
+                        <h5 class="font-sm-14 m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                        <i class="font-sm-13">Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+                    </div>
+                </div>
+
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="font-sm-18 m-0 font-weight-bold">BÁO CÁO </h4>
+                    <p class="font-sm-15 m-0 font-weight-bold">Tổng hợp số lượng giấy phép tài nguyên nước đã được cấp</p>
+                    <p class="m-0 font-weight-bold">(Kỳ báo cáo: 2020)</p>
+                </div>
+
+                <!-- KẾT THÚC PHẦN ĐẦU TRANG -->
+
+                <div class="table-responsive">
+                    <table class="table no-margin table-hover table-bordered" id="bieu-mau-16">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th rowspan="4" class="text-center align-middle text-nowrap">STT</th>
+                                <th rowspan="4" class="text-center align-middle text-nowrap">Loại giấy phép </th>
+                                <th rowspan="2" colspan="3" class="text-center align-middle text-nowrap">Tổng số giấy phép đã cấp </th>
+                                <th colspan="6" class="text-center align-middle text-nowrap">Tổng số giấy phép cấp phân theo thẩm quyền </th>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="text-center align-middle">Bộ TNMT cấp</th>
+                                <th colspan="3" class="text-center align-middle">Địa phương cấp</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle">Lũy kế đến kỳ trước</th>
+                                <th class="text-center align-middle">Lũy kế đến kỳ báo cáo</th>
+                                <th class="text-center align-middle">Thay đổi</th>
+
+                                <th class="text-center align-middle">Lũy kế đến kỳ trước</th>
+                                <th class="text-center align-middle">Lũy kế đến kỳ báo cáo</th>
+                                <th class="text-center align-middle">Thay đổi</th>
+
+                                <th class="text-center align-middle">Lũy kế đến kỳ trước</th>
+                                <th class="text-center align-middle">Lũy kế đến kỳ báo cáo</th>
+                                <th class="text-center align-middle">Thay đổi</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle">(1)&nbsp;</th>
+                                <th class="text-center align-middle">(2)&nbsp;</th>
+                                <th class="text-center align-middle">(3)=(2)-(1)</th>
+                                <th class="text-center align-middle">(4)&nbsp; </th>
+                                <th class="text-center align-middle">(5)&nbsp;</th>
+                                <th class="text-center align-middle">(6)=(5)-(4)</th>
+                                <th class="text-center align-middle">(7)&nbsp;</th>
+                                <th class="text-center align-middle">(8)&nbsp;</th>
+                                <th class="text-center align-middle">(9)=(8)-(7) </th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr ng-repeat="item in BieuMau16 | orderBy:'Id'">
+                                <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"></th>
+                                <td class="text-nowrap" ng-bind="item.Name"></td>
+
+                                <td ng-bind="item.TWPreviousPeriod + item.LocalPreviousPeriod"></td>
+                                <td ng-bind="item.TWThisPeriod + item.LocalThisPeriod"></td>
+                                <td ng-bind="(item.TWThisPeriod + item.LocalThisPeriod) - (item.TWPreviousPeriod + item.LocalPreviousPeriod)"></td>
+
+                                <td ng-bind="item.TWPreviousPeriod"></td>
+                                <td ng-bind="item.TWThisPeriod"></td>
+                                <td ng-bind="item.TWThisPeriod - item.TWPreviousPeriod"></td>
+
+                                <td ng-bind="item.LocalPreviousPeriod"></td>
+                                <td ng-bind="item.LocalThisPeriod"></td>
+                                <td ng-bind="item.LocalThisPeriod - item.LocalPreviousPeriod"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PHẦN CHÂN TRANG -->
+                <div class="form-title d-flex justify-content-between col-12 my-3">
+                    <div class="col-6 col-md-3 text-left p-0 font-sm-13">
+                        <i>Nơi nhận</i>
+                        <p class="m-0">- Ban Giám đốc Sở</p>
+                        <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+                    </div>
+                    <div class="col-6 col-md-4 text-center font-sm-13">
+                        <p class="mb-5 font-weight-bold h5 font-sm-16 font-sm-14">NGƯỜI THỐNG KÊ </p>
+                    </div>
+                </div>
+
+                <!-- KẾT THÚC PHẦN CHÂN TRANG -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+<!--End Nav Pane-->

@@ -1,0 +1,61 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+}
+<div class="row m-0 py-2 align-items-center justify-content-between">
+    <div class="col-12 col-sm-4">
+        <span>Tổng số tiền cấp quyền (VNĐ):&ensp;{{sumTotalMoney | customCurrency}}₫</span>
+    </div>
+    <div class="row col-12 col-sm-8 m-0 p-0 justify-content-end">
+        <div class="col-12 col-md-3">
+            <div class="floating-label w-100">
+                <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder="Nhập số quyết định" ng-model="Keyword">
+                <ul class="dropdown-menu w-100 p-2" role="menu">
+                    <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in ItemsForSearch | filter:Keyword'>
+                        <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.LicenseFeeNumber)">
+                            <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.LicenseFeeNumber}}</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-md-2">
+            <div class="floating-label w-100">
+                <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="StartYearFilter">
+                <ul class="dropdown-menu w-100" role="menu">
+                    <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in DataYear">
+                        <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseFeeByDataYear(e.Year, EndYear)">
+                            <p class="m-0 text-primary" style="font-size: 0.85rem">Từ năm: <span ng-bind="e.Year"></span></p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-md-2">
+            <div class="floating-label w-100">
+                <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="EndYearFilter">
+                <ul class="dropdown-menu w-100" role="menu">
+                    <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in DataYear">
+                        <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseFeeByDataYear(StartYear, e.Year)">
+                            <p class="m-0 text-primary" style="font-size: 0.85rem">Đến năm: <span ng-bind="e.Year"></span></p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-0 align-items-center">
+            <button class="btn btn-sm font-10 btn-addnew px-4 mx-1 h-100" ng-click="Search()">
+                <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+            </button>
+        </div>
+        @if (_service.IsViewAction("/tien-cap-quyen", User.Identity.Name, "ADD"))
+        {
+            <div class="row m-0 align-items-center">
+                <button type="button" class="btn btn-sm font-10 btn-addnew px-4 mx-1 h-100" ng-click="Add()">
+                    <i class="fa-solid fa-plus"></i> Thêm mới
+                </button>
+            </div>
+        }
+    </div>
+</div>

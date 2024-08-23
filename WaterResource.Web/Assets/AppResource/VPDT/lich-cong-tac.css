@@ -1,0 +1,278 @@
+﻿
+/* Khuong viet ngay  23/10/2012 */
+th.ms-vh
+ 	 {
+ 	   	color: black;
+   	 	font-weight: bold;
+    	padding-bottom: 0;
+ 		padding-top: 5px; 		
+ 	} 
+ 	,tr.ms-vr-title th
+	{
+		background:url("/Images/quickLaunchHeader.gif");	 
+		border-left:1px #7F9DB9 solid;
+		border-bottom:1px #7F9DB9 solid;	
+		text-align:center;	
+	}
+
+tr.ms-vr-title th  span.ngay
+	{
+		font-size:10px;
+	}
+.no-background{
+	background:none!important;
+}
+table.ms-tb-lichlamviec
+	{
+		border-top:1px #7F9DB9 solid;
+		border-right:1px #7F9DB9 solid; 		
+	}
+table.ms-tb-lichlamviec  td
+	{		
+		border-left:1px #7F9DB9 solid;
+		border-bottom:1px #7F9DB9 solid;		
+	}
+	
+table.ms-tb-lichlamviec td p
+	{
+	 	padding:0px;
+	 	margin:opx;
+	}
+table.ms-tb-lichlamviec td .ms-sp-thu
+	{
+	 	font-weight:bold;	
+	 	text-align:center;
+	}
+	
+table.ms-tb-lichlamviec td .ms-sp-day
+	{	 	  
+		/* color:#7F9DB9;  */
+		 color:black;
+		 
+		 font-size:10px;
+		 text-align:center;
+	}
+}
+table.ms-tb-lichlamviec .type-lanhdao
+	{
+		color:brown;
+	}
+table.ms-tb-lichlamviec .type-thoigian
+	{
+		color:#7F9DB9;
+	}
+	table.ms-tb-lichlamviec .type-noidung
+	{
+		color:black;	
+	}
+
+	table.ms-tb-lichlamviec .type-noidung:hover
+	{
+		color:blue;
+		text-decoration:underline;	
+	}
+
+table .ms-cal-weektable
+	{
+		margin:10px;
+		width:98%;
+		border-top:1px #7F9DB9 solid;
+		border-right:1px #7F9DB9 solid; 	
+	}
+table .ms-cal-weektable th.ms-cal-weekth
+	{
+		background: url("/Images/quickLaunchHeader.gif") repeat scroll 0 0 transparent;
+	    border-bottom: 1px solid #7F9DB9;
+	    border-left: 1px solid #7F9DB9;
+	    text-align: center;
+		width:14%;
+	}
+table.ms-cal-weektable  td
+	{		
+		border-left:1px #7F9DB9 solid;
+		border-bottom:1px #7F9DB9 solid;
+		min-height:100px;	
+		#min-height:100px;	
+
+	}
+table.ms-cal-weektable  td:hover
+	{		
+		background-color:#F2F8FF;
+		cursor:pointer;
+	}
+table.ms-cal-weektable  td:hover .ms-cal-weekday div a
+	{
+		color:red;
+	}
+table.ms-cal-weektable  td a
+	{		
+		text-decoration:none;
+		font-size:24px;
+		padding:5px;	
+	}
+.ms-cal-weekday
+	{
+		background-color:#F2F8FF;
+	}
+	.ms-cal-weekday div a
+	{
+		color:red;
+	}
+
+table.ms-cal-weektable div.ms-cal-weekitem
+	{
+		min-height:100px;	
+		#min-height:100px;	
+	}
+
+input.ComboBox {   
+    width: 89%;
+}
+
+table.lich-cong-tac{
+	border:1px silver solid;
+	border-right:none;
+	border-bottom:none;
+}
+table.lich-cong-tac tr td,
+table.lich-cong-tac tr th{
+	border:1px silver solid;
+	border-left:none;
+	border-top:none; 
+	padding:10px;
+}
+table.lich-cong-tac tr th 
+{
+	/*background:url("/Images/quickLaunchHeader.gif");	*/
+	background-color:#E6F2FE;
+	text-align:center;	
+}
+table.lich-cong-tac .type-lanhdao
+{
+	color:gray;
+	vertical-align:middle;
+	font-size:larger;
+}
+/*--------Tab---------*/
+/* Tabs container */
+.r-tabs {
+	position: relative;
+
+	background-color: #00c5ad;
+
+	border-top: 1px solid #00c5ad;
+	border-right: 1px solid #00c5ad;
+	border-left: 1px solid #00c5ad;
+	border-bottom: 4px solid #00c5ad;
+	border-radius: 4px;
+
+}
+
+/* Tab element */
+.r-tabs .r-tabs-nav .r-tabs-tab {
+	position: relative;
+	background-color: #00c5ad;
+}
+
+/* Tab anchor */
+.r-tabs .r-tabs-nav .r-tabs-anchor {
+	display: inline-block;
+	padding: 10px 12px;
+
+	text-decoration: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+	font-size: 14px;
+	font-weight: bold;
+	color: #fff;
+}
+
+/* Disabled tab */
+.r-tabs .r-tabs-nav .r-tabs-state-disabled {
+	opacity: 0.5;
+}
+
+/* Active state tab anchor */
+.r-tabs .r-tabs-nav .r-tabs-state-active .r-tabs-anchor {
+	color: #00c5ad;
+	text-shadow: none;
+
+	background-color: white;
+
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+}
+
+/* Tab panel */
+.r-tabs .r-tabs-panel {
+	background-color: white;
+
+	border-bottom: 4px solid white;
+
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+
+}
+
+/* Accordion anchor */
+.r-tabs .r-tabs-accordion-title .r-tabs-anchor {
+	display: block;
+	padding: 10px;
+
+	background-color: #00c5ad;
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+	font-size: 14px;
+
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+}
+
+/* Active accordion anchor */
+.r-tabs .r-tabs-accordion-title.r-tabs-state-active .r-tabs-anchor {
+	background-color: #fff;
+	color: #00c5ad;
+	text-shadow: none;
+}
+
+/* Disabled accordion button */
+.r-tabs .r-tabs-accordion-title.r-tabs-state-disabled {
+	opacity: 0.5;
+}
+
+.r-tabs .r-tabs-nav {
+    margin: 0;
+    padding: 0;
+}
+
+.r-tabs .r-tabs-tab {
+    display: inline-block;
+    margin: 0;
+    list-style: none;
+}
+
+.r-tabs .r-tabs-panel {
+    padding: 15px;
+    display: none;
+}
+
+.r-tabs .r-tabs-accordion-title {
+    display: none;
+}
+
+.r-tabs .r-tabs-panel.r-tabs-state-active {
+    display: block;
+}
+
+/* Accordion responsive breakpoint */
+@media only screen and (max-width: 768px) {
+    .r-tabs .r-tabs-nav {
+        display: none;
+    }
+
+    .r-tabs .r-tabs-accordion-title {
+        display: block;
+    }
+}
+/*------------ Het ----------*/

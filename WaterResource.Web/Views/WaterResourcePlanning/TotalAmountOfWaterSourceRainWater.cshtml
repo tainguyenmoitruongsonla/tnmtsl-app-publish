@@ -1,0 +1,203 @@
+﻿@using Microsoft.AspNet.Identity
+@using WaterResource.Service;
+@{
+    ViewBag.Title = "THÔNG TIN DỮ LIỆU VỀ LƯỢNG NƯỚC ĐẾN TIỂU VÙNG QUY HOẠCH DO MƯA";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "VIEW"))
+{
+    <div ng-controller="myCntrl as demo">
+        <script src="~/Scripts/WaterResourcePlanning/Service.js"></script>
+        <script src="~/Scripts/WaterResourcePlanning/Controller.js"></script>
+
+        <section class="content p-0">
+
+            <div class="p-3">
+                <!--Chỗ dán bảng-->
+                <!-- PHẦN ĐẦU TRANG -->
+                <div class="form-title d-flex justify-content-between col-12">
+                    <div class="col-6 col-sm-3 text-center p-0">
+                        <h5 class="font-sm-14 m-0">UBND TỈNH SƠN LA</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                        <p class="font-sm-13 d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+                    </div>
+                    <div class="col-6 col-sm-4 text-center">
+                        <h5 class="font-sm-14 m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                        <i class="font-sm-13">Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+                    </div>
+                </div>
+
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="font-sm-18 m-0 font-weight-bold">THỐNG KÊ </h4>
+                    <p class="font-sm-15 m-0 font-weight-bold">THỐNG KÊ SỐ LIỆU ĐÁNH GIÁ LƯỢNG NƯỚC MƯA TRÊN CÁC TIỂU VÙNG LƯU VỰC TRÊN ĐỊA BÀN TỈNH SƠN LA </p>
+                    <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+                </div>
+
+                @Html.Partial("_Search")
+
+                <!--<p class="m-0 font-weight-bold">Bảng 1: TRỮ LƯỢNG ĐỘNG TỰ NHIÊN CỦA NƯỚC DƯỚI ĐẤT </p>-->
+                <div class="table-responsive">
+                    <table class="table no-margin table-hover table-bordered">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th class="text-center align-middle">STT</th>
+                                <th class="text-center align-middle">Tiểu vùng lưu vực</th>
+                                <th class="text-center align-middle">Diện tích (km2) </th>
+                                <th class="text-center align-middle">Lượng mưa năm (mm)</th>
+                                <th class="text-center align-middle">Dân số (người) </th>
+                                <th class="text-center align-middle">Tổng lượng nước mưa (10^6 m3) </th>
+                                <th class="text-center align-middle">Lượng nước mưa (m3/người/năm) </th>
+                                <th class="text-center align-middle"> Ghi chú </th>
+                                <th class="text-center align-middle">Thao tác</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle">(1)</th>
+                                <th class="text-center align-middle">(2)</th>
+                                <th class="text-center align-middle">(3)</th>
+                                <th class="text-center align-middle">(4) </th>
+                                <th class="text-center align-middle">(5)</th>
+                                <th class="text-center align-middle">(6)</th>
+                                <th class="text-center align-middle">(7)</th>
+                                <th class="text-center align-middle">(8)</th>
+                                <th class="text-center align-middle">(9)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr class="text-center" ng-repeat="item in WaterResourcePlannings">
+                                <th class="text-center align-middle">{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                <td class="text-center align-middle" ng-bind="item.Basin"></td>
+                                <td class="text-center align-middle" ng-bind="item.I"></td>
+                                <td class="text-center align-middle" ng-bind="item.II"></td>
+                                <td class="text-center align-middle" ng-bind="item.III"></td>
+                                <td class="text-center align-middle" ng-bind="item.IV"></td>
+                                <td class="text-center align-middle" ng-bind="item.V"></td>
+                                <td><span ng-bind="item.Description"></span></td>
+                                <td class="text-center align-middle">
+                                    <div class="d-flex">
+                                        @if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "EDIT"))
+                                        {
+                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa" ng-click="Edit(item)"><i class="fa fa-edit"></i></a>
+                                        }
+                                        @if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "DELETE"))
+                                        {
+                                            <a href="javascript:void(0)" class="text-red" title="Xóa" ng-click="Delete(item)"><i class="fa-solid fa-trash-can"></i></a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- PHẦN phân trang file cshtml-->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItem "
+                            ng-model="currentPage"
+                            items-per-page="numPerPage "
+                            boundary-links="true"
+                            previous-text=" &#xf104;"
+                            next-text=" &#xf105;"
+                            first-text=" &#xf100;"
+                            last-text=" &#xf101;"
+                            max-size="maxSize " ng-change="pageChanged()"
+                            class="pagination pagination-sm inline fa d-flex"></ul>
+                    </div>
+                </div>
+
+                <!-- PHẦN CHÂN TRANG -->
+                <div class="form-title d-flex justify-content-between col-12 my-3">
+                    <div class="col-6 col-md-3 text-left p-0 font-sm-13">
+                        <i>Nơi nhận</i>
+                        <p class="m-0">- Ban Giám đốc Sở</p>
+                        <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+                    </div>
+                    <div class="col-6 col-md-4 text-center font-sm-13">
+                        <p class="mb-5 font-weight-bold h5 font-sm-16 font-sm-14">NGƯỜI THỐNG KÊ </p>
+                        <p class="mb-0 mt-5 font-weight-bold">
+                            @if (Request.IsAuthenticated)
+                            {
+                                @User.Identity.GetUserName()
+                            }
+                        </p>
+                    </div>
+                </div>
+                <!-- KẾT THÚC PHẦN CHÂN TRANG -->
+            </div>
+
+            <div class="sidenav p-0" id="aside">
+                <div>
+                    <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                        <div class="d-flex col-12 p-0 align-items-center">
+                            <div class="col-10">
+                                <div class="admission-title d-flex center-center">
+                                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16">{{HeaderAction}}</p>
+                                </div>
+                            </div>
+                            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside()">&times;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 row">
+                    <fieldset class="col-12 m-2 border border-secondary p-2 background-color bg-lightgray">
+                        <div class="mb-2">
+                            <div class="col-sm-12 p-0 row">
+                                <div class="col-md-4 p-2">
+                                    <div class="floating-label my-2">
+                                        <input ng-model="item.Basin" class="floating-input w-100" placeholder=" ">
+                                        <label>Tiểu vùng lưu vực</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 p-2">
+                                    <div class="floating-label my-2">
+                                        <input type="number" ng-model="item.I" class="floating-input w-100" placeholder=" ">
+                                        <label>Diện tích (km2)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 p-2">
+                                    <div class="floating-label my-2">
+                                        <input type="number" ng-model="item.II" class="floating-input w-100" placeholder=" ">
+                                        <label>Lượng mưa năm (mm)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 p-2">
+                                    <div class="floating-label my-2">
+                                        <input type="number" ng-model="item.III" class="floating-input w-100" placeholder=" ">
+                                        <label>Dân số (người)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 p-2">
+                                    <div class="floating-label my-2">
+                                        <input type="number" ng-model="item.IV" class="floating-input w-100" placeholder=" ">
+                                        <label>Tổng lượng nước mưa (10^6 m3)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 p-2">
+                                    <div class="floating-label my-2">
+                                        <input type="number" ng-model="item.V" class="floating-input w-100" placeholder=" ">
+                                        <label>Lượng nước mưa (m3/người/năm)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="col-12 mx-2 p-2">
+                        <div class="floating-label">
+                            <textarea class="floating-input floating-textarea w-100 h-100" rows="3" ng-model="item.Description" placeholder=" "></textarea>
+                            <label>Ghi chú</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-1 col-sm-12 d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-addnew mx-2" ng-click="Save()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu </button>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}

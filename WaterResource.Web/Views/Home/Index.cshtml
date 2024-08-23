@@ -1,0 +1,220 @@
+﻿@using WaterResource.Web.Models
+@using WaterResource.Service;
+@model LoginViewModel
+@{
+    ViewBag.Title = "Hệ thống quản lý, giám sát khai thác sử dụng tài nguyên nước";
+    UserRightService _service = new UserRightService();
+    string user = User.Identity.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<link href="~/Assets/leaflet/leaflet.css" rel="stylesheet" />
+<script src="~/Assets/leaflet/leaflet.js"></script>
+<script src="~/Assets/leaflet/L.KML.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.0.4/esri-leaflet.js"></script>
+
+<!-- Load Esri Leaflet Vector from CDN -->
+<script src="https://unpkg.com/esri-leaflet-vector@3.1.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+<script src="~/Assets/leaflet/leaflet-bing-layer.js"></script>
+<script src="~/Assets/leaflet/Bing.js"></script>
+<div ng-controller="HomeCntrl as demo">
+    <script src="~/Scripts/Home/Controller.js"></script>
+    @Html.Partial("ImportServiceJs")
+    <section class="content p-0">
+        <aside class="p-2" id="Constructions">
+            <div class="card-header border-0">
+                <h3 class="card-title font-sm-14">
+                    THỐNG KÊ DỮ LIỆU TÀI NGUYÊN NƯỚC ( {{currentTime}} )
+                </h3>
+            </div>
+            <div class="row m-0">
+                @if (!_service.IsInRole(user, "Default"))
+                {
+                    <div class="col-12 col-md-4 p-0 px-md-1">
+
+                        <div class="col-12 card p-0">
+                            <div class="card-header font-weight-bold py-2 bg-darkblue">
+                                Trạng thái công trình thủy điện
+                            </div>
+                            <div class="card-body">
+                                <div class="row m-0 font-14 py-2 align-items-center">
+                                    <span class="font-weight-bold d-block col-4">Tổng số: </span>
+                                    <span class="d-block col-3 text-end" ng-bind-html="ConstructionNum"></span>
+                                </div>
+                                <div class="row m-0 font-14 py-2">
+                                    <span class="font-weight-bold d-block col-12">Trạm kết nối bình thường: </span>
+                                    <div class="col-12">
+                                        <div class="progress progress-xxl active border border-success position-relative">
+                                            <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="{{countStableConnection}}" aria-valuemin="0" aria-valuemax="100" style="{{calculateWidth(countStableConnection, ConstructionNum)}}">
+
+                                            </div>
+                                            <span class="font-weight-bold position-absolute w-100 h-100 d-flex align-items-center justify-content-center" ng-bind-html="countStableConnection + ' / ' + ConstructionNum"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row m-0 font-14 py-2">
+                                    <span class="font-weight-bold d-block col-12">Trạm mất kết nối: </span>
+                                    <div class="col-12">
+                                        <div class="progress progress-xxl active border border-warning position-relative">
+                                            <div class="progress-bar bg-warning progress-bar-striped" role="progressbar" aria-valuenow="{{countLostConnection}}" aria-valuemin="0" aria-valuemax="100" style="{{calculateWidth(countLostConnection, ConstructionNum)}}">
+
+                                            </div>
+                                            <span class="font-weight-bold position-absolute w-100 h-100 d-flex align-items-center justify-content-center" ng-bind-html="countLostConnection  + ' / ' + ConstructionNum"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row m-0 font-14 py-2">
+                                    <span class="font-weight-bold d-block col-12">Trạm vận hành chưa đúng: </span>
+                                    <div class="col-12">
+                                        <div class="progress progress-xxl active border border-secondary position-relative">
+                                            <div class="progress-bar bg-danger progress-bar-striped" role="progressbar" aria-valuenow="{{countFalseOperation}}" aria-valuemin="0" aria-valuemax="100" style="{{calculateWidth(countFalseOperation, ConstructionNum)}}">
+
+                                            </div>
+                                            <span class="font-weight-bold position-absolute w-100 h-100 d-flex align-items-center justify-content-center" ng-bind-html="countFalseOperation  + ' / ' + ConstructionNum"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 card">
+                            <div class="row m-0">
+                                <div class="col-12 col-lg-6 font-weight-bold row center-center mx-0 px-2">
+                                    <div class="col-12">
+                                        <span class="col-12 d-block p-0 text-center m-0 font-16 text-nowrap"> Tổng số giấy phép đã cấp </span>
+                                        <span class="col-12 d-block p-0 text-center m-0 font-30"> {{TotalLicenses}} </span>
+                                    </div>
+                                    <div class="col-12 p-0">
+                                        <div class="col-12 d-flex btn-link font-weight-bold text-dark" onclick="window.location.href = '/giay-phep?bo-cap'">
+                                            <div class=" col-5 text-nowrap text-left font-14"> BTNMT: </div>
+                                            <div class=" col-7 text-left font-14"> {{LicenseFrom[0] - 0 | customCurrency}} giấy phép </div>
+                                        </div>
+                                        <div class="col-12 d-flex btn-link font-weight-bold text-dark" onclick="window.location.href = '/giay-phep?tinh-cap'">
+                                            <div class=" col-5 text-left font-14"> UBND Tỉnh: </div>
+                                            <div class=" col-7 text-left font-14"> {{LicenseFrom[1] - 0 | customCurrency}} giấy phép </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 d-flex center-center">
+                                    <div id="chartAllLicense"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 card">
+                            <div class="row m-0">
+                                <div class="col-12 col-lg-12 font-weight-bold row center-center mx-0 px-2">
+                                    <div class="col-12 btn-link font-weight-bold text-dark" onclick="window.location.href = '/tien-cap-quyen'">
+                                        <span class="col-12 d-block p-0 pt-3 text-center m-0 font-16 text-nowrap"> Tổng số tiền cấp quyền (VNĐ) </span>
+                                        <span class="col-12 d-block p-0 text-center m-0 font-20"> {{(TotalBTNMT + TotalUBND) - 0 | number : fractionSize}} </span>
+                                    </div>
+                                </div>
+                                <div class="col-12 row m-0 p-0">
+                                    <div class="col-6 py-3 border-right row m-0 btn-link font-weight-bold text-dark" onclick="window.location.href = '/tien-cap-quyen/bo-cap'">
+                                        <div class="col-12 text-center font-14 text-nowrap"> BTNMT </div>
+                                        <div class="col-12 text-center font-14"> {{TotalBTNMT - 0 | customCurrency}} </div>
+                                    </div>
+                                    <div class="col-6 py-3 row m-0 btn-link font-weight-bold text-dark" onclick="window.location.href = '/tien-cap-quyen/tinh-cap'">
+                                        <div class="col-12 text-center font-14 text-nowrap"> UBND Tỉnh </div>
+                                        <div class="col-12 text-center font-14"> {{TotalUBND - 0 | customCurrency}} </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-lg-6 d-flex center-center">
+                            <div id="chartLicenseFee"></div>
+                        </div>*@
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (_service.IsInRole(user, "Default"))
+                {
+                    <div class="col-12 col-md-12 p-0 card" style="height: calc(100vh - 120px);">
+                        <div class="card-header font-weight-bold py-2 bg-darkblue">
+                            Trạng thái vận hành công trình thủy điện
+                        </div>
+                        <div class="card-body p-0" style="width: 100%; height: 100%">
+                            <span class="showAnnotateLayerBtn btn btn-light"> << </span>
+                            <ul class="annotate-layer cursor-pointer" id="annotate-layer">
+                                <li><span class="showAnnotateLayerBtn btn btn-danger"> &times; </span></li>
+                                <li class="m-0 d-flex">
+                                    <input type="checkbox" class="mr-2" id="cons-name" ng-click="toggleShow()">
+                                    <label for="cons-name">Hiển thị tên công trình</label>
+                                </li>
+
+                                <li class="ng-scope m-0 d-flex"><hr /></li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-binh-thuong" ng-click="toggleMarker('binh-thuong')">
+                                    <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien.png"></span>
+                                    <label for="thuydien">Vận hành đúng</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-canh-bao" ng-click="toggleMarker('canh-bao')">
+                                    <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien-warning.png"></span>
+                                    <label for="thuydien">Vận hành chưa đúng</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-mat-ket-noi" ng-click="toggleMarker('mat-ket-noi')">
+                                    <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien-lostconnect.png"></span>
+                                    <label for="thuydien">Mất kết nối</label>
+                                </li>
+                            </ul>
+
+                            <div class="common-map" id="Map_Home"></div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12 col-md-8 p-0 card" style="height: calc(100vh - 120px);">
+                        <div class="card-header font-weight-bold py-2 bg-darkblue">
+                            Trạng thái vận hành công trình thủy điện
+                        </div>
+                        <div class="card-body p-0" style="width: 100%; height: 100%">
+                            <span class="showAnnotateLayerBtn btn btn-light"> << </span>
+                            <ul class="annotate-layer cursor-pointer" id="annotate-layer">
+                                <li><span class="showAnnotateLayerBtn btn btn-danger"> &times; </span></li>
+                                <li class="m-0 d-flex">
+                                    <input type="checkbox" class="mr-2" id="cons-name" ng-click="toggleShow()">
+                                    <label for="cons-name">Hiển thị tên công trình</label>
+                                </li>
+
+                                <li class="ng-scope m-0 d-flex"><hr /></li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-binh-thuong" ng-click="toggleMarker('binh-thuong')">
+                                    <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien.png"></span>
+                                    <label for="thuydien">Vận hành đúng</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-canh-bao" ng-click="toggleMarker('canh-bao')">
+                                    <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien-warning.png"></span>
+                                    <label for="thuydien">Vận hành chưa đúng</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-mat-ket-noi" ng-click="toggleMarker('mat-ket-noi')">
+                                    <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien-lostconnect.png"></span>
+                                    <label for="thuydien">Mất kết nối</label>
+                                </li>
+                            </ul>
+
+                            <div class="common-map" id="Map_Home"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </aside>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.dropdown-content').hide();
+
+        $(".dropdown-text").click(function () {
+            $(this).parent().next().slideToggle();
+        });
+
+        $('.showAnnotateLayerBtn').click(function () {
+            $('.annotate-layer').toggle('slow');
+        });
+    });
+</script>

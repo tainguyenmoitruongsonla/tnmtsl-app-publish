@@ -1,0 +1,171 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "Giám sát khai thác, sử dụng tài nguyên nước";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/he-thong-giam-sat", User.Identity.Name, "VIEW"))
+{
+<link href="~/Assets/leaflet/leaflet.css" rel="stylesheet" />
+<script src="~/Assets/leaflet/leaflet.js"></script>
+<script src="~/Assets/leaflet/L.KML.js"></script>
+ <!-- Load Esri Leaflet from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.0.4/esri-leaflet.js"></script>
+
+ <!-- Load Esri Leaflet Vector from CDN -->
+<script src="https://unpkg.com/esri-leaflet-vector@3.1.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+<script src="~/Assets/leaflet/leaflet-bing-layer.js"></script>
+<script src="~/Assets/leaflet/Bing.js"></script>
+<div ng-controller="myCntrl as demo">
+    <script src="~/Scripts/MonitoringSystem/Controller.js"></script>
+    @Html.Partial("ImportServiceJs")
+
+    <!-- Main content -->
+    <section class="content p-0">
+        <!-- MAP -->
+        <div class="col-md-12 p-0">
+            <div style="width: 100%;" class="fullmap-container">
+                <select id="basemaps" class="form-select switch-basemap" aria-label="Default select example">
+                    <option value="Imagery">Bản đồ vệ tinh</option>
+                    <option value="Topographic">Bản đồ địa hình</option>
+                    <option value="Streets">Bản đồ đường</option>
+                    <option value="Gray">Bản đồ xám</option>
+                </select>
+                <span class="showAnnotateLayerBtn btn btn-light"> << </span>
+
+                <ul class="annotate-layer cursor-pointer" id="annotate-layer">
+                    <li><span class="showAnnotateLayerBtn btn btn-danger"> &times; </span></li>
+                    <li class="m-0 d-flex">
+                        <input type="checkbox" class="mr-2" id="cons-name" ng-click="toggleShow()">
+                        <label for="cons-name">Hiển thị tên công trình</label>
+                    </li>
+                    <li class="text-uppercase ng-scope">
+                        <div class="header mt-3 mb-0 ng-binding d-flex">
+                            <input type="checkbox" checked id="checkbox-nuocmat" class="mr-2" ng-click="toggleMarker('nuocmat')">
+                            <div class="d-flex justify-content-between w-100 dropdown-text">
+                                <span>NƯỚC MẶT</span><i class="fa-solid fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <ul class="dropdown-content">
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-thuydien" ng-click="toggleMarker('thuydien')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thuydien.png"></span>
+                                <label for="thuydien">Thủy điện</label>&nbsp;(<span ng-bind-html="countHydroelectric"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-hochua" ng-click="toggleMarker('hochua')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/hochua.png"></span>
+                                <label for="hochua">Hồ chứa</label>&nbsp;(<span ng-bind-html="countIrrigation"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-trambom" ng-click="toggleMarker('trambom')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/trambom.png"></span>
+                                <label for="trambom">Trạm bơm</label>&nbsp;(<span ng-bind-html="countPumpStation"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-tramcapnuoc" ng-click="toggleMarker('tramcapnuoc')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/tramcapnuoc.png"></span>
+                                <label for="tramcapnuoc">Trạm cấp nước</label>&nbsp;(<span ng-bind-html="countWaterSupplyStation"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-cong" ng-click="toggleMarker('cong')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/cong.png"></span>
+                                <label for="cong">Cống</label>&nbsp;(<span ng-bind-html="countDrainStation"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-nhamaynuoc" ng-click="toggleMarker('nhamaynuoc')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/nhamaynuoc.png"></span>
+                                <label for="nhamaynuoc">Nhà máy nước</label>&nbsp;(<span ng-bind-html="countWaterFactory"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-quyhoachnuocmat" ng-click="toggleMarker('quyhoachnuocmat')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/quyhoachnuocmat.png"></span>
+                                <label for="cong">Quy hoạch nước mặt</label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="text-uppercase ng-scope">
+                        <div class="header mt-3 mb-0 ng-binding d-flex">
+                            <input type="checkbox" checked id="checkbox-nuocduoidat" class="mr-2" ng-click="toggleMarker('nuocduoidat')">
+                            <div class="d-flex justify-content-between w-100 dropdown-text">
+                                <span>NƯỚC DƯỚI ĐẤT</span><i class="fa-solid fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <ul class="dropdown-content">
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-khaithac" ng-click="toggleMarker('khaithac')">
+                                <span class="p-1 ng-binding"><img width="25" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/khaithac.png"></span>
+                                <label for="khaithac">Khai thác</label>&nbsp;(<span ng-bind-html="countExploitStation"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-thamdo" ng-click="toggleMarker('thamdo')">
+                                <span class="p-1 ng-binding"><img width="25" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/thamdo.png"></span>
+                                <label for="thamdo">Thăm dò</label>&nbsp;(<span ng-bind-html="countGroundExploration"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-quyhoachnuocduoidat" ng-click="toggleMarker('quyhoachnuocduoidat')">
+                                <span class="p-1 ng-binding"><img width="25" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/quyhoachnuocduoidat.png"></span>
+                                <label for="cong">Quy hoạch nước dưới đất</label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="text-uppercase ng-scope">
+                        <div class="header mt-3 mb-0 ng-binding d-flex">
+                            <input type="checkbox" checked id="checkbox-xathai" class="mr-2" ng-click="toggleMarker('xathai')">
+                            <div class="d-flex justify-content-between w-100 dropdown-text">
+                                <span>XẢ THẢI</span><i class="fa-solid fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <ul class="dropdown-content">
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-kh_cumcn_taptrung" ng-click="toggleMarker('kh_cumcn_taptrung')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/kh_cumcn_taptrung.png"></span>
+                                <label for="kh_cumcn_taptrung">Khu / cụm CN</label>&nbsp;(<span ng-bind-html="countIndustrialArea"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-sx_tieuthu_cn" ng-click="toggleMarker('sx_tieuthu_cn')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/sx_tieuthu_cn.png"></span>
+                                <label for="sx_tieuthu_cn">SX tiểu thủ CN</label>&nbsp;(<span ng-bind-html="countHandycraftProduction"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-cs_benhvien" ng-click="toggleMarker('cs_benhvien')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/cs_benhvien.png"></span>
+                                <label for="cs_benhvien">CS bệnh viện</label>&nbsp;(<span ng-bind-html="countHospital"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-xathai_congtrinhkhac" ng-click="toggleMarker('xathai_congtrinhkhac')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/xathai_congtrinhkhac.png"></span>
+                                <label for="xathai_congtrinhkhac">Công trình khác</label>&nbsp;(<span ng-bind-html="countOtherDischarge"></span>)
+                            </li>
+                            <li class="m-0">
+                                <input type="checkbox" checked id="checkbox-quyhoachxathai" ng-click="toggleMarker('quyhoachxathai')">
+                                <span class="p-1 ng-binding"><img width="20" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/quyhoachxathai.png"></span>
+                                <label for="quyhoachxathai">Quy hoạch xả thải</label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="bg-map" id="Map_MonitoringSystem" style="width:100%;height:100%"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+        $(document).ready(function () {
+            $('.dropdown-content').hide();
+
+            $(".dropdown-text").click(function () {
+                $(this).parent().next().slideToggle();
+            });
+
+            $('.showAnnotateLayerBtn').click(function () {
+                $('.annotate-layer').toggle('slow');
+            });
+        });
+</script>
+}
+else
+{
+@Html.Partial("_401")
+}

@@ -1,0 +1,110 @@
+﻿<div class="sidenav p-0" id="aside">
+    <div>
+        <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+            <div class="d-flex col-12 p-0 align-items-center">
+                <div class="col-10">
+                    <div class="admission-title d-flex center-center">
+                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16">{{HeaderAction}} KẾT QUẢ THU TIỀN CẤP QUYỀN KHAI THÁC SỬ DỤNG CỦA BỘ </p>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside()">&times;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <fieldset class="col-12 border border-secondary p-3 mb-2 background-color bg-lightgray">
+            <legend class="font-18 font-weight-bold text-primary" style="width: auto">Thông tin quyết định cấp quyền </legend>
+            <div class="mb-2">
+                <div class="col-sm-12 p-0 row">
+                    <div class="col-md-6 p-2">
+                        <div class="dropdown dropdown-scroll floating-label">
+                            <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder="Chọn giấy phép" ng-model="item.License.LicenseNumber" />
+                            <ul class="dropdown-menu w-100 px-2" role="menu">
+                                <li class="border-bottom border-secondary p-0" ng-repeat='licenseItem in License | filter: item.License.LicenseNumber'>
+                                    <a href="javascript:void(0)" class="text-primary nav-link font-weight-normal py-0 px-1" ng-click="AddLicenses(licenseItem)"> {{licenseItem.LicenseNumber}} </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div ng-repeat="license in item.Licenses">
+                            <div class="d-flex justify-content-between border-bottom">
+                                <span ng-bind="$index + 1"></span>
+                                <div class="text-primary text-nowrap" ng-bind="license.LicenseNumber"></div>
+                                <a href="javascript:void(0)" class="d-block px-2 text-danger border" ng-click="RemoveLicenses($index, license, item.Id)">&times;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-2">
+                        <div class="floating-label">
+                            <input ng-model="item.LicenseFeeNumber" class="floating-input w-100" placeholder="Số quyết định">
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-2">
+                        <div class="align-middle text-nowrap">
+                            <input type="text" class="floating-input w-100 dpicker" placeholder="Ngày ký" uib-datepicker-popup="{{format}}" ng-model="item.SignDate" is-open="LicenseFeeSignDate.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" current-text="Hôm nay" clear-text="Xóa" alt-input-formats="altInputFormats" ng-click="openDatepicker('LicenseFeeSignDate')" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-2">
+                        <div class="floating-label">
+                            <input ng-model="item.TotalMoney" type="number" class="floating-input w-100" placeholder="Tổng tiền">
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-2">
+                        <div class="floating-label">
+                            <input type="file" accept="application/pdf" class="floating-input w-100" placeholder="FilePDF" id="fileAttachs" ng-model="item.FilePDF">
+                        </div>
+                    </div>
+                    <div class="col-md-12 py-3">
+                        <div class="floating-label">
+                            <textarea class="floating-input floating-textarea w-100 h-100" rows="3" ng-model="item.Description" placeholder="Ghi chú"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    @*<div class="col-12" ng-show="item.SupplementLicenseFee">
+            <fieldset class="col-12 border border-secondary p-3 mb-2 background-color bg-lightgray">
+                <legend class="font-18 font-weight-bold text-primary" style="width: auto">Quyết định bổ sung cho quyết định tiền cấp quyền số {{item.LicenseFeeNumber}} </legend>
+                <div class="mb-2">
+                    <div class="col-sm-12 p-0 row">
+                        <div class="col-md-6 p-2">
+                            <div class="floating-label">
+                                <input ng-model="item.SupplementLicenseFee.LicenseFeeNumber" class="floating-input w-100" placeholder=" ">
+                                <label>Số quyết định</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-2">
+                            <div class="floating-label">
+                                <input type="text" class="floating-input w-100" uib-datepicker-popup="{{format}}" ng-model="item.SupplementLicenseFee.SignDate" is-open="SupplementLicenseFeeSignDate.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" today-text="Hôm nay" alt-input-formats="altInputFormats" ng-click="openDatepicker('SupplementLicenseFeeSignDate')" />
+                                <label>Ngày ký</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-2">
+                            <div class="floating-label">
+                                <input ng-model="item.SupplementLicenseFee.TotalMoney" type="number" class="floating-input w-100" placeholder=" ">
+                                <label>Tổng tiền</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-2">
+                            <div class="floating-label">
+                                <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileSupplemenAttachs" ng-model="item.SupplementLicenseFee.FilePDF">
+                                <label>PDF</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 py-3">
+                            <div class="floating-label">
+                                <textarea class="floating-input floating-textarea w-100 h-100" rows="3" ng-model="item.SupplementLicenseFee.Description" placeholder=" "></textarea>
+                                <label>Ghi chú</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>*@
+    <div class="pt-1 col-sm-12 d-flex justify-content-end">
+        @*<button ng-if="item.SupplementLicenseFee && Action == 'Update'" type="button" class="mx-2 btn btn-sm btn-cancel" ng-click="DeleteSupplementLicenseFee(item.SupplementLicenseFee,item.Id)"><i class="fa-solid fa-trash-can"></i>Xóa quyết định bổ sung </button>
+            <button ng-if="!item.SupplementLicenseFee && Action == 'Update'" type="button" class="mx-2 btn btn-sm btn-supplement" ng-click="AddSupplementLicenseFee()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Thêm quyết định bổ sung </button>*@
+        <button type="button" class="btn btn-sm btn-addnew mx-2" ng-click="Save()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu </button>
+    </div>
+</div>

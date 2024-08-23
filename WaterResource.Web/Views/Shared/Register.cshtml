@@ -1,0 +1,83 @@
+﻿<!-- Register modal -->
+<div id="Register-window" class="modal fade addnew-windows">
+    @model WaterResource.Web.Models.RegisterViewModel
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+            <div class="modal-body p-0">
+                <div class="form-register position-absolute needs-validation" noValidate>
+                    <img class="w-100 banner-tnmt" src="~/LocalFiles/images/ANHSOTNMT.png" alt="banner-tnmt" />
+                    <main class="d-flex flex-column flex-md-row">
+                        <div class="col-lg-5 col-md-5 px-0 pt-md-0 pb-md-0 align-items-center d-none d-md-block">
+                            <img class="w-100 h-100" src="~/LocalFiles/images/ban-do-dia-hinh-son-la.png" alt="ban-do-dia-hinh-son-la" />
+                        </div>
+                        <div class="bg-lightgray col-lg-7 col-sm-12 col-md-7 text-center py-1 py-lg-0 px-2">
+                            <div class="p-0 text-center">
+                                <h5 class="text-primary font-weight-bold d-block py-2"> ĐĂNG KÝ TÀI KHOẢN </h5>
+                            </div>
+                            @Html.AntiForgeryToken()
+
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                            <div class="floating-input w-100 d-flex m-0 center-center mb-3">
+                                <div class="form-check-inline">
+                                    <label class="form-check-label position-sticky" for="radio1">
+                                        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1">Cá nhân
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label position-sticky" for="radio2">
+                                        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">Tổ chức
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.FullName, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Tên cá nhân/Tổ chức</label>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.BusinessCode, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Mã doanh nghệp</label>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Tài khoản</label>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.Password, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Mật khẩu</label>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.Address, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Địa chỉ</label>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Số điện thoại</label>
+                            </div>
+
+                            <div class="floating-label mb-3">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                                <label>Email</label>
+                            </div>
+
+                            <div class="text-center d-flex pt-2 pb-3 justify-content-end align-items-center">
+                                <input type="submit" class="btn btn-outline-success border-success px-3 mx-2" value="Đăng ký" />
+
+                                <button type="button" class="btn btn-outline-danger border-danger px-3 mx-2" data-dismiss="modal"> Huỷ </button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- /Register modal -->

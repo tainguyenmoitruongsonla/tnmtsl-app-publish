@@ -1,0 +1,211 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+    string user = User.Identity.Name;
+}
+<div class="col-md-12 row mt-4 mx-0 p-0 justify-content-between position-relative">
+    <div class="col-12 p-0 row m-0">
+        <div class="col-12 col-md-12 p-0">
+            <div class="row mx-0">
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input class="floating-input w-100" type="text" placeholder="Nhập số giấy phép" ng-change="SetKeyword(Keyword)" ng-model="Keyword" ng-keypress="onKeyPress($event)">
+                    </div>
+                </div>
+                <div ng-if="ShowConsType" class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="TypeOfConstructionFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterConsByType(0, 'Chọn loại CT')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn loại CT</p>
+                                </a>
+                            </li>
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in TypeOfConstructions">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterConsByType(e.Id, e.TypeName)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.TypeName"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="LicensingTypeFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByType(-1, 'Chọn loại hình CP')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn loại hình CP</p>
+                                </a>
+                            </li>
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in LicensingTypes">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByType(e.Id, e.Name)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="LicenseEffectFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in ListLicenseEffect">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByEffect(e.Id, e.Name)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="LicensingAuthoritiesFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in ListLicensingAuthorities">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByLicensingAuthorities(e.Id, e.Name)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                @if (!_service.IsInRole(user, "District"))
+                {
+                    <div class="col-12 col-md-2 p-0">
+                        <div class="floating-label w-100 p-1">
+                            <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="DistrictFilter">
+                            <ul class="dropdown-menu w-100" role="menu">
+                                <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                    <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByDistrict(0, 'Chọn huyện')">
+                                        <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn huyện</p>
+                                    </a>
+                                </li>
+                                <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in Districts">
+                                    <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByDistrict(e.Id, e.DistrictName)">
+                                        <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.DistrictName"></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+                <div ng-if="ShowAquifer" class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="AquiferFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByAquifer(0, 'Chọn tầng chứa nước')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tầng chứa nước</p>
+                                </a>
+                            </li>
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in AllAquifers">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByAquifer(e.Id, e.Name)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="BasinFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByBasin(0, 'Chọn tiểu vùng quy hoạch')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tiểu vùng quy hoạch</p>
+                                </a>
+                            </li>
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in Basins">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByBasin(e.Id, e.Name)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="StartYearFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in DataYear">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByDataYear(e.Year, EndYear)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Từ năm: <span ng-bind="e.Year"></span></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="EndYearFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in DataYear">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByDataYear(StartYear, e.Year)">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Đến năm: <span ng-bind="e.Year"></span></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input class="floating-input w-100" type="text" id="ConstructionFilter" data-toggle="dropdown" placeholder="Nhập tên CT" ng-model="ConstructionFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByCons(0, 'ConstructionFilter')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
+                                </a>
+                            </li>
+                            <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat='i in DataConstruction | filter:ConstructionFilter'>
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByCons(i, 'ConstructionFilter')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.ConstructionName}}</p>
+                                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.ConstructionLocation}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 p-0">
+                    <div class="floating-label w-100 p-1">
+                        <input class="floating-input w-100" type="text" id="LicenseHolderFilter" data-toggle="dropdown" placeholder="Nhập tên chủ GP" ng-model="LicenseHolderFilter">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li class="border-bottom border-secondary m-0 p-1">
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByBusiness(0, 'LicenseHolderFilter')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
+                                </a>
+                            </li>
+                            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='i in Business | filter:LicenseHolderFilter'>
+                                <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByBusiness(i, 'LicenseHolderFilter')">
+                                    <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
+                                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.Address}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row m-0 col-12 p-0">
+                    <div class="row m-0 align-items-center py-2">
+                        <button class="btn btn-sm font-10 btn-addnew px-4 mx-1" ng-click="Search()">
+                            <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+                        </button>
+                    </div>
+                    <div class="row m-0 align-items-center py-2">
+                        <button class="btn btn-sm font-10 btn-outline-success rounded-0 px-4 m-1" title="Xuất file excel" ng-click="exportToExcel('excel-export')">
+                            <i class="fa-solid fa-file-excel"></i> Xuất excel
+                        </button>
+                    </div>
+                    @if (_service.IsViewAction("/giay-phep", User.Identity.Name, "Add"))
+                    {
+                        <div ng-if="AddBtn" class="row m-0 align-items-center py-2">
+                            <button type="button" class="btn btn-sm font-10 btn-addnew px-4 mx-1" ng-click="openFormCreatLicense('formCreateLicense')">
+                                <i class="fa-solid fa-plus"></i> Thêm mới
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

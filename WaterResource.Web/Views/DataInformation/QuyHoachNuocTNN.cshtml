@@ -1,0 +1,203 @@
+﻿@using Microsoft.AspNet.Identity
+@using WaterResource.Service;
+@{
+    ViewBag.Title = "THÔNG TIN DỮ LIỆU VỀ KHAI THÁC SỬ DỤNG NƯỚC TRÊN ĐỊA BÀN TỈNH SƠN LA";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "VIEW"))
+{
+    <div ng-controller="myCntrl as demo">
+
+        <!-- BỘ QUẢN LÝ -->
+        <!--Nh-->
+        <script src="~/Scripts/DataInformation/Controller.js"></script>
+        @Html.Partial("ImportServiceJs")
+        <!-- HẾT NHÚNG FILE MAP -->
+        <!-- Main content -->
+
+        <section class="content p-0">
+            <div class="p-3">
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="font-sm-18 m-0 font-weight-bold">THỐNG KÊ </h4>
+                    <p class="font-sm-15 m-0 font-weight-bold">Thống kê danh mục các tiểu vùng  </p>
+                </div>
+                <!--copy fom lọc + nút thêm mới-->
+                <div class="row m-0 align-items-center justify-content-end">
+                    <div class="floating-label mb-2">
+                        <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="Keyword">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in ItemsForSearch | filter:Keyword'>
+                                <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.MaHo)">
+                                    <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.TenHoChua}}</p>
+                                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.MaHo}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <label>Tên hoặc mã tiểu vùng</label>
+                    </div>
+                    <div class="row mx-0 mx-md-2 mb-2 align-items-center">
+                        <button class="btn btn-sm btn-addnew px-4 rounded-0" ng-click="SearchDanhMucAoHo()">Lọc</button>
+                    </div>
+                    <div class="row mx-0 mx-md-2 mb-2 align-items-center">
+                        @if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "ADD"))
+                        {<button class="btn btn-sm btn-addnew rounded-0" ng-click="Add('DanhMucSong_DanhMucAoHo-windows')" title="Thêm văn bản mới">Thêm mới</button>}
+
+                    </div>
+                </div>
+                <!--hết copy fom lọc + nút thêm mới-->
+
+                <div class="table-responsive">
+                    <!--thêm class để co giãn màn hình -->
+                    <table class="table no-margin table-hover table-bordered font-sm-13">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th class="text-center text-nowrap align-middle">STT</th>
+                                <th class="text-center text-nowrap align-middle">Loại nhu cầu </th>
+                                <th class="text-center text-nowrap align-middle">Loại nguồn nước </th>
+                                <th class="text-center text-nowrap align-middle">Loại nước dưới đất </th>
+                                <th class="text-center text-nowrap align-middle">Tầng chứa nước/lưu vực </th>
+                                <th class="text-center text-nowrap align-middle">Phân vùng quy hoạch và các bản đồ quy hoạch </th>
+                                <th class="text-center text-nowrap align-middle">Mục tiêu chất lượng nước </th>
+                                <th class="text-center text-nowrap align-middle">Quyết định báo cáo/ quy hoạch (file PDF) </th>
+                                <th class="text-center text-nowrap align-middle">Lưu vực </th>
+                                <th class="text-center text-nowrap align-middle">Sông/ suối </th>
+                                <th class="text-center text-nowrap align-middle">Xã </th>
+                                <th class="text-center text-nowrap align-middle">Tọa độ X  </th>
+                                <th class="text-center text-nowrap align-middle">Tọa độ Y </th>
+                                <th class="text-center text-nowrap align-middle">Q tối thiểu</th>
+                                <th rowspan="2" class="text-center text-nowrap align-middle" style="width: 90px;"> Thao tác </th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <!--repeat lặp bản ghi  -->
+                            <tr ng-repeat="item in getDataDanhMucAoHo">
+                                <td ng-bind="(currentPage -1)*numPerPage+$index+1" style="width:50px"></td>
+                                <td ng-bind="item.Huyen" style="width:150px"></td>
+                                <td ng-bind="AllCommunes[item.ThonXaPhuong].CommuneName"></td>
+                                <td style="width:120px" ng-bind="item. "></td>
+                                <td style="width:120px" ng-bind="item. "></td>
+                                <td style="width:120px" ng-bind="item. "></td>
+
+                                <td class="command" style="width:80px">
+                                    <div class="tools d-flex justify-content-between">
+                                        @if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "EDIT"))
+                                        {<a href="javascript:void(0)" class="px-2" title="Chỉnh sửa văn bản" ng-click="EditDanhMucAoHo('DanhMucSong_DanhMucAoHo-windows',item)"><i class="fa fa-edit"></i></a>}
+                                        @if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "DELETE"))
+                                        {<a href="javascript:void(0)" class="px-2 text-danger" title="Xoá văn bản" ng-click="DeleteDanhMucAoHo(item)"><i class="fa-solid fa-trash-can"></i></a>}
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalTWItem"
+                            ng-model="currentPage"
+                            items-per-page="numPerPage"
+                            boundary-links="true"
+                            previous-text=" &#xf104;"
+                            next-text=" &#xf105;"
+                            first-text=" &#xf100;"
+                            last-text=" &#xf101;"
+                            max-size="5" ng-change="pageChanged()"
+                            rotate="true"
+                            force-ellipses="true"
+                            class="pagination pagination-sm inline fa d-flex"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="sidenav p-0" id="DanhMucSong_DanhMucAoHo-windows">
+                <div class="modal-content">
+                    <div>
+                        <div class="doc-title py-2 pr-0 pl-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                            <div class="d-flex col-12 p-0 align-items-center">
+                                <div class="col-10 p-0">
+                                    <div class="admission-title d-flex center-center">
+                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> {{HeaderAction}} HỒ, AO {{item.TenHoChua}} </p>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('DanhMucSong_DanhMucAoHo-windows')">&times;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <input type="hidden" ng-model="construction.TypeOfConstructionId" />
+                            <fieldset class="col-12 border border-secondary p-3 mb-2 background-color bg-lightgray">
+                                <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN HỒ, AO</legend>
+                                <div class="row col-12 m-0">
+                                    <div class="col-md-4 py-3">
+                                        <div class="floating-label">
+                                            <div class="floating-label">
+                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="item.MaHo">
+                                                <label> Mã Hồ, Ao </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 py-3">
+                                        <div class="floating-label">
+                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="item.TenHoChua">
+                                            <label> Tên Hồ, Ao </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 py-3">
+                                        <div class="floating-label">
+                                            <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="item.Huyen" ng-change="DistrictChange(item.Huyen)" class="floating-select w-100">
+                                                <option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option>
+                                            </select>
+                                            <label>Quận/Huyện</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 py-3">
+                                        <div class="floating-label">
+                                            <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="item.ThonXaPhuong" class="floating-select w-100">
+                                                <option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option>
+                                            </select>
+                                            <label>Xã/Phường</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 py-3">
+                                        <div class="floating-label">
+                                            <div class="floating-label">
+                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="item.NguonNuoc">
+                                                <label>Nguồn nước</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 py-3">
+                                        <div class="floating-label">
+                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="item.ThuocHeThongSong">
+                                            <label>Thuộc hệ thống sông</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 py-3">
+                                        <div class="floating-label">
+                                            <textarea class="floating-input floating-textarea w-100 h-100" rows="3" ng-model="item.GhiChu" placeholder=" "></textarea>
+                                            <label>Ghi chú</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-addnew" data-dismiss="modal" ng-click="SaveDanhMucAoHo('DanhMucSong_DanhMucAoHo-windows')"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @Html.Partial("_ViewFilePDF")
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}

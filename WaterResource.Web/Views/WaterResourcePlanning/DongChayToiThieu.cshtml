@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNet.Identity
+@using WaterResource.Service;
+@{
+    ViewBag.Title = "THÔNG TIN DỮ LIỆU VỀ NHU CẦU DÒNG CHẢY TỐI THIỂU TẠI CÁC SÔNG SUỐI TRÊN ĐỊA BÀN TỈNH SƠN LA";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "VIEW"))
+{
+    <div ng-controller="myCntrl as demo">
+
+        <!-- BỘ QUẢN LÝ -->
+        <!--Nh-->
+        @Html.Partial("ImportServiceJs")
+        <script src="~/Scripts/MinimunFlow/Controller.js"></script>
+
+        <!-- HẾT NHÚNG FILE MAP -->
+        <!-- Main content -->
+        <div class="form-title d-flex justify-content-between col-12">
+            <div class="col-6 col-sm-3 text-center p-0">
+                <h5 class="font-sm-14 m-0">UBND TỈNH SƠN LA</h5>
+                <h5 class="font-sm-14 font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                <p class="font-sm-13 d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+            </div>
+            <div class="col-6 col-sm-4 text-center">
+                <h5 class="font-sm-14 m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                <h5 class="font-sm-14 font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                <i class="font-sm-13">Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+            </div>
+        </div>
+
+        <div class="form-title col-12 text-center mt-2 my-4">
+            <h4 class="font-sm-18 m-0 font-weight-bold">THỐNG KÊ </h4>
+            <p class="font-sm-15 m-0 font-weight-bold">THÔNG TIN DỮ LIỆU VỀ NHU CẦU DÒNG CHẢY TỐI THIỂU TẠI CÁC SÔNG SUỐI TRÊN ĐỊA BÀN TỈNH SƠN LA </p>
+            <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+        </div>
+
+        <section class="content p-0">
+
+            <div class="table-responsive">
+                <table class="table no-margin table-hover table-bordered">
+                    <thead class="custom-table-thead">
+                        <tr>
+                            <th rowspan="2" class="text-center align-middle" style="width: 550px"> Lưu vực </th>
+                            <th rowspan="2" class="text-center align-middle"> Sông/suối </th>
+                            <th rowspan="2" class="text-center align-middle"> Xã </th>
+                            <th colspan="2" class="text-center align-middle"> Toạ độ </th>
+                            <th rowspan="2" class="text-center align-middle" style="width: 100px"> Q<sub>tt</sub> </th>
+                        </tr>
+                        <tr>
+                            <th class="text-center align-middle" style="width: 200px">X</th>
+                            <th class="text-center align-middle" style="width: 200px">Y</th>
+                        </tr>
+                    </thead>
+                    <tbody class="custom-table-tbody" ng-repeat="basin in BieuMau18A">
+                        <tr>
+                            <td class="align-middle font-weight-bold text-nowrap" rowspan="{{basin.River.length}}">{{basin.Name}}</td>
+                            <td class="align-middle text-nowrap">{{basin.River[0].Name}}</td>
+                            <td class="align-middle text-nowrap">{{basin.River[0].CommuneName}}</td>
+                            <td class="align-middle">{{basin.River[0].X}}</td>
+                            <td class="align-middle">{{basin.River[0].Y}}</td>
+                            <td class="align-middle">{{basin.River[0].Qtt}}</td>
+                        </tr>
+                        <tr ng-repeat="river in basin.River" ng-if="$index > 0">
+                            <td class="align-middle text-nowrap">{{river.Name}}</td>
+                            <td class="align-middle text-nowrap">{{river.CommuneName}}</td>
+                            <td class="align-middle">{{river.X}}</td>
+                            <td class="align-middle">{{river.Y}}</td>
+                            <td class="align-middle">{{river.Qtt}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- PHẦN CHÂN TRANG -->
+            <div class="form-title d-flex justify-content-between col-12 my-3">
+                <div class="col-6 col-md-3 text-left p-0 font-sm-13">
+                    <i>Nơi nhận</i>
+                    <p class="m-0">- Ban Giám đốc Sở</p>
+                    <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+                </div>
+                <div class="col-6 col-md-4 text-center font-sm-13">
+                    <p class="mb-5 font-weight-bold h5 font-sm-16 font-sm-14">NGƯỜI THỐNG KÊ </p>
+                    <p class="mb-0 mt-5 font-weight-bold">
+                        @if (Request.IsAuthenticated)
+                        {
+                            @User.Identity.GetUserName()
+                        }
+                    </p>
+                </div>
+            </div>
+            <!-- KẾT THÚC PHẦN CHÂN TRANG -->
+        </section>
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}

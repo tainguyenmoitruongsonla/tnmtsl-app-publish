@@ -1,0 +1,133 @@
+﻿@using Microsoft.AspNet.Identity
+
+@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+}
+
+@Html.Partial("_Search")
+@*@if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "VIEW"))
+{*@
+    <div class="table-responsive">
+        <table class="table no-margin table-hover table-bordered">
+            <thead class="custom-table-thead">
+                <tr>
+                    <th rowspan="2" class="text-center align-middle">STT</th>
+                    <th rowspan="2" class="text-center align-middle">Tiểu vùng lưu vực</th>
+                    <th colspan="12" class="text-center align-middle text-nowrap">{{TableCol}}</th>
+                    <th rowspan="2" class="text-center align-middle">Cả năm (10^6 m3)</th>
+                    <th rowspan="2" class="text-center align-middle">Bình quân (m3/s)</th>
+                    <th rowspan="2" class="text-center align-middle"> Ghi chú </th>
+                    <th rowspan="2" class="text-center align-middle">Thao tác</th>
+                </tr>
+                <tr>
+                    <th class="text-center align-middle">I</th>
+                    <th class="text-center align-middle">II</th>
+                    <th class="text-center align-middle">III</th>
+                    <th class="text-center align-middle">IV</th>
+                    <th class="text-center align-middle">V</th>
+                    <th class="text-center align-middle">VI</th>
+                    <th class="text-center align-middle">VII</th>
+                    <th class="text-center align-middle">VIII</th>
+                    <th class="text-center align-middle">IX</th>
+                    <th class="text-center align-middle">X</th>
+                    <th class="text-center align-middle">XI</th>
+                    <th class="text-center align-middle">XII</th>
+                </tr>
+                <tr>
+                    <th class="text-center align-middle">(1)</th>
+                    <th class="text-center align-middle">(2)</th>
+                    <th class="text-center align-middle">(3)</th>
+                    <th class="text-center align-middle">(4) </th>
+                    <th class="text-center align-middle">(5)</th>
+                    <th class="text-center align-middle">(6)</th>
+                    <th class="text-center align-middle">(7)</th>
+                    <th class="text-center align-middle">(8)</th>
+                    <th class="text-center align-middle">(9)</th>
+                    <th class="text-center align-middle">(10)</th>
+                    <th class="text-center align-middle">(11)</th>
+                    <th class="text-center align-middle">(12)</th>
+                    <th class="text-center align-middle">(13)</th>
+                    <th class="text-center align-middle">(14)</th>
+                    <th class="text-center align-middle">(15)</th>
+                    <th class="text-center align-middle">(16)</th>
+                    <th class="text-center align-middle">(17)</th>
+                    <th class="text-center align-middle">(18)</th>
+                </tr>
+            </thead>
+            <tbody class="custom-table-tbody">
+                <tr class="text-center" ng-repeat="item in WaterResourcePlannings">
+                    <th class="text-center align-middle">{{(currentPage -1)*numPerPage+$index+1}}</th>
+                    <td class="text-center align-middle" ng-bind="item.Basin"></td>
+                    <td class="text-center align-middle" ng-bind="item.I"></td>
+                    <td class="text-center align-middle" ng-bind="item.II"></td>
+                    <td class="text-center align-middle" ng-bind="item.III"></td>
+                    <td class="text-center align-middle" ng-bind="item.IV"></td>
+                    <td class="text-center align-middle" ng-bind="item.V"></td>
+                    <td class="text-center align-middle" ng-bind="item.VI"></td>
+                    <td class="text-center align-middle" ng-bind="item.VII"></td>
+                    <td class="text-center align-middle" ng-bind="item.VIII"></td>
+                    <td class="text-center align-middle" ng-bind="item.IX"></td>
+                    <td class="text-center align-middle" ng-bind="item.X"></td>
+                    <td class="text-center align-middle" ng-bind="item.XI"></td>
+                    <td class="text-center align-middle" ng-bind="item.XII"></td>
+                    <td class="text-center align-middle" ng-bind="item.AverageYear"></td>
+                    <td class="text-center align-middle" ng-bind="item.Equilibrium"></td>
+                    <td><span ng-bind="item.Description"></span></td>
+                    <td class="text-center align-middle">
+                        <div class="d-flex">
+                            @if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "EDIT"))
+                            {
+                                <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa" ng-click="Edit(item)"><i class="fa fa-edit"></i></a>
+                            }
+                            @if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "DELETE"))
+                            {
+                                <a href="javascript:void(0)" class="text-red" title="Xóa" ng-click="Delete(item)"><i class="fa-solid fa-trash-can"></i></a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- PHẦN phân trang file cshtml-->
+    <div class="box-footer">
+        <div class="box-tools pull-right">
+            <ul uib-pagination
+                total-items="TotalItem "
+                ng-model="currentPage"
+                items-per-page="numPerPage "
+                boundary-links="true"
+                previous-text=" &#xf104;"
+                next-text=" &#xf105;"
+                first-text=" &#xf100;"
+                last-text=" &#xf101;"
+                max-size="5" ng-change="pageChanged()"
+                rotate="true"
+                force-ellipses="true" class="pagination pagination-sm inline fa d-flex"></ul>
+        </div>
+    </div>
+
+    <!-- PHẦN CHÂN TRANG -->
+    <div class="form-title d-flex justify-content-between col-12 my-3">
+        <div class="col-6 col-md-3 text-left p-0 font-sm-13">
+            <i>Nơi nhận</i>
+            <p class="m-0">- Ban Giám đốc Sở</p>
+            <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+        </div>
+        <div class="col-6 col-md-4 text-center font-sm-13">
+            <p class="mb-5 font-weight-bold h5 font-sm-16 font-sm-14">NGƯỜI THỐNG KÊ </p>
+            <p class="mb-0 mt-5 font-weight-bold">
+                @if (Request.IsAuthenticated)
+                {
+                    @User.Identity.GetUserName()
+                }
+            </p>
+        </div>
+    </div>
+    <!-- KẾT THÚC PHẦN CHÂN TRANG -->
+@*}
+else
+{
+    @Html.Partial("_401")
+}*@

@@ -1,0 +1,58 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "THÔNG BÁO";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/thong-bao", User.Identity.Name, "VIEW"))
+{
+    <script src="~/Scripts/Notification/Controller.js"></script>
+    <script src="~/Scripts/Notification/Service.js"></script>
+
+    <div ng-controller="myCntrl as demo">
+        <section class="content p-2">
+            <ul class="nav nav-tabs font-20" id="Nofitication-tab" role="tablist">
+                <li class="nav-item">
+                    <button ng-click="GetData(false)" class="nav-link rounded-0 active" id="General-tab" data-toggle="pill" role="tab" aria-controls="GeneralNofity" aria-selected="false">Chung</button>
+                </li>
+                <li class="nav-item">
+                    <button ng-click="GetData(true)" class="nav-link rounded-0" id="Error-tab" data-toggle="pill" role="tab" aria-controls="ErrorNofity" aria-selected="false">Hoạt động công trình lỗi</button>
+                </li>
+            </ul>
+            <div class="table-responsive mailbox-messages">
+                <table class="table table-hover table-striped">
+                    <tbody>
+                        <tr ng-repeat="item in NotificationTNN">
+                            <td class="mailbox-name"><a href="{{item.Url}}">{{item.NotifyTitle}} </a></td>
+                            <td class="mailbox-subject">
+                                <i>{{item.NotifyContent}}</i>
+                            </td>
+                            <td class="mailbox-date">{{DateTimeConvert(item.Time)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItem"
+                            ng-model="currentPage"
+                            items-per-page="numPerPage"
+                            boundary-links="true"
+                            previous-text=" &#xf104;"
+                            next-text=" &#xf105;"
+                            first-text=" &#xf100;"
+                            last-text=" &#xf101;"
+                            max-size="5" ng-change="pageChanged()"
+                            rotate="true"
+                            force-ellipses="true"
+                            class="pagination pagination-sm inline fa d-flex"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}

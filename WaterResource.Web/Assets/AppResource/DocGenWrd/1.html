@@ -1,0 +1,92 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo of DocxGenJS</title>
+    
+    <link rel="stylesheet" href="main.css">
+    <!--Export To Word-->
+    <script type="text/javascript" src="/Assets/DocGenWrd/libs/base64.js"></script>
+    <script type="text/javascript" src="/Assets/DocGenWrd/libs/jszip/jszip.js"></script>
+    <script type="text/javascript" src="/Assets/DocGenWrd/libs/jszip/jszip-load.js"></script>
+    <script type="text/javascript" src="/Assets/DocGenWrd/libs/jszip/jszip-inflate.js"></script>
+    <!-- Include docxgen js lib -->
+    <script type="text/javascript" src="/Assets/DocGenWrd/js/docxgen.js"></script>
+    <script src="/Assets/DocGenWrd/main.js"></script>
+    <!--./Export To Word-->
+</head>
+<body>
+
+
+
+
+	<table class="demo">
+
+		<tr>
+            <td colspan="3">
+                <h3>Code Used:</h3>
+
+                <button type="button" id="btnexport">
+                    <i class="fa fa-file-word-o" aria-hidden="true"></i> Export
+                </button>
+
+
+
+                <textarea raw="MyEvent.docx">
+var docData=docXData["MyEvent.docx"]; //docXData is an array containing all the raw data for these examples
+var doc= new DocxGen(docData); //Create a new DocxGen document
+
+doc.setTemplateVars(
+{
+"TuanThu":"31","FromDay":"31/7/2018","ToDay":"5/8/2018",
+"ChairEvents":[
+{
+	"chairname":"TCT Nguyễn Văn Tỉnh",
+	"WeekEvents":
+	[
+		{
+		 "diadiem":"Phòng họp 203 A1",
+		 "ngay":"30/7/2018",
+		 "eventname":"Họp phòng chống thiên tai",
+		 "thanhphan":"Trưởng, phó các đơn vị"
+		},
+		{
+		 "diadiem":"Phòng họp 203 A1",
+		 "ngay":"31/7/2018",
+		 "eventname":"Tiếp khách UNDP",
+		 "thanhphan":"Theo giấy mời"
+		}
+	]
+},
+{
+	"chairname":"P.TCT Nguyễn Văn Thành",
+	"WeekEvents":
+	[
+		{
+		 "diadiem":"Phòng họp 203 A1",
+		 "ngay":"30/7/2018",
+		 "eventname":"Họp phòng chống thiên tai",
+		 "thanhphan":"Trưởng, phó các đơn vị"
+		},
+		{
+		 "diadiem":"Phòng họp 203 A1",
+		 "ngay":"31/7/2018",
+		 "eventname":"Tiếp khách UNDP",
+		 "thanhphan":"Theo giấy mời"
+		}
+	]
+}
+]
+}
+) //set the templateVariables
+doc.applyTemplateVars() //apply them
+doc.output() //Output the document using Data-URI					
+				</textarea>
+            </td>
+		</tr>
+	</table>
+
+
+
+</body>
+</html>

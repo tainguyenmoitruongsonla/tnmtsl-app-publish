@@ -1,0 +1,218 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "Phân quyền người dùng";
+    UserRightService _service = new UserRightService();
+}
+@if (!_service.IsSuperUser(User.Identity.Name))
+{
+    <div class="ban-dashboard">
+        <i class="fa fa-ban" aria-hidden="true"></i>
+    </div>
+}
+<div ng-controller="myCntrl as demo">
+    @if (_service.IsSuperUser(User.Identity.Name))
+    {
+
+        <script src="~/Scripts/UserPermit/Service.js"></script>
+        <script src="~/Scripts/UserPermit/Controller.js"></script>
+        <!-- Main content -->
+        <section class="content container-fluid">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border d-flex py-2">
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <div class="col-12 col-sm-6 d-flex col-md-4 col-lg-3">
+                                <input type="text" class="form-control pull-right" placeholder="Tìm kiếm user" ng-model="Keyword">
+                                <button class="btn btn-sm btn-addnew px-4 mx-1" ng-click="Search()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <div class="box-body">
+                        <table class="table table-sm no-margin table-hover">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Họ và tên</th>
+                                    <th>Tài khoản</th>
+                                    <th>Email</th>
+                                    <th class="command">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in Users">
+                                    <td ng-bind-html="(currentPage -1)*numPerPage+$index+1"></td>
+                                    <td ng-bind-html="item.FullName" ng-click="openAside('mySidenav',item)" style="cursor:pointer"></td>
+                                    <td ng-bind-html="item.UserName"></td>
+                                    <td ng-bind-html="item.Email"></td>
+                                    <td class="command" style="text-align:center;width:75px">
+                                        <div class="tools d-flex center-center">
+                                            <a href="javascript:void(0)" ng-click="openAsideDash('myDasboard',item)">
+                                                <i class="fa fa-television" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="box-tools pull-right">
+                            <ul uib-pagination
+                                total-items="TotalItem"
+                                ng-model="currentPage"
+                                items-per-page="numPerPage"
+                                boundary-links="true"
+                                previous-text=" &#xf104; " next-text=" &#xf105; "
+                                first-text=" &#xf100; " last-text=" &#xf101; "
+                                max-size="5" ng-change="pageChanged()"
+                                rotate="true"
+                                force-ellipses="true" class="pagination pagination-sm inline fa d-flex"></ul>
+                        </div>
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </section>
+        <!-- /.content -->
+        <!--Begin Nav Pane-->
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" style="top:5px; right: 20px" ng-click="closeAside('mySidenav')">&times;</a>
+            <div style="margin-left:20px;margin-right:20px">
+                <div class="doc-title">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN NGƯỜI DÙNG</h4>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên người dùng</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td ng-bind-html="user.FullName" style="width:35%;cursor:pointer" ng-click="openAside('mySidenav',item)"></td>
+                                <td ng-bind-html="user.Email"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-cogs" aria-hidden="true"></i> PHÂN QUYỀN CÁC CHỨC NĂNG</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;width:35px">TT</th>
+                                <th>Dashboard</th>
+                                <th>URL</th>
+                                <th>Quyền thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="dash in user.dashboards">
+                                <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                                <td ng-bind="dash.Name"></td>
+                                <td ng-bind="dash.FileControl"></td>
+                                <td>
+                                    <span ng-repeat="func in dash.Functions">
+                                        <label style="display: inline-block;padding: 5px 8px 5px 5px">
+                                            <input type="checkbox" ng-change="CheckFunction(user, dash, func)" ng-model="func.Status" ng-true-value="true" ng-false-value="false"> <span ng-bind-html="func.Description"></span> <span ng-bind-html="func.PermitName"></span>
+                                        </label>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="input-group input-group-sm" style="padding-bottom:50px">
+                </div>
+            </div>
+        </div>
+        <!--End Nav Pane-->
+    }
+
+    <!----Begin Add Dashboard By User---->
+    <div id="myDasboard" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" style="top:5px; right: 20px" ng-click="closeAsideDash('myDasboard')">&times;</a>
+        <div style="margin-left:20px;margin-right:20px">
+            <div class="doc-title">
+                <div class="row">
+                    <div class="col-sm-12 col-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN ROLE</h4>
+                        </div>
+                    </div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tên người dùng</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td ng-bind="useritem.FullName"></td>
+                            <td ng-bind="useritem.Email"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @if (_service.IsSuperUser(User.Identity.Name))
+            {
+                <div>
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-television" aria-hidden="true"></i> MÀN HÌNH CHỨC NĂNG</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;width:35px">TT</th>
+                                <th>Dashboard</th>
+                                <th>URL</th>
+                                <th style="text-align:center">Cho phép truy cập</th>
+                                <th style="text-align:center">Truy cập theo Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="udash in dashforuser">
+                                <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                                <td ng-bind="udash.DashboardName"></td>
+                                <td ng-bind="udash.FileControl"></td>
+                                <td style="text-align:center">
+                                    <label style="padding:0px"><input type="checkbox" ng-model="udash.PermitAccess" ng-click="CheckDashAccess(udash)" /></label>
+                                </td>
+                                <td style="text-align:center">
+                                    <label style="padding:0px"><input type="checkbox" ng-model="udash.PermitByRole" ng-click="CheckDashByUser(udash)" ng-if="udash.PermitAccess==true" /></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="input-group input-group-sm" style="padding-bottom:50px">
+                </div>
+            }
+        </div>
+    </div>
+    <!----End Add Dashboard By Role----->
+</div>

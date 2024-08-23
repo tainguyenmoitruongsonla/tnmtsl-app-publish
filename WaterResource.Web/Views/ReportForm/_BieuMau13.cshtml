@@ -1,0 +1,168 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+}
+<div id="BieuMauBaoCao_BieuMau13" class="sidenav p-0 ">
+    <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+        <div class="d-flex col-12 p-0 align-items-center">
+            <div class="col-10 p-0">
+                <div class="admission-title d-flex center-center">
+                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> Biểu mẫu thông tư 31/2018/TT-BTNMT/ Biểu mẫu số 13  </p>
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('BieuMauBaoCao_BieuMau13')">&times;</a>
+        </div>
+    </div>
+    <div class="p-3">
+        <div class="card">
+            <div class="card-header row m-0">
+                <h5 class="card-title m-0 col-md-11">Biểu mẫu số 13. Số lượng công trình khai thác nước mặt, nước dưới đất theo mục đích sử dụng</h5>
+                <div class="row m-0 justify-content-end col-md-1">
+                    <button class="btn btn-outline-success rounded-0 px-2 py-1" title="Xuất file excel" ng-click="exportToExcel('#bieu-mau-13')">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- PHẦN ĐẦU TRANG -->
+                <div class="form-title d-flex justify-content-between col-12">
+                    <div class="col-3 text-center p-0">
+                        <h5 class="m-0">UBND TỈNH SƠN LA</h5>
+                        <h5 class="font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                        <p class="d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h5 class="m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                        <h5 class="font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                        <i>Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="m-0 font-weight-bold">BÁO CÁO</h4>
+
+                    <p class="m-0 font-weight-bold"> Tổng hợp các đặc trưng của các chỉ tiêu cơ bản về chất lượng nước mặt  </p>
+                    <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+                </div>
+
+                <!-- KẾT THÚC PHẦN ĐẦU TRANG -->
+
+                <table class="table no-margin table-hover table-bordered " id="bieu-mau-13">
+                    <thead class="custom-table-thead">
+                        <tr class="text-center align-middle">
+                            <th rowspan="4">STT</th>
+                            <th rowspan="3"> Vị trí quan trắc </th>
+                            <th colspan="9"> Kết quả phân tích chất lượng nước </th>
+                            <th rowspan="3"> Ghi chú </th>
+                            <th rowspan="3">Thao tác</th>
+                        </tr>
+
+                        <tr class="text-center align-middle">
+                            <th colspan="3"> BOD5 </th>
+                            <th colspan="3"> COD </th>
+                            <th colspan="3"> DO </th>
+                        </tr>
+                        <tr class="text-center align-middle">
+                            <th>Lớn nhất </th>
+                            <th>Nhỏ nhất </th>
+                            <th>Trung bình </th>
+                            <th>Lớn nhất </th>
+                            <th>Nhỏ nhất </th>
+                            <th>Trung bình </th>
+                            <th>Lớn nhất </th>
+                            <th>Nhỏ nhất </th>
+                            <th>Trung bình </th>
+                        </tr>
+                        <tr class="text-center align-middle">
+                            <th>(1)&nbsp;</th>
+                            <th>(2)&nbsp;</th>
+                            <th>(3)&nbsp;</th>
+                            <th>(4)&nbsp;</th>
+                            <th>(5)&nbsp;</th>
+                            <th>(6)&nbsp;</th>
+                            <th>(7)&nbsp;</th>
+                            <th>(8)&nbsp;</th>
+                            <th>(9)&nbsp;</th>
+                            <th>(10)&nbsp;</th>
+                            <th>(11)&nbsp;</th>
+                            <th>(12)&nbsp;</th>
+                        </tr>
+                        <tr class="text-center align-middle">
+                            <th></th>
+                            <th>Giá trị lớn nhất </th>
+                            <th class="text-center align-middle">  </th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="custom-table-tbody">
+                        <tr class="text-center align-middle" ng-repeat="item in DataThongTinChatLuongNuocMat">
+                            <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                            <td class="text-left text-nowrap"><span ng-bind="item.ViTriQuanTrac"></span></td>
+                            <td><span ng-bind="item.BOD5Max | number:2"></span></td>
+                            <td><span ng-bind="item.BOD5Min | number:2"></span></td>
+                            <td><span ng-bind="(item.BOD5Max + item.BOD5Min)/2 | number:2 "></span></td>
+                            <td><span ng-bind="item.CODMax | number:2"></span></td>
+                            <td><span ng-bind="item.CODMin | number:2"></span></td>
+                            <td><span ng-bind="(item.CODMax + item.CODMin)/2 | number:2"></span></td>
+                            <td><span ng-bind="item.DOMax | number:2"></span></td>
+                            <td><span ng-bind="item.DOMin | number:2"></span></td>
+                            <td><span ng-bind="(item.DOMax + item.DOMin)/2 | number:2 "></span></td>
+                            <td class="text-left"><span ng-bind="item.GhiChu"></span></td>
+                            <td>
+                                <div class="d-flex">
+                                    @if (_service.IsViewAction("/bao-cao-bieu-mau", User.Identity.Name, "EDIT"))
+                                    {
+                                        <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa văn bản" data-toggle="modal" data-target="#SoLuongChatLuongNuoc_CLNuocMat_addnew-windows" ng-click="EditDataQualitySurfaceWaterItem(item)"><i class="fa fa-edit"></i></a>
+                                    }
+                                    @if (_service.IsViewAction("/bao-cao-bieu-mau", User.Identity.Name, "DELETE"))
+                                    {
+                                        <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá văn bản" ng-click="DeleteDataQualitySurfaceWaterItem(item)"><i class="fa-solid fa-trash-can"></i></a>
+                                    }
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- pagination -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItemBieuMauSo3"
+                            ng-model="currentPage"
+                            items-per-page="numPerPage"
+                            boundary-links="true"
+                            previous-text=" &#xf104; " next-text=" &#xf105; "
+                            first-text=" &#xf100; " last-text=" &#xf101; "
+                            max-size="5" ng-change="pageChanged()"
+                            rotate="true"
+                            force-ellipses="true" class="pagination pagination-sm d-flex fa my-3"></ul>
+                    </div>
+                </div>
+                <!-- PHẦN CHÂN TRANG -->
+                <div class="form-title d-flex justify-content-between col-12 my-3">
+                    <div class="col-3 text-left p-0">
+                        <i>Nơi nhận</i>
+                        <p class="m-0">- Ban Giám đốc Sở</p>
+                        <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h5 class="mb-5 font-weight-bold">NGƯỜI VIẾT BÁO CÁO</h5>
+                    </div>
+                </div>
+
+                <!-- KẾT THÚC PHẦN CHÂN TRANG -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+<!--End Nav Pane-->
