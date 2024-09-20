@@ -122,7 +122,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="custom-table-tbody">
-                                            <tr ng-repeat="item in Licenses">
+                                            <tr ng-repeat="item in Licenses track by item.Id | orderBy:'SignDate'">
                                                 <td class="sticky-col start-col align-middle"><span ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.LicenseFile)" class="text-primary text-nowrap" ng-bind="item.LicenseNumber"></span></td>
                                                 <!--GP-->
                                                 <td class="align-middle" ng-bind-html="CheckLicenseEffect(item)"></td>
