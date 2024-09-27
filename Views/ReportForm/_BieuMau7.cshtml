@@ -1,0 +1,237 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+}
+<div id="BieuMauBaoCao_BieuMau7" class="sidenav p-0 ">
+    <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+        <div class="d-flex col-12 p-0 align-items-center">
+            <div class="col-10 p-0">
+                <div class="admission-title d-flex center-center">
+                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> Biểu mẫu thông tư 31/2018/TT-BTNMT/ Biểu mẫu số 7 </p>
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('BieuMauBaoCao_BieuMau7')">&times;</a>
+        </div>
+    </div>
+    <div class="p-sm-3">
+        <div class="card">
+            <div class="card-header row m-0">
+                <h5 class="card-title m-0 col-md-11">Biểu mẫu số 7. Diện tích đã được điều tra, đánh giá tài nguyên nước dưới đất </h5>
+                <div class="row m-0 justify-content-end col-md-1">
+                    <button class="btn btn-outline-success rounded-0 px-2 py-1" title="Xuất file excel" ng-click="exportToExcel('#bieu-mau-7')">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- PHẦN ĐẦU TRANG -->
+                <div class="form-title d-flex justify-content-between col-12">
+                    <div class="col-6 col-sm-3 text-center p-0">
+                        <h5 class="font-sm-14 m-0">UBND TỈNH SƠN LA</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                        <p class="font-sm-13 d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+                    </div>
+                    <div class="col-6 col-sm-4 text-center">
+                        <h5 class="font-sm-14 m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                        <i class="font-sm-13">Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+                    </div>
+                </div>
+
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="font-sm-18 m-0 font-weight-bold">BÁO CÁO </h4>
+                    <p class="font-sm-15 m-0 font-weight-bold"> Diện tích đã được điều tra, đánh giá tài nguyên nước dưới đất</p>
+                    <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+                </div>
+
+                <!-- KẾT THÚC PHẦN ĐẦU TRANG -->
+
+                <div class="table-responsive">
+                    <table class="table no-margin table-hover table-bordered" id="bieu-mau-7">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th class="text-center align-middle text-nowrap">STT</th>
+                                <th class="text-center align-middle text-nowrap">Vùng/ khu vực </th>
+                                <th class="text-center align-middle text-nowrap">Vùng điều tra </th>
+                                <th class="text-center align-middle text-nowrap">Diện tích được điều tra (km2) </th>
+                                <th class="text-center align-middle text-nowrap">Tầng chứa nước được điều tra </th>
+                                <th class="text-center align-middle text-nowrap">Tỷ lệ điều tra, đánh giá </th>
+                                <th class="text-center align-middle text-nowrap">Thao tác</th>
+                            </tr>
+
+                            <tr>
+                                <th> </th>
+                                <th class="text-center align-middle">(1)&nbsp;</th>
+                                <th class="text-center align-middle">(2)&nbsp;</th>
+                                <th class="text-center align-middle">(3)&nbsp;</th>
+                                <th class="text-center align-middle">(4)&nbsp;</th>
+                                <th class="text-center align-middle">(5)&nbsp;</th>
+                                <th class="text-center align-middle">(6)&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr ng-repeat="item in DataBieuMauSo7">
+                                <!-- lấy DataBieuMauSo6 từ file scrip/controler.js-->
+                                <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                <td ng-bind="item.LuuVucSong"> </td>
+                                <td ng-bind="item.VungDieuTra"></td>
+                                <td ng-bind="item.DienTich"></td>
+                                <td ng-bind-html="item.TangChuaNuoc"></td>
+                                <td ng-bind="item.TyLeDieuTra"></td>
+                                <td>
+                                    <div class="d-flex">
+                                        @if (_service.IsViewAction("/bao-cao-bieu-mau", User.Identity.Name, "EDIT"))
+                                        {
+                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa văn bản" data-toggle="modal" data-target="#BaoCaoBieuMau07_edit-windows"><i class="fa fa-edit"></i></a>
+                                        }
+                                        @if (_service.IsViewAction("/bao-cao-bieu-mau", User.Identity.Name, "DELETE"))
+                                        {
+                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá văn bản"><i class="fa-solid fa-trash-can"></i></a>
+                                        }
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- pagination -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItemBieuMauSo7"
+                            ng-model="currentPageInBieuMauSo7"
+                            items-per-page="numPerPageInBieuMauSo7"
+                            boundary-links="true"
+                            previous-text=" &#xf104; " next-text=" &#xf105; "
+                            first-text=" &#xf100; " last-text=" &#xf101; "
+                            max-size="5" ng-change="pageChanged()"
+                            rotate="true"
+                            force-ellipses="true" class="pagination pagination-sm d-flex fa my-3"></ul>
+                    </div>
+                </div>
+                <!-- PHẦN CHÂN TRANG -->
+                <div class="form-title d-flex justify-content-between col-12 my-3">
+                    <div class="col-6 col-md-3 text-left p-0 font-sm-13">
+                        <i>Nơi nhận</i>
+                        <p class="m-0">- Ban Giám đốc Sở</p>
+                        <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+                    </div>
+                    <div class="col-6 col-md-4 text-center font-sm-13">
+                        <p class="mb-5 font-weight-bold h5 font-sm-16 font-sm-14">NGƯỜI THỐNG KÊ </p>
+                    </div>
+                </div>
+
+                <!-- KẾT THÚC PHẦN CHÂN TRANG -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+<!--End Nav Pane-->
+<!--Popup thêm mới -->
+<div class="modal fade" id="BaoCaoBieuMau07_addnew-windows">
+    <div class="modal-dialog" style="max-width: 60%">
+        <div class="modal-content p-2 rounded">
+            <div class="modal-header">
+                <h5 class="text-center">Biểu mẫu số 7: Diện tích đã được điều tra, đánh giá tài nguyên nước dưới đất</h5>
+            </div>
+            <div class="modal-body">
+                <form class="row m-0">
+                    <!--dàn hàng ngang các thẻ bên trong -->
+                    <div class="form-group col-12">
+                        <label for="luuvucsong">Lưu vực </label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="luuvucsong">Vùng điều tra </label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label for="ghichu">Diện tích được điều tra (km2) </label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label for="ghichu">Tầng chứa nước được điều tra (km2) </label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label for="ghichu">Tỷ lệ điều tra, đánh giá</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label for="ghichu">Ghi chú </label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="form-group d-flex align-items-center justify-content-end col-12">
+                        <button type="button" class="btn btn-sm btn-addnew border-info mx-2">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                        <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--hết Popup thêm mới -->
+<!--Popup chỉnh sửa mới -->
+
+<div class="modal fade" id="BaoCaoBieuMau07_edit-windows">
+    <div class="modal-dialog" style="max-width: 60%">
+        <div class="modal-content p-2 rounded">
+            <div class="modal-header">
+                <h5 class="text-center">Biểu mẫu số 5. Dòng chảy trung bình tháng năm trong kỳ báo cáo</h5>
+            </div>
+            <div class="modal-body">
+                <form class="row m-0">
+                    <!--dàn hàng ngang các thẻ bên trong -->
+                    <div class="modal-body">
+                        <form class="row m-0">
+                            <!--dàn hàng ngang các thẻ bên trong -->
+                            <div class="form-group col-12">
+                                <label for="luuvucsong">Lưu vực </label>
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="luuvucsong">Vùng điều tra </label>
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="ghichu">Diện tích được điều tra (km2) </label>
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="ghichu">Tầng chứa nước được điều tra (km2) </label>
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="ghichu">Tỷ lệ điều tra, đánh giá</label>
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="ghichu">Ghi chú </label>
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="form-group d-flex align-items-center justify-content-end col-12">
+                                <button type="button" class="btn btn-sm btn-addnew border-info mx-2">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                                <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                            </div>
+                        </form>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--hết Popup thêm mới -->
+<!--End Nav Pane-->

@@ -1,0 +1,299 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "Hệ thống quản lý cơ sở dữ liệu cấp phép khai thác sử dụng nước mặt";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("giay-phep", User.Identity.Name, "VIEW"))
+{
+    <style>
+        .leaflet-popup-content {
+            overflow-y: auto;
+        }
+    </style>
+    <link href="~/Assets/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="~/Assets/leaflet/leaflet.js"></script>
+    <script src="~/Assets/leaflet/L.KML.js"></script>
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.0.4/esri-leaflet.js"></script>
+
+    <!-- Load Esri Leaflet Vector from CDN -->
+    <script src="https://unpkg.com/esri-leaflet-vector@3.1.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+    <script src="~/Assets/leaflet/leaflet-bing-layer.js"></script>
+    <script src="~/Assets/leaflet/Bing.js"></script>
+    <input type="hidden" id="tbxUsername" value="@User.Identity.Name" />
+    <div ng-controller="myCntrl as demo">
+        <script src="~/Scripts/License/Controller.js"></script>
+        @Html.Partial("ImportServiceJs")
+        <!-- Main content -->
+        <section class="content p-1">
+            <div class="row m-0">
+                <section class="col-12 p-0">
+                    <div class="col-md-12 p-0">
+                        <div class="p-0 bg-white">
+                            <div class="row m-0">
+                                <div class="col-12 col-md-3 p-0 countLicense">
+                                    <div class="col-12">
+                                        <div class="col-12 py-1 d-flex justify-content-center text-center border-bottom">
+                                            <div class="col-9 text-left p-0">
+                                                <p class="font-weight-bold m-0 font-14">Tổng số giấy phép</p>
+                                                <p class="font-18 m-0 font-weight-bold text-danger"> <span ng-bind-html="CountLicenses.surfacewater[0] - 0"></span> </p>
+                                            </div>
+                                            <img src="~/LocalFiles/images/QUAN_LY_CAP_PHEP/CONG_TRINH/licensing.png" class="p-0 hydroelectric-sub-icon border-secondary my-auto mx-2" alt="giay-phep" />
+                                        </div>
+                                        <div class="col-12 py-1 d-flex justify-content-center text-center border-bottom">
+                                            <div class="col-9 text-left p-0">
+                                                <p class="font-weight-bold m-0 font-14">Giấy phép sắp hết hiệu lực</p>
+                                                <p class="font-18 m-0 font-weight-bold text-danger"> <span ng-bind-html="CountLicenses.surfacewater[2] - 0"></span> / <span ng-bind-html="CountLicenses.surfacewater[0] - 0"></span></p>
+                                            </div>
+                                            <img src="~/LocalFiles/images/QUAN_LY_CAP_PHEP/CONG_TRINH/licensing-2.png" class="p-0 hydroelectric-sub-icon border-secondary my-auto mx-2" alt="giay-phep-2" />
+                                        </div>
+                                        <div class="col-12 py-1 d-flex justify-content-center text-center border-bottom">
+                                            <div class="col-9 text-left p-0">
+                                                <p class="font-weight-bold m-0 font-14">Giấy phép hết hiệu lực</p>
+                                                <p class="font-18 m-0 font-weight-bold text-danger"> <span ng-bind-html="CountLicenses.surfacewater[1] - 0"></span> / <span ng-bind-html="CountLicenses.surfacewater[0] - 0"></span></p>
+                                            </div>
+                                            <img src="~/LocalFiles/images/QUAN_LY_CAP_PHEP/CONG_TRINH/licensing-3.png" class="p-0 hydroelectric-sub-icon border-secondary my-auto mx-2" alt="giay-phep-3" />
+                                        </div>
+                                        <div class="col-12 py-1 d-flex justify-content-center text-center border-bottom mb-lg-3">
+                                            <div class="col-9 text-left p-0">
+                                                <p class="font-weight-bold m-0 font-14">Đã bị thu hồi</p>
+                                                <p class="font-18 m-0 font-weight-bold text-danger">  <span ng-bind-html="CountLicenses.surfacewater[5] - 0"></span> / <span ng-bind-html="CountLicenses.surfacewater[0] - 0"></span></p>
+                                            </div>
+                                            <img src="~/LocalFiles/images/QUAN_LY_CAP_PHEP/CONG_TRINH/expire.png" class="p-0 hydroelectric-sub-icon border-secondary my-auto mx-2" alt="het-han" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- MAP -->
+                                <div class="col-12 col-md-9">
+                                    <div style="width: 100%; height: 45vh">
+                                        <select id="basemaps" class="form-select switch-basemap" aria-label="Default select example">
+                                            <option value="Imagery">Bản đồ vệ tinh</option>
+                                            <option value="Topographic">Bản đồ địa hình</option>
+                                            <option value="Streets">Bản đồ đường</option>
+                                            <option value="Gray">Bản đồ xám</option>
+                                        </select>
+                                        <div class="common-map" id="Map"></div>
+                                    </div>
+                                </div>
+                                <!-- END MAP -->
+                            </div>
+                            <div class="col-12">
+                                @Html.Partial("_search")
+
+                                <div class="table-responsive wrapper-sticky">
+                                    <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                                        <thead class="custom-table-thead">
+                                            <tr class="text-center">
+                                                <th rowspan="2" class=" sticky-col start-col">Số GP</th>
+                                                <th colspan="8">Thông tin giấy phép</th>
+                                                <th colspan="2">Thông tin giấy phép cũ</th>
+                                                <th colspan="8" class="">Thông tin công trình</th>
+                                                <th colspan="3" class="">Tiền cấp quyền</th>
+                                                <th rowspan="2" class=" sticky-col end-col" style="width: 90px;">Thao tác</th>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <!-- License -->
+                                                <th class="">Hiệu lực GP</th>
+                                                <th class="">Ngày ký</th>
+                                                <th class="">Thời hạn</th>
+                                                <th class="">Ngày có hiệu lực</th>
+                                                <th class="">Ngày hết hiệu lực</th>
+                                                <th class="">Loại hình</th>
+                                                <th class="">Tên chủ giấy phép</th>
+                                                <th class="">Địa chỉ chủ giấy phép</th>
+                                                <!-- Old license -->
+                                                <th class="">Số giấy phép cũ</th>
+                                                <th class="">Ngày ký</th>
+                                                <!-- Construction -->
+                                                <th class="">Tên công trình</th>
+                                                <th class="">Địa điểm công trình</th>
+                                                <th class="">Loại hình <br /> công trình</th>
+                                                <th class="">Xã</th>
+                                                <th class="">Huyện</th>
+                                                <th class="">Nguồn nước khai thác</th>
+                                                <th class="">Lưu vực</th>
+                                                <th class="">Tiểu vùng quy hoạch</th>
+
+                                                <!-- License fee -->
+                                                <th class="">Số quyết định</th>
+                                                <th class="">Ngày ký </th>
+                                                <th class="">Tổng tiền(VNĐ)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="custom-table-tbody">
+                                            <tr ng-repeat="item in Licenses track by item.Id | orderBy:'SignDate'">
+                                                <td class="sticky-col start-col align-middle"><span ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.LicenseFile)" class="text-primary text-nowrap" ng-bind="item.LicenseNumber"></span></td>
+                                                <!--GP-->
+                                                <td class="align-middle" ng-bind-html="CheckLicenseEffect(item)"></td>
+                                                <td class="align-middle" ng-bind="item.SignDate | date:'dd/MM/yyyy'"></td>
+                                                <td class="align-middle" ng-bind="item.Duration"></td>
+                                                <td class="align-middle" ng-bind="item.IssueDate | date:'dd/MM/yyyy'"></td>
+                                                <td class="align-middle" ng-bind="item.ExpireDate | date:'dd/MM/yyyy'"></td>
+                                                <td class="align-middle" ng-bind="item.LicenseTypeName"></td>
+                                                <td class="align-middle" ng-bind="item.Business.Name"></td>
+                                                <td class="align-middle" ng-bind="item.Business.Address"></td>
+                                                <!--GPOld-->
+                                                <td class="align-middle"><span ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.OldLicense.LicenseFile)" class="text-primary text-nowrap" ng-bind="item.OldLicense.LicenseNumber"></span></td>
+                                                <td class="align-middle" ng-bind="item.OldLicense.SignDate | date:'dd/MM/yyyy'"></td>
+                                                <!--TTCT-->
+                                                <td class="align-middle" ng-bind="item.Construction.ConstructionName"></td>
+                                                <td class="align-middle" ng-bind="item.Construction.ConstructionLocation"></td>
+                                                <td class="align-middle" ng-bind="item.ConstructionType"></td>
+                                                <td class="align-middle" ng-bind="item.Location.CommuneName"></td>
+                                                <td class="align-middle" ng-bind="item.Location.DistrictName"></td>
+                                                <td class="align-middle" ng-bind="item.Construction.ExploitedWS"></td>
+                                                <td class="align-middle" ng-bind="item.Construction.RiverName"></td>
+                                                <td class="align-middle" ng-bind="item.Construction.BasinName"></td>
+                                                <!--TCQ-->
+                                                <td>
+                                                    <div ng-repeat="licFee in item.LicenseFees">
+                                                        <span ng-click="openLicenseFeeFile(licFee)" class="text-primary text-nowrap" ng-bind-html="licFee.LicenseFeeNumber"></span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div ng-repeat="licFee in item.LicenseFees">
+                                                        <span ng-bind-html="licFee.SignDate | date:'dd/MM/yyyy'"></span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div ng-repeat="licFee in item.LicenseFees">
+                                                        <span ng-bind-html="licFee.TotalMoney | number : fractionSize"></span>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle sticky-col end-col">
+                                                    <div class="d-flex">
+                                                        @if (_service.IsViewAction("/giay-phep", User.Identity.Name, "EDIT"))
+                                                        {
+                                                            <button style="padding-left:10px" class="btn btn-link" ng-click="EDIT(item,'formCreateLicense')" title="Sửa">
+                                                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                                            </button>
+                                                        }
+                                                        @if (_service.IsViewAction("/giay-phep", User.Identity.Name, "DELETE"))
+                                                        {
+                                                            <button style="padding-left:10px" class="btn text-red" ng-click="DELETE(item)" title="Xóa giấy phép">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- pagination -->
+                                @Html.Partial("_pagination")
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+        <table class="d-none" id="excel-export">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="5">Vị trí công trình khai thác</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="2">Lượng nước khai thác sử dụng</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>Số giấy phép</th>
+                    <th>Ngày tháng năm cấp phép</th>
+                    <th>Thời hạn CP (năm)</th>
+                    <th>Ngày hết hạn</th>
+                    <th>Tên chủ giấy phép</th>
+                    <th>Địa chỉ chủ giấy phép</th>
+                    <th>Cấp thẩm quyền cấp phép</th>
+                    <th>Đơn vị thẩm định, quản lý GP</th>
+                    <th>Tên công trình</th>
+                    <th>Phường/Xã</th>
+                    <th>Quận/Huyện</th>
+                    <th>Tỉnh</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Nguồn nước khai thác</th>
+                    <th>Thuộc sông</th>
+                    <th>Thuộc lưu vực sông</th>
+                    <th>Thủy điện (Công suất MW)</th>
+                    <th>Mục đích khác (Qk.thác m3/ngđ)</th>
+                    <th>Loại hình công trình khai thác</th>
+                    <th>Mục đích khai thác sử dụng nước</th>
+                    <th>Lưu lượng xả dòng chảy tối thiểu (m3/s)</th>
+                    <th>Dung tích hữu ích</th>
+                    <th>Dung tích toàn bộ</th>
+                    <th>Lưu lượng lớn nhất qua nhà máy</th>
+                    <th>Mực nước chết</th>
+                    <th>Mực nước dâng bình thường</th>
+                    <th>Số quyết định TCQ</th>
+                    <th>Tổng tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in ExcelLicense">
+                    <td ng-bind="item.LicenseNumber"></td>
+                    <td ng-bind="item.SignDate | date:'dd/MM/yyyy'"></td>
+                    <td ng-bind="item.Duration"></td>
+                    <td ng-bind="item.ExpireDate | date:'dd/MM/yyyy'"></td>
+                    <td ng-bind="item.Business.Name"></td>
+                    <td ng-bind="item.Business.Address"></td>
+                    <td ng-bind-html="displayLA(item.LicensingAuthorities)"></td>
+                    <!--Don vi tham dinh, quan ly GP-->
+                    <td></td> 
+                    <td ng-bind="item.Construction.ConstructionName "></td>
+                    <td ng-bind="item.Location.CommuneName"></td>
+                    <td ng-bind="item.Location.DistrictName "></td>
+                    <td ng-bind="item.Location.CityName"></td>
+                    <td ng-bind="item.Construction.X"></td>
+                    <td ng-bind="item.Construction.Y"></td>
+                    <td ng-bind="item.Construction.ExploitedWS"></td>
+                    <td ng-bind="item.Construction.RiverName"></td>
+                    <td ng-bind="item.Construction.BasinName"></td>
+                    <td ng-bind="item.Construction.Power"></td>
+                    <td ng-bind="item.Construction.AmountWaterExploited"></td>
+                    <td ng-bind="item.Construction.ConstructionTypeName"></td>
+                    <td ng-bind="item.Construction.MiningPurpose"></td>
+                    <td ng-bind="item.Construction.MinimumFlow"></td>
+                    <td ng-bind="item.Construction.UsefulCapacity"></td>
+                    <td ng-bind="item.Construction.TotalCapacity"></td>
+                    <td ng-bind="item.Construction.MaximumFlow"></td>
+                    <td ng-bind="item.Construction.DeadWL"></td>
+                    <td ng-bind="item.Construction.RiseWL"></td>
+                    <td ng-bind="item.LicenseFees[0].LicenseFeeNumber"></td>
+                    <td ng-bind="item.LicenseFees[0].TotalMoney"></td>
+                </tr>
+            </tbody>
+        </table>
+        @Html.Partial("ViewFilePDF")
+        @Html.Partial("_formCreateLicense")
+        @Html.Partial("_addBusiness")
+        @*@Html.Partial("_viewLicense")*@
+        @Html.Partial("_ModalConstruction/_Surfacewater")
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+}
+else
+{
+    @Html.Partial("_401")
+}

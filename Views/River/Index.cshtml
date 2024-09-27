@@ -1,0 +1,156 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "Danh mục sông";
+    UserRightService _service = new UserRightService();
+}
+@if (_service.IsViewAction("/song-suoi", User.Identity.Name, "VIEW"))
+{
+<div ng-controller="myCntrl as demo">
+    <script src="~/Scripts/River/Service.js"></script>
+    <script src="~/Scripts/River/Controller.js"></script>
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box border-0 pt-3">
+                <div class="box-header with-border mb-2">
+                    <div class="col-md-12 row m-0 justify-content-end">
+                        <div class="col-auto">
+                            <select ng-options="opt.Id as opt.Name for opt in Basins" ng-model="myitem.BasinId" ng-change="filterDataByBasin(myitem.BasinId)" class="floating-select w-100">
+                                <option value="" class="" selected="selected">[--Tất cả tiểu vùng quy hoạch--]</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <input class="floating-input w-100" type="text" placeholder="Nhập tên sông" ng-model="Keyword" ng-change="Search()">
+                        </div>
+                        @if (_service.IsViewAction("/song-suoi", User.Identity.Name, "ADD"))
+                        {
+                            <div class="col-auto d-flex align-items-center">
+                                <button type="button" class="btn btn-sm btn-addnew font-10" data-toggle="modal" data-target="#addnew-window" ng-click="AddItem()"><i class="fa fa-plus"></i> Thêm mới</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <table class="table no-margin table-hover" id="table-view-license">
+                            <thead class="custom-table-thead">
+                                <tr>
+                                    <th style="width: 5%">STT</th>
+                                    <th style="width: 25%">Tên sông </th>
+                                    <th>X</th>
+                                    <th>Y</th>
+                                    <th>Qtt</th>
+                                    <th>Mô tả </th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody class="custom-table-tbody">
+                                <tr ng-repeat="item in Rivers | filter:Keyword">
+                                    <td ng-bind-html="(currentPage -1)*numPerPage+$index+1"></td>
+                                    <td ng-bind-html="item.Name"></td>
+                                    <td ng-bind-html="item.X"></td>
+                                    <td ng-bind-html="item.Y"></td>
+                                    <td ng-bind-html="item.Qtt"></td>
+                                    <td ng-bind-html="item.Description"></td>
+                                    <td class="command">
+                                        <div class="tools d-flex">
+                                            @if (_service.IsViewAction("/song-suoi", User.Identity.Name, "EDIT"))
+                                            {
+                                                <a href="javascript:void(0)" class="py-0" data-toggle="modal" data-target="#addnew-window" ng-click="EditItem(item)">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            }
+                                            @if (_service.IsViewAction("/song-suoi", User.Identity.Name, "DELETE"))
+                                            {
+                                                <a href="javascript:void(0)" class="text-red py-0" ng-click="DeleteItem(item)">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </a>
+                                            }
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItem"
+                            ng-model="currentPage"
+                            items-per-page="numPerPage"
+                            boundary-links="true"
+                            previous-text=" &#xf104;"
+                            next-text=" &#xf105;"
+                            first-text=" &#xf100;"
+                            last-text=" &#xf101;"
+                            max-size="maxSize"
+                            ng-change="pageChanged()"
+                            class="pagination pagination-sm inline fa d-flex"></ul>
+                    </div>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- Primary modal -->
+        <div id="addnew-window" class="modal fade">
+            <div class="modal-dialog" style="max-width:50%">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary d-flex">
+                        <h6 class="modal-title text-white"><i class="fa fa-users" aria-hidden="true"></i>  CẬP NHẬT THÔNG TIN SÔNG </h6>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="font-13">Lưu vực :</label>
+                                    <select ng-options="opt.Id as opt.Name for opt in Basins" ng-model="myitem.BasinId" class="floating-select w-100">
+                                        <option value="" hidden class="" selected="selected">[--Lưu vực--]</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="font-13">Tên sông</label>
+                                    <input class="floating-input w-100" type="text" placeholder=" " id="tbxName" ng-model="myitem.Name">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="font-13">X</label>
+                                    <input class="floating-input w-100" type="text" placeholder=" " ng-model="myitem.X">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="font-13">Y</label>
+                                    <input class="floating-input w-100" type="text" placeholder=" " ng-model="myitem.Y">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="font-13">Lưu lượng tối thiểu</label>
+                                    <input class="floating-input w-100" type="text" placeholder=" " ng-model="myitem.Qtt">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="font-13">Mô tả</label>
+                                    <input class="floating-input w-100" type="text" placeholder=" " id="tbxDescription" ng-model="myitem.Description">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-cancel" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-addnew" data-dismiss="modal" ng-click="Save()"> Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /primary modal -->
+    </section>
+    <!-- /.content -->
+</div>
+ <!-- /.content-wrapper -->
+}
+else
+{
+@Html.Partial("_401")
+}

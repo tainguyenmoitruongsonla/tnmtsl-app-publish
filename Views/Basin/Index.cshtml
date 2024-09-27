@@ -1,0 +1,135 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "Danh mục lưu vực";
+    UserRightService _service = new UserRightService();
+}
+@if (_service.IsViewAction("/luu-vuc", User.Identity.Name, "VIEW"))
+{
+    <div ng-controller="myCntrl as demo">
+        <script src="~/Scripts/Basin/Service.js"></script>
+        <script src="~/Scripts/Basin/Controller.js"></script>
+        <!-- Main content -->
+        <section class="content container-fluid">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box border-0 pt-3">
+                    <div class="box-header with-border">
+                        <div class="col-md-12 row m-0 justify-content-end">
+                            <div class="col-auto">
+                                <div class="floating-label mb-2">
+                                    <input class="floating-input w-100" type="text" placeholder=" " ng-model="Keyword" ng-change="Search()">
+                                    <label>Tìm kiếm</label>
+                                </div>
+                            </div>
+                            @if (_service.IsViewAction("/luu-vuc", User.Identity.Name, "ADD"))
+                            {
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-sm btn-addnew font-10" data-toggle="modal" data-target="#addnew-window" ng-click="AddItem()"> Thêm mới</button>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="col-md-12">
+                            <table class="table no-margin table-hover" id="table-view-license">
+                                <thead class="custom-table-thead">
+                                    <tr>
+                                        <th style="width: 5%">STT</th>
+                                        <th style="width: 25%">Tên lưu vực </th>
+                                        <th>Mô tả </th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="custom-table-tbody">
+                                    <tr ng-repeat="item in Basins | filter:Keyword">
+                                        <td ng-bind-html="(currentPage -1)*numPerPage+$index+1"></td>
+                                        <td ng-bind-html="item.Name"></td>
+                                        <td ng-bind-html="item.Description"></td>
+                                        <td class="command">
+                                            <div class="tools d-flex">
+                                                @if (_service.IsViewAction("/luu-vuc", User.Identity.Name, "EDIT"))
+                                                {
+                                                    <a href="javascript:void(0)" class="py-0" data-toggle="modal" data-target="#addnew-window" ng-click="EditItem(item)">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                }
+                                                @if (_service.IsViewAction("/luu-vuc", User.Identity.Name, "DELETE"))
+                                                {
+                                                    <a href="javascript:void(0)" class="text-red py-0" ng-click="DeleteItem(item)">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </a>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="box-tools pull-right">
+                            <ul uib-pagination
+                                total-items="TotalItem"
+                                ng-model="currentPage"
+                                items-per-page="numPerPage"
+                                boundary-links="true"
+                                previous-text=" &#xf104;"
+                                next-text=" &#xf105;"
+                                first-text=" &#xf100;"
+                                last-text=" &#xf101;"
+                                max-size="maxSize"
+                                ng-change="pageChanged()"
+                                class="pagination pagination-sm inline fa d-flex"></ul>
+                        </div>
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- Primary modal -->
+            <div id="addnew-window" class="modal fade">
+                <div class="modal-dialog" style="max-width:50%">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary d-flex">
+                            <h6 class="modal-title text-white"><i class="fa fa-users" aria-hidden="true"></i>  CẬP NHẬT THÔNG TIN LƯU VỰC SÔNG </h6>
+                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="floating-label mb-2">
+                                            <input class="floating-input w-100" type="text" placeholder=" " ng-model="myitem.Name">
+                                            <label>Tên lưu vực</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 py-3">
+                                        <div class="floating-label mb-2">
+                                            <textarea class="floating-input w-100" type="text" placeholder=" " id="tbxDescription" ng-model="myitem.Description"></textarea>
+                                            <label>Mô tả</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-cancel" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-addnew" data-dismiss="modal" ng-click="Save()"> Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /primary modal -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+}
+else
+{
+    @Html.Partial("_401")
+}

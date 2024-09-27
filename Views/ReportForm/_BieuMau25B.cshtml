@@ -1,0 +1,113 @@
+﻿<div id="BieuMauBaoCao_BieuMau25B" class="sidenav p-0 ">
+    <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+        <div class="d-flex col-12 p-0 align-items-center">
+            <div class="col-10 p-0">
+                <div class="admission-title d-flex center-center">
+                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> Biểu mẫu thông tư 31/2018/TT-BTNMT/ Biểu mẫu số 25 </p>
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('BieuMauBaoCao_BieuMau25B')">&times;</a>
+        </div>
+    </div>
+    <div class="p-sm-3">
+        <div class="card">
+            <div class="card-header row m-0">
+                <h5 class="card-title m-0 col-md-11">Biểu mẫu số 25B. Số lượng công trình khai thác nước mặt, nước dưới đất theo mục đích sử dụng</h5>
+                <div class="row m-0 justify-content-end col-md-1">
+                    <button class="btn btn-outline-success rounded-0 px-2 py-1" title="Xuất file excel" ng-click="exportToExcel('#bieu-mau-25B')">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-title d-flex justify-content-between col-12">
+                    <div class="col-6 col-sm-3 text-center p-0">
+                        <h5 class="font-sm-14 m-0">UBND TỈNH SƠN LA</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                        <p class="font-sm-13 d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+                    </div>
+                    <div class="col-6 col-sm-4 text-center">
+                        <h5 class="font-sm-14 m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                        <h5 class="font-sm-14 font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                        <i class="font-sm-13">Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+                    </div>
+                </div>
+
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="font-sm-18 m-0 font-weight-bold">BÁO CÁO </h4>
+                    <p class="font-sm-15 m-0 font-weight-bold">Tổng lượng mưa, phân phối lượng mưa trong năm</p>
+                    <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table no-margin table-hover table-bordered" id="bieu-mau-25B">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th class="text-center" rowspan="3">TT</th>
+                                <th class="text-center" rowspan="2">Thông số quan trắc</th>
+                                <th class="text-center" rowspan="2">Đơn vị</th>
+                                <th class="text-center" colspan="4">Nồng độ</th>
+                                <th class="text-center" rowspan="2">Ghi chú</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Lớn nhất</th>
+                                <th class="text-center">Nhỏ nhất</th>
+                                <th class="text-center">Trung bình</th>
+                                <th class="text-center">Giới hạn quy định trong giấy phép</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">(1)&nbsp;</th>
+                                <th class="text-center">(2)&nbsp;</th>
+                                <th class="text-center">(3)&nbsp;</th>
+                                <th class="text-center">(4)&nbsp;</th>
+                                <th class="text-center">(5)&nbsp;</th>
+                                <th class="text-center">(6)&nbsp;</th>
+                                <th class="text-center">(7)&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr>
+                                <td>1</td>
+                                <td>pH</td>
+                                <td>-</td>
+                                <td>8.5</td>
+                                <td>5</td>
+                                <td>6.75</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- pagination -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItemBieuMauSo2"
+                            ng-model="totalpage"
+                            items-per-page="numPerPageInBieuMauSo2"
+                            boundary-links="true"
+                            previous-text=" &#xf104; " next-text=" &#xf105; "
+                            first-text=" &#xf100; " last-text=" &#xf101; "
+                            max-size="5" ng-change="pageChanged()"
+                            rotate="true"
+                            force-ellipses="true" class="pagination pagination-sm d-flex fa my-3"></ul>
+                    </div>
+                </div>
+
+                <div class="form-title d-flex justify-content-between col-12 my-3">
+                    <div class="col-6 col-md-3 text-left p-0 font-sm-13">
+                        <i>Nơi nhận</i>
+                        <p class="m-0">- Ban Giám đốc Sở</p>
+                        <p class="m-0">- Lưu: VT; TNN, KS&KTTV; VP, 10b</p>
+                    </div>
+                    <div class="col-6 col-md-4 text-center font-sm-13">
+                        <p class="mb-5 font-weight-bold h5 font-sm-16 font-sm-14">NGƯỜI THỐNG KÊ </p>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>

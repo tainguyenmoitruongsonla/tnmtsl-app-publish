@@ -1,0 +1,379 @@
+﻿@model WaterResource.Web.Models.UserManModels
+@using WaterResource.Web.Models
+@using WaterResource.Service;
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    UserRightService _service = new UserRightService();
+}
+<input type="hidden" id="tbxYear" value="@DateTime.Now.Year" />
+@if (_service.IsAdministrator(User.Identity.Name))
+{
+    <div ng-controller="myCntrl as demo">
+        <script src="~/Scripts/UserMan/Service.js"></script>
+        <script src="~/Scripts/UserMan/Controller.js"></script>
+        <script src="~/Assets/alert/sweetalert2.js"></script>
+        <link rel="stylesheet" href="~/Assets/alert/sweetalert2.css">
+        <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+
+        <!-- Main content -->
+        <section class="content container-fluid">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <div class="row m-0 py-2">
+                            <div class="col-md-12 d-flex justify-content-end">
+                                <div class="col-12 col-sm-6 d-flex col-md-4 col-lg-3">
+                                    <input type="text" class="form-control pull-right" placeholder="Tìm kiếm user" ng-model="Keyword">
+                                    <button class="btn btn-sm btn-addnew px-4 mx-1" ng-click="Search()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                </div>
+                                <button type="button" class="btn btn-addnew" data-toggle="modal" data-target="#addnew-window" ng-click="AddItem()"><i class="fa fa-plus"></i> Thêm mới</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <div class="box-body">
+                        <table class="table table-sm no-margin table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tổ chức/cá nhân</th>
+                                    <th>Tài khoản</th>
+                                    <th class="command" style="text-align:center;width:120px">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in Users">
+                                    <td class="align-center" ng-bind-html="(currentPage -1)*numPerPage+$index+1"></td>
+                                    <td class="align-center" ng-bind-html="item.FullName"></td>
+                                    <td class="align-center" ng-bind-html="item.UserName"></td>
+                                    <td class="command" style="text-align:center">
+                                        <div class="tools d-flex center-center">
+                                            <a href="#" data-toggle="modal" data-target="#roles-window" ng-click="openAside('myRoleNav',item)" title="Quyền truy cập">
+                                                <i class="fa fa-shield" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="#" data-toggle="modal" data-target="#changepass-window" ng-click="ChangePassword(item)" title="Đổi mật khẩu">
+                                                <i class="fa fa-key" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="#" data-toggle="modal" data-target="#edit-window" ng-click="EditItem(item)" title="Cập nhật thông tin">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="#" class="text-red" ng-click="DeleteItem(item)" title="Xóa tài khoản">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="box-tools pull-right">
+                            <ul uib-pagination
+                                total-items="TotalItem"
+                                ng-model="currentPage"
+                                items-per-page="numPerPage"
+                                boundary-links="true"
+                                previous-text=" &#xf104; " next-text=" &#xf105; "
+                                first-text=" &#xf100; " last-text=" &#xf101; "
+                                max-size="5" ng-change="pageChanged()"
+                                rotate="true"
+                                force-ellipses="true" class="pagination pagination-sm inline fa d-flex"></ul>
+                        </div>
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+            <!--Add new User-->
+            <div id="addnew-window" class="modal fade">
+                <div class="modal-dialog" style="max-width:50%">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary d-flex">
+                            <h5 class="modal-title"><i class="fa fa-user-plus" aria-hidden="true"></i> Thêm tài khoản</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal" style="padding-left:15px;padding-right:15px">
+                                <!--Begin Add User-->
+                                @*<div class="form-group row">
+                                        <label class="col-md-3 control-label">Loại tài khoản</label>
+                                        <div class="col-md-9 floating-label">
+                                            <div class="floating-input w-100 d-flex m-0 center-center">
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label position-sticky" for="AccountType1">
+                                                        <input type="radio" class="form-check-input" placeholder=" " id="AccountType1" name="AccountType" ng-value="0" ng-model="myitem.AccountType" />
+                                                        Cá nhân
+                                                    </label>
+                                                </div>
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label position-sticky" for="AccountType2">
+                                                        <input type="radio" class="form-check-input" placeholder=" " id="AccountType2" name="AccountType" ng-value="1" ng-model="myitem.AccountType" />
+                                                        Tổ chức
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                @*<div class="form-group row">
+                                        <label class="col-md-3 control-label">Cá nhân/Tổ chức</label>
+                                        <div class="col-md-9 floating-label">
+                                            <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="BusinessName">
+                                            <input class="floating-input w-100" type="text" ng-model="BusinessName">
+                                            <ul class="dropdown-menu w-100" role="menu">
+                                            <li class="border-bottom border-secondary m-0 p-1">
+                                                <a href="javascript:void(0)" class="m-0" ng-click="SetBusiness(0)">
+                                                    <p class="m-0 text-primary" style="font-size: 0.85rem">-- Tất cả --</p>
+                                                </a>
+                                            </li>
+                                            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='i in Busineses | filter:BusinessName'>
+                                                <a href="javascript:void(0)" class="m-0" ng-click="SetBusiness(i)">
+                                                    <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
+                                                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.Address}}</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        </div>
+                                    </div>*@
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Tên đăng nhập</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="text" class="floating-input w-100" ng-model="myitem.UserName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Mật khẩu</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="password" class="floating-input w-100" ng-model="myitem.Password" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Nhập lại mật khẩu</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="password" class="floating-input w-100" ng-model="myitem.ConfirmPassword" />
+                                    </div>
+                                </div>
+                                <!--End Add User-->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-addnew" data-dismiss="modal" ng-click="CreateUser(myitem)">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/Add new user-->
+            <!-- Profile modal -->
+            <div id="edit-window" class="modal fade">
+                <div class="modal-dialog" style="max-width:66%">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary d-flex">
+                            <h5 class="modal-title"><i class="fa fa-user" aria-hidden="true"></i> Cập nhật thông tin người dùng</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                @*<div class="form-group row">
+                                        <label class="col-md-3 control-label">Loại tài khoản</label>
+                                        <div class="col-md-9 floating-label">
+                                            <div class="floating-input w-100 d-flex m-0 center-center">
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label position-sticky" for="AccountType1_edit">
+                                                        <input type="radio" class="form-check-input" placeholder=" " id="AccountType1_edit" name="AccountType" ng-value="0" ng-model="myitem.AccountType" />
+                                                        Cá nhân
+                                                    </label>
+                                                </div>
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label position-sticky" for="AccountType2_edit">
+                                                        <input type="radio" class="form-check-input" placeholder=" " id="AccountType2_edit" name="AccountType" ng-value="1" ng-model="myitem.AccountType" />
+                                                        Tổ chức
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 control-label">Cá nhân/Tổ chức</label>
+                                        <div class="col-md-9 floating-label">
+                                            <input class="floating-input w-100" type="text" ng-model="BusinessName">
+                                            <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="BusinessName">
+                                            <ul class="dropdown-menu w-100" role="menu">
+                                                    <li class="border-bottom border-secondary m-0 p-1">
+                                                        <a href="javascript:void(0)" class="m-0" ng-click="SetBusiness(0)">
+                                                            <p class="m-0 text-primary" style="font-size: 0.85rem">-- Tất cả --</p>
+                                                        </a>
+                                                    </li>
+                                                    <li class="border-bottom border-secondary m-0 p-1" ng-repeat='i in Busineses | filter:BusinessName'>
+                                                        <a href="javascript:void(0)" class="m-0" ng-click="SetBusiness(i)">
+                                                            <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
+                                                            <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.Address}}</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                        </div>
+                                    </div>*@
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Tên đăng nhập</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="text" class="floating-input w-100" ng-model="myitem.UserName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Số điện thoại</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="text" class="floating-input w-100" ng-model="myitem.PhoneNumber" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Email</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="text" class="floating-input w-100" ng-model="myitem.Email" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">Địa chỉ</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="text" class="floating-input w-100" ng-model="myitem.Address" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-addnew" data-dismiss="modal" ng-click="Save()">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Profile modal -->
+            <!--Change Password Modal-->
+            <div id="changepass-window" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary d-flex">
+                            <h5 class="modal-title"><i class="fa fa-key" aria-hidden="true"></i> Đổi mật khẩu người dùng</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <!--Begin Change Password-->
+                                <div class="form-group row mx-0">
+                                    <label class="col-md-3 control-label">Họ và tên</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="hidden" class="form-control" readonly ng-model="myitem.Id" />
+                                        <input type="text" class="floating-input w-100" readonly ng-model="myitem.FullName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label class="col-md-3 control-label">Email</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="email" class="form-control" readonly ng-model="myitem.Email" />
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label class="col-md-3 control-label">Mật khẩu</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="password" class="form-control" ng-model="myitem.NewPassword" />
+                                    </div>
+                                </div>
+                                <div class="form-group row mx-0">
+                                    <label class="col-md-3 control-label">Nhập lại mật khẩu</label>
+                                    <div class="col-md-9 floating-label">
+                                        <input type="password" class="form-control" ng-model="myitem.ConfirmNewPassword" />
+                                    </div>
+                                </div>
+
+                                <!--End Change Pasword-->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-addnew" data-dismiss="modal" ng-click="SaveChangePassword(myitem)">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/Change Password Modal-->
+            <!--Begin Nav Roles-->
+            <style>
+                .sidenav-open {
+                    width: calc( 100% - 230px );
+                }
+            </style>
+            <div id="myRoleNav" class="sidenav">
+                <a href="javascript:void(0)" style="top:0;" class="closebtn" ng-click="closeAside('myRoleNav')">&times;</a>
+                <div style="margin-left:20px;margin-right:18px">
+                    <div class="doc-title">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                    <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN NGƯỜI DÙNG</h4>
+                                </div>
+                            </div>
+                            <div></div>
+                        </div>
+                        <table class="table no-margin table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tên người dùng</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td ng-bind-html="myitem.FullName" style="width:35%"></td>
+                                    <td ng-bind-html="myitem.Email"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col-sm-12 col-12">
+                                <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                    <h4><i class="fa fa-users" aria-hidden="true"></i> PHÂN QUYỀN CÁC ROLES</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table no-margin table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;width:35px">TT</th>
+                                    <th>Role Name</th>
+                                    <th>Permit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="role in AllRoles">
+                                    <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                                    <td ng-bind="role.Name"></td>
+                                    <td>
+                                        <input type="checkbox" ng-change="CheckRole(role, myitem)" ng-model="role.IsUserInRole" ng-true-value="true" ng-false-value="false">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="input-group input-group-sm" style="padding-bottom:50px">
+                    </div>
+                </div>
+            </div>
+            <!--End Nav Role-->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+}
+else
+{
+    <div class="ban-dashboard">
+        <i class="fa fa-ban" aria-hidden="true"></i>
+    </div>
+
+}

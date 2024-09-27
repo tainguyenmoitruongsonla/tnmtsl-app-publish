@@ -1,0 +1,173 @@
+﻿<div ng-if="TypeOfParentConstructionId == 1" class="col-12">
+    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+        <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN CÔNG TRÌNH</legend>
+        <div class="row col-12 m-0 p-0">
+            <div class="col-md-6">
+                <label class="font-13">Loại công trình <sup class="text-danger font-13">*</sup></label>
+                <input readonly class="floating-input w-100 text-left" type="text" placeholder=" " ng-model="license.ConstructionType" />
+            </div>
+            <div class="col-md-6">
+                <label class="font-13">Tên công trình <sup class="text-danger font-13">*</sup></label>
+                <input readonly class="floating-input w-100 text-left" type="text" placeholder=" " ng-model="license.Construction.ConstructionName">
+            </div>
+            <div class="col-md-4">
+                <label>Tỉnh</label>
+                <input readonly type="text" class="floating-input w-100" ng-model="Loc.CityName">
+            </div>
+            <div class="col-md-4">
+                <label>Quận/Huyện</label>
+                <input readonly type="text" class="floating-input w-100" ng-model="Loc.DistrictName">
+            </div>
+            <div class="col-md-4">
+                <label>Xã/Phường</label>
+                <input readonly type="text" class="floating-input w-100" ng-model="Loc.CommuneName">
+            </div>
+            <div class="col-md-9">
+                <label> Địa điểm công trình </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.ConstructionLocation">
+            </div>
+            <div class="col-md-3">
+                <label> Năm bắt đầu vận hành </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.StartDate">
+            </div>
+            <div class="col-md-6">
+                <label> Vĩ độ </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.X">
+            </div>
+            <div class="col-md-6">
+                <label> Kinh độ </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.Y">
+            </div>
+            <div class="col-md-6">
+                <label> Lưu vực sông </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.RiverName">
+            </div>
+            <div class="col-md-6">
+                <label> Tiểu vùng quy hoạch </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.BasinName">
+            </div>
+            <div class="col-md-6">
+                <label> Nguồn nước khai thác </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.ExploitedWS">
+            </div>
+            <div class="col-md-6">
+                <label> Phương thức khai thác </label>
+                <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.MiningMethod">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset ng-if="Id == 4 || Id == 5 || Id == 13 || Id == 6" class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+        <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG SỐ CÔNG TRÌNH</legend>
+        <div class="row col-12 m-0 p-0">
+
+            <div ng-if="Id == 4 || Id == 5" class="row col-md-12 m-0 p-0">
+                <div class="col-md-6">
+                    <label> Công suất </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.Power">
+                </div>
+                <div class="col-md-6">
+                    <label> Chiều cao đập </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DamHeight">
+                </div>
+                <div class="col-md-6">
+                    <label> Lưu lượng tối đa </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.MaximumFlow">
+                </div>
+                <div class="col-md-6">
+                    <label> Lưu lượng tối thiểu </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.MinimumFlow">
+                </div>
+
+                <div ng-if="Id == 4" class="col-md-12 m-0 p-0 row">
+                    <div class="col-md-6">
+                        <label> Mực nước chết </label>
+                        <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DeadWL">
+                    </div>
+                    <div class="col-md-6">
+                        <label> Mực nước dâng bình thường </label>
+                        <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.RiseWL">
+                    </div>
+                    <div class="col-md-6">
+                        <label> Mực nước lũ thiết kế </label>
+                        <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DesignFloodLevel">
+                    </div>
+                    <div class="col-md-6">
+                        <label> Mực nước lũ kiểm tra </label>
+                        <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.CheckFloodWL">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label> Dung tích toàn bộ </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.TotalCapacity">
+                </div>
+                <div class="col-md-6">
+                    <label> Dung tích hữu ích </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.UsefulCapacity">
+                </div>
+            </div>
+
+            <div ng-if="Id == 6" class="row col-md-12 m-0 p-0">
+                <div class="col-md-6">
+                    <label> Số máy bơm </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.PumpNumber">
+                </div>
+                <div class="col-md-6">
+                    <label> Qtk(m3/ngày đêm) </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.PumpDesignFlow">
+                </div>
+                <div class="col-md-6">
+                    <label> Qmax (m3/ngày đêm) </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.PumpMaxFlow">
+                </div>
+                <div class="col-md-6">
+                    <label> Mực nước bể hút  </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.SuctionTankWL">
+                </div>
+            </div>
+            <div ng-if="Id == 13" class="row col-md-12 m-0 p-0">
+                <div class="col-md-6">
+                    <label> Cao trình cống </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DrainElevation">
+                </div>
+                <div class="col-md-6">
+                    <label> Chiều dài cống </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DrainLength">
+                </div>
+                <div class="col-md-6">
+                    <label> Đường kính (m) </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DrainDiameter">
+                </div>
+                <div class="col-md-6">
+                    <label> Kích thước (rộng * cao)  </label>
+                    <input readonly type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DrainSize">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+        <legend class="font-18 font-weight-bold text-primary" style="width: auto">VỊ TRÍ CÁC HẠNG MỤC CHÍNH CỦA CÔNG TRÌNH KHAI THÁC SỬ DỤNG NƯỚC</legend>
+        <div class="mb-2">
+            <div class="col-12 p-1 table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center align-middle font-13" rowspan="2">TT</th>
+                            <th class="text-center align-middle font-13" rowspan="2">Hạng mục</th>
+                            <th class="text-center align-middle font-13">Tọa độ X</th>
+                            <th class="text-center align-middle font-13">Tọa độ Y</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in license.Construction.ConstructionItems">
+                            <th class="text-center align-middle font-13" ng-bind-html="$index+1"></th>
+                            <td><input readonly type="text" name="tenhangmuc" class="floating-input w-100" ng-model="item.Name"></td>
+                            <td><input readonly type="number" name="x" class="floating-input w-100" ng-model="item.X"></td>
+                            <td><input readonly type="number" name="y" class="floating-input w-100" ng-model="item.Y"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</div>

@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNet.Identity
+@using WaterResource.Service;
+@{
+    ViewBag.Title = "THÔNG TIN DỮ LIỆU VỀ NHU CẦU KHAI THÁC SỬ DỤNG NƯỚC TRÊN ĐỊA BÀN TỈNH SƠN LA";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/quy-hoach-tai-nguyen-nuoc", User.Identity.Name, "VIEW"))
+{
+    <div ng-controller="myCntrl as demo">
+
+        <!-- BỘ QUẢN LÝ -->
+        <!--Nh-->
+        <script src="~/Scripts/WaterResourcePlanning/Service.js"></script>
+        <script src="~/Scripts/WaterResourcePlanning/Controller.js"></script>
+
+        <!-- HẾT NHÚNG FILE MAP -->
+        <!-- Main content -->
+
+        <section class="content p-0">
+
+            <div class="tab-content">
+                <!-- Tab hien thi bang  -->
+                <div class="tab-pane fade show active p-0" id="NhuCauNuocChoNongNghiep" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <div class="p-3">
+                        <!--Chỗ dán bảng-->
+                        <!-- PHẦN ĐẦU TRANG -->
+                        <div class="form-title d-flex justify-content-between col-12">
+                            <div class="col-6 col-sm-3 text-center p-0">
+                                <h5 class="font-sm-14 m-0">UBND TỈNH SƠN LA</h5>
+                                <h5 class="font-sm-14 font-weight-bold m-0">SỞ TÀI NGUYÊN VÀ MÔI TRƯỜNG</h5>
+                                <p class="font-sm-13 d-flex center-center">Số: <input type="text" class="form-control form-control-sm" style="width: 50px;" />   /STNMT-TNN-KS&KTTV</p>
+                            </div>
+                            <div class="col-6 col-sm-4 text-center">
+                                <h5 class="font-sm-14 m-0">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+                                <h5 class="font-sm-14 font-weight-bold m-0">Độc lập - Tự do - Hạnh phúc</h5>
+                                <i class="font-sm-13">Sơn La, ngày {{getDatetime | date:'dd'}} tháng {{getDatetime | date:'MM'}} năm {{getDatetime | date:'yyyy'}}</i>
+                            </div>
+                        </div>
+
+                        <div class="form-title col-12 text-center mt-2 my-4">
+                            <h4 class="font-sm-18 m-0 font-weight-bold">THỐNG KÊ </h4>
+                            <p class="font-sm-15 m-0 font-weight-bold">THÔNG TIN DỮ LIỆU VỀ NHU CẦU SỬ DỤNG NƯỚC CHO NÔNG NGHIỆP TRÊN ĐỊA BÀN TỈNH SƠN LA THEO TIỂU VÙNG QUY HOẠCH</p>
+                            <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+                        </div>
+
+                        @Html.Partial("_Table")
+                    </div>
+                </div>
+            </div>
+        </section>
+        @Html.Partial("_FormAside")
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}}

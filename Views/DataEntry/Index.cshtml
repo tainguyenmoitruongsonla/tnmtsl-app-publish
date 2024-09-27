@@ -1,0 +1,286 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "Danh mục dữ liệu";
+    UserRightService _service = new UserRightService();
+}
+
+<div ng-controller="myCntrl as demo">
+
+    <script src="~/Scripts/DataEntry/Service.js"></script>
+    <script src="~/Scripts/DataEntry/Controller.js"></script>
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <div class="col-md-3">
+                        <h3 class="box-title"><i class="fa fa-users" aria-hidden="true"></i> @ViewBag.Title</h3>
+                    </div>
+                    <div class="col-md-9">
+                        @if (_service.IsViewAction(Request.RawUrl, User.Identity.Name, "VIEW") == true)
+                        {
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="box-tools pull-right">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search" ng-model="Keyword">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group input-group-sm pull-right">
+                                <button type="button" class="btn btn-block btn-addnew pull-right" style="width:100px;height:31px" data-toggle="modal" data-target="#addnew-window" ng-click="AddItem()"><i class="fa fa-plus"></i> Thêm mới</button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <table class="table no-margin table-hover">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên dữ liệu</th>
+                                    <th>Mô tả</th>
+                                    <th>Thứ tự</th>
+                                    <th class="command" style="text-align:center;width:120px">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in DataEntries | filter:Keyword">
+                                    <td ng-bind-html="(currentPage -1)*numPerPage+$index+1"></td>
+                                    <td ng-bind-html="item.Name"></td>
+                                    <td ng-bind-html="item.Description"></td>
+                                    <td ng-bind-html="item.DisplayOrder"></td>
+                                    <td class="command">
+                                        <div class="tools">
+                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#addnew-window" ng-click="EditItem(item)">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" ng-click="ViewFeedback('myFeedback',item)">
+                                                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" ng-click="ViewFiles('myFileNav',item)">
+                                                <i class="fa fa-files-o" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" class="text-red" ng-click="DeleteItem(item)">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItem"
+                            ng-model="currentPage"
+                            items-per-page="numPerPage"
+                            boundary-links="true"
+                            previous-text=" &#xf104; " next-text=" &#xf105; "
+                            first-text=" &#xf100; " last-text=" &#xf101; "
+                            max-size="5" ng-change="pageChanged()"
+                            rotate ="true"
+                            force-ellipses="true" class="pagination pagination-sm inline fa"></ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+
+        <!-- Primary modal -->
+        <div id="addnew-window" class="modal fade">
+            <div class="modal-dialog" style="width:50%">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title"><i class="fa fa-users" aria-hidden="true"></i> Cập nhật dữ liệu</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="tbxName">Tên nhóm :</label>
+                                    <input type="text" id="tbxName" ng-model="myitem.Name" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group" style="margin-left:0px;margin-right:0px;">
+                                        <label>Mô tả :</label>
+                                        <input type="text" id="tbxDescription" ng-model="myitem.Description" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6" style="padding-left: 0px;">
+                                        <div class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <label>Thứ tự hiển thị :</label>
+                                            <input type="number" id="tbxOrder" ng-model="myitem.Restriction" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="padding-right: 0px;">
+                                        <label>&nbsp; &nbsp;</label>
+                                        <div class="form-group" style="margin-left:0px;margin-right:0px;">
+                                            <div class="form-control">
+                                                <label>
+                                                    <input type="checkbox" id="chkStatus" ng-model="myitem.IsActive" /> Trạng thái hiển thị :
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-addnew" data-dismiss="modal" ng-click="Save()">Lưu thay đổi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /primary modal -->
+        <!--Begin File Nav-->
+        <div id="myFeedback" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" ng-click="closeAside('myFeedback')">&times;</a>
+            <div style="margin-left:20px;margin-right:18px">
+                <div class="doc-title">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN DỮ LIỆU</h4>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên dữ liệu</th>
+                                <th>Mô tả</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td ng-bind-html="myitem.Name" style="width:35%"></td>
+                                <td ng-bind-html="myitem.Description"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-comments-o" aria-hidden="true"></i> CÁC PHẢN HỒI</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;width:35px">TT</th>
+                                <th>Nội dung phản hồi</th>
+                                <th style="text-align:center"><a>#</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="fback in AllFeedBacks">
+                                <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                                <td ng-bind="fback.Comments"></td>
+                                <td style="text-align:center"><a ng-click="DeleteDataFeedback(fback)"><i class="fa fa-times text-red" aria-hidden="true"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="input-group input-group-sm" style="padding-bottom:50px">
+                </div>
+            </div>
+        </div>
+        <!--End File Nav-->
+        <!--Begin File Nav-->
+        <div id="myFileNav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" ng-click="closeAside('myFileNav')">&times;</a>
+            <div style="margin-left:20px;margin-right:18px">
+                <div class="doc-title">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN DỮ LIỆU</h4>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên dữ liệu</th>
+                                <th>Mô tả</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td ng-bind-html="myitem.Name" style="width:35%"></td>
+                                <td ng-bind-html="myitem.Description"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" ng-model="myitem.ID" />
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                                <h4><i class="fa fa-files-o" aria-hidden="true"></i> DANH MỤC FILES</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;width:35px">TT</th>
+                                <th>Tên file</th>
+                                <th style="text-align:center"><a>#</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="file in AllFiles">
+                                <td style="text-align:center;width:35px; vertical-align:middle" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                                <td style="vertical-align:middle"><i class="fa fa-file-o" aria-hidden="true"></i> <span ng-bind="file.FileName" style="padding-left:10px"></span></td>
+                                <td style="text-align:center"><a ng-click="DeleteDataFile(file)"><i class="fa fa-times text-red" aria-hidden="true"></i></a></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="form-control" style="height:38px">
+                                        <div class="col-md-6">
+                                            <input type="file" accept="application/pdf" id="fileAttach" onchange="angular.element(this).scope().loadFile(this.files)" multiple ngf-select ngf-multiple="true" style="max-width:320px" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span>Chọn và tải lên ảnh (.jpg, .jpeg, .png, .bmp)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="input-group input-group-sm" style="padding-bottom:50px">
+                </div>
+            </div>
+        </div>
+        <!--End File Nav-->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

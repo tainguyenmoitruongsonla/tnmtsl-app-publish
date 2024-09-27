@@ -1,0 +1,264 @@
+﻿@using Microsoft.AspNet.Identity
+@using WaterResource.Service;
+@{
+    ViewBag.Title = "THÔNG TIN DỮ LIỆU VỀ KHAI THÁC SỬ DỤNG NƯỚC TRÊN ĐỊA BÀN TỈNH SƠN LA";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "VIEW"))
+{
+    <div ng-controller="myCntrl as demo">
+
+        <!-- BỘ QUẢN LÝ -->
+        <!--Nh-->
+        @Html.Partial("ImportServiceJs")
+        <script src="~/Scripts/DataInformation/Controller.js"></script>
+
+        <!-- HẾT NHÚNG FILE MAP -->
+        <!-- Main content -->
+
+        <section class="content p-0">
+
+            <div class="p-3">
+
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <h4 class="font-sm-18 m-0 font-weight-bold">THỐNG KÊ </h4>
+                    <p class="font-sm-15 m-0 font-weight-bold">THỐNG KÊ SỐ LIỆU ĐIỀU TRA KHẢO SÁT ĐỊA CHẤT THỦY VĂN TRÊN ĐỊA BÀN TỈNH SƠN LA</p>
+                    <p class="m-0 font-weight-bold d-flex center-center">(Kỳ báo cáo:  <input type="text" class="form-control form-control-sm font-weight-bold" style="width: 50px;" />)</p>
+                </div>
+
+                <!--copy fom lọc + nút thêm mới-->
+                <div class="row m-0 align-items-center justify-content-end">
+                    <div class="floating-label mb-2">
+                        <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="Keyword">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in ItemsForSearch | filter:Keyword'>
+                                <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.VungDieuTra)">
+                                    <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.VungDieuTra}}</p>
+                                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.TieuVung}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <label>Vùng điều tra</label>
+                    </div>
+                    <div class="row mx-0 mx-md-2 mb-2 align-items-center">
+                        <button class="btn btn-sm btn-addnew px-4 rounded-0" ng-click="SearchThongTinKhaoSatDiaChat()">Lọc</button>
+                    </div>
+                    <div class="row mx-0 mx-md-2 mb-2 align-items-center">
+                        @if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "ADD"))
+                        {<button class="btn btn-sm btn-addnew rounded-0" ng-click="Add('DiaChatThuyVan_DieuTraDiaChatThuyVan_addnew-windows')" title="Thêm văn bản mới">Thêm mới</button>}
+
+                    </div>
+                </div>
+                <!--hết copy fom lọc + nút thêm mới-->
+
+                <div class="table-responsive">
+                    <!--thêm class để co giãn màn hình -->
+                    <table class="table no-margin table-hover table-bordered">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th rowspan="2" class="text-center align-middle">STT</th>
+                                <th rowspan="2" class="text-center align-middle">Địa điểm điều tra </th>
+                                <th rowspan="2" class="text-center align-middle">Tiểu vùng quy hoạch</th>
+                                <th rowspan="2" class="text-center align-middle">Số hiệu lỗ khoan </th>
+                                <th rowspan="2" class="text-center align-middle">Chiều sâu (m) </th>
+                                <th rowspan="2" class="text-center align-middle">Chiều dày tầng chứa nước (m) </th>
+                                <th rowspan="2" class="text-center align-middle">Mực nước tĩnh (m) </th>
+                                <th rowspan="2" class="text-center align-middle">Mực nước hạ thấp (m) </th>
+                                <th colspan="2" class="text-center align-middle">Lưu lượng thực hút </th>
+                                <th rowspan="2" class="text-center align-middle"> Trữ lượng khai thác Qkt (m3/ngày đêm) </th>
+                                <th rowspan="2" class="text-center align-middle">Phân loại điều tra </th>
+                                <th rowspan="2" class="text-center align-middle"> Phương pháp điều tra</th>
+                                <th rowspan="2" class="text-center align-middle">Thao tác</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle">(l/s) </th>
+                                <th class="text-center align-middle">(m3/ngày) </th>
+                            </tr>
+
+                            <tr>
+                                <th class="text-center align-middle">(1)</th>
+                                <th class="text-center align-middle">(2)</th>
+                                <th class="text-center align-middle">(3)</th>
+                                <th class="text-center align-middle">(4) </th>
+                                <th class="text-center align-middle">(5)</th>
+                                <th class="text-center align-middle">(6)</th>
+                                <th class="text-center align-middle">(7)</th>
+                                <th class="text-center align-middle">(8)</th>
+                                <th class="text-center align-middle">(9)</th>
+                                <th class="text-center align-middle">(10)</th>
+                                <th class="text-center align-middle">(11)</th>
+                                <th class="text-center align-middle">(12)</th>
+                                <th class="text-center align-middle">(13)</th>
+                                <th class="text-center align-middle">(14)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr class="text-center" ng-repeat="item in DataThongTinKhaoSatDiaChat">
+                                <th class="text-center align-middle">{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                <td><span ng-bind="item.VungDieuTra"></span></td>
+                                <td><span ng-bind="item.TieuVung"></span></td>
+                                <td><span ng-bind="item.SoHieuLoKhoan"></span></td>
+                                <td><span ng-bind="item.ChieuSau"></span></td>
+                                <td><span ng-bind="item.ChieuDayTangChuaNuoc"></span></td>
+                                <td><span ng-bind="item.MucNuocTinh"></span></td>
+                                <td><span ng-bind="item.MucNuocHaThap"></span></td>
+                                <td><span ng-bind="item.LuuLuongThucHut"></span></td>
+                                <td><span ng-bind="item.LuuLuongThucHut"></span></td>
+                                <td><span ng-bind="item.QKhaiThac"></span></td>
+                                <td><span ng-bind="item."></span></td>
+                                <td><span ng-bind="item."></span></td>
+                                <td>
+                                    <div class="d-flex">
+                                        @if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "EDIT"))
+                                        {<a href="javascript:void(0)" class="px-2" title="Chỉnh sửa bản ghi" ng-click="EditThongTinKhaoSatDiaChat('DiaChatThuyVan_DieuTraDiaChatThuyVan_addnew-windows',item)"><i class="fa fa-edit"></i></a>}
+                                        @if (_service.IsViewAction("/thong-tin-du-lieu", User.Identity.Name, "DELETE"))
+                                        {<a href="javascript:void(0)" class="text-red" ng-click="DeleteDataThongTinKhaoSatDiaChat(item)" title="Xoá bản ghi">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        }
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItem "
+                            ng-model="currentPage"
+                            items-per-page="numPerPage "
+                            boundary-links="true"
+                            previous-text=" &#xf104;"
+                            next-text=" &#xf105;"
+                            first-text=" &#xf100;"
+                            last-text=" &#xf101;"
+                            max-size="maxSize " ng-change="pageChanged()"
+                            class="pagination pagination-sm inline fa d-flex"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="sidenav p-0" id="DiaChatThuyVan_DieuTraDiaChatThuyVan_addnew-windows">
+
+                <div class="modal-content rounded">
+                    <div>
+                        <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                            <div class="d-flex col-12 p-0 align-items-center">
+                                <div class="col-10">
+                                    <div class="admission-title d-flex center-center">
+                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16 font-sm-13">{{HeaderAction}} KẾT QUẢ ĐIỀU TRA KHẢO SÁT ĐỊA CHẤT THỦY VĂN TRÊN ĐỊA BÀN TỈNH SƠN LA </p>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('DiaChatThuyVan_DieuTraDiaChatThuyVan_addnew-windows')">&times;</a>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row m-0">
+                                <p class="divHead hidden">{{Action}}</p>
+                                <!--dàn hàng ngang các thẻ bên trong -->
+                                <div class="col-6 p-0">
+                                    <!-- chiều dài 50%, chia 3 hàng trong 1 cột thì theo 3 input  -->
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.VungDieuTra" placeholder=" ">
+
+                                            <label>Vùng điều tra</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.TieuVung" placeholder=" ">
+                                            <label>Tiểu vùng</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.SoHieuLoKhoan" placeholder=" ">
+                                            <label> Số hiệu lỗ khoan</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.TangChuaNuoc" placeholder=" ">
+                                            <label>Tầng chứa nước</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 p-0">
+                                    <!-- chiều dài 50%, chia 3 hàng trong 1 cột thì theo 3 input  -->
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.ChieuSau" placeholder=" ">
+                                            <label>Chiều sâu (m)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.ChieuDayTangChuaNuoc" placeholder=" ">
+                                            <label>Chiều dày tầng chứa nước (m)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.MucNuocTinh" placeholder=" ">
+                                            <label> Mực nước tĩnh (m)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="floating-label mb-2 mt-3">
+                                            <input class="floating-input w-100" ng-model="item.MucNuocHaThap" placeholder=" ">
+                                            <label>Mực nước hạ thấp (m)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 row mx-0">
+                                    <fieldset class="border border-dark col-12 row mx-0">
+                                        <legend class="font-14 text-violet" style="width: auto"> Lưu lượng thực hút (m) </legend>
+                                        <div class="col-4">
+                                            <div class="floating-label my-2">
+                                                <input class="floating-input w-100" ng-model="item.LuuLuongThucHutLS" placeholder=" ">
+                                                <label>Lưu lượng thực hút (l/s)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="floating-label my-2">
+                                                <input class="floating-input w-100" ng-model="item.LuuLuongThucHutM3Ngay" placeholder=" ">
+                                                <label>Lưu lượng thực hút (m3/ngày)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="floating-label my-2">
+                                                <input class="floating-input w-100" ng-model="item.QKhaiThac" placeholder=" ">
+                                                <label>Trữ lượng khai thác (m3/ngày đêm)</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="floating-label mb-2 mt-3">
+                                        <textarea class="floating-input floating-textarea w-100 h-100" ng-model="item.GhiChu" rows="3" placeholder=" "></textarea>
+                                        <label>Ghi chú</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group d-flex align-items-center justify-content-end col-12">
+                                    <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                                    <button type="button" class="btn btn-sm btn-addnew" data-dismiss="modal" ng-click="SaveDataThongTinKhaoSatDiaChat(item)">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @Html.Partial("_ViewFilePDF")
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}

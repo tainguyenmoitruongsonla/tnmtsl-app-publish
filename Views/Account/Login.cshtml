@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "ĐĂNG NHẬP";
+    Layout = "";
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> @ViewBag.Title </title>
+</head>
+<body>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700,300'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/css/main.css">
+
+    @model WaterResource.Web.Models.LoginViewModel
+    <!-- Login modal -->
+    @*<div class="bg-register">
+            <img src="~/LocalFiles/images/thuy-dien-suoi-tan.jpg" alt="Alternate Text" />
+        </div>*@
+    @if (!Request.IsAuthenticated)
+        {
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login100-form validate-form", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="text-center pb-2">
+                        <img src="~/LocalFiles/images/logo_sotnmtsonla.png" width="100" alt="logo_tnmt" />
+                        <h5 class="m-t-15 text-danger font-weight-bold">SỞ TNMT TỈNH SƠN LA</h5>
+                        <p>HỆ THỐNG QUẢN LÝ CƠ SỞ DỮ LIỆU TÀI NGUYÊN NƯỚC</p>
+                    </div>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    <div class="wrap-input100 validate-input" data-validate="Tên đăng nhập không được để trống">
+                        @*<input class="input100" type="text" name="UserName">*@
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "input100" })
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Tên đăng nhập</span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    <div class="wrap-input100 validate-input" data-validate="Mật khẩu không được để trống">
+                        @*<input class="input100" type="password" name="pass">*@
+                        @Html.PasswordFor(m => m.Password, new { @class = "input100" })
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Mật khẩu</span>
+                    </div>
+
+                    <div class="flex-sb-m w-full p-t-3 p-b-32">
+                        <div class="contact100-form-checkbox d-flex">
+                            @*<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">*@
+                            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "input-checkbox100" })
+                            <label class="label-checkbox100" for="RememberMe">
+                                Nhớ tài khoản
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button type="submit" class="login100-form-btn">
+                            Đăng nhập
+                        </button>
+                    </div>
+
+                    <div class="text-center p-t-46 p-b-20">
+                        <p>hoặc</p>
+                        <a class="font-16 text-primary" href="/dang-ky">ĐĂNG KÝ</a>
+                    </div>
+                }
+
+                <div class="login100-more" style="background-image: url('LocalFiles/images/thuy-dien-suoi-tan.jpg');">
+                </div>
+            </div>
+        </div>
+    </div>
+        }
+        else
+        {
+    <script>
+                window.location = "/";
+    </script>
+        }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="~/Assets/AppResource/Login/vendor/animsition/js/animsition.min.js"></script>
+    <script src="~/Assets/AppResource/Login/vendor/select2/select2.min.js"></script>
+    <script src="~/Assets/AppResource/Login/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/Assets/AppResource/Login/vendor/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/AppResource/Login/vendor/countdowntime/countdowntime.js"></script>
+    <script src="~/Assets/AppResource/Login/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+﻿<div ng-if="TypeOfParentConstructionId == 10" class="col-12">
+    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+        <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN CÔNG TRÌNH</legend>
+        <div class="row col-12 m-0 p-0">
+            <div class="col-md-6">
+                <label class="font-13">Loại công trình <sup class="text-danger font-13">*</sup></label>
+                <input readonly class="floating-input w-100 text-left" type="text" ng-model="license.ConstructionType" />
+            </div>
+            <div class="col-md-6">
+                <label class="font-13">Tên công trình <sup class="text-danger font-13">*</sup></label>
+                <input readonly class="floating-input w-100 text-left" type="text" ng-model="license.Construction.ConstructionName">
+            </div>
+            <div class="col-md-4">
+                <label>Tỉnh</label>
+                <input readonly type="text" class="floating-input w-100" ng-model="Loc.CityName">
+            </div>
+            <div class="col-md-4">
+                <label>Quận/Huyện</label>
+                <input readonly type="text" class="floating-input w-100" ng-model="Loc.DistrictName">
+            </div>
+            <div class="col-md-4">
+                <label>Xã/Phường</label>
+                <input readonly type="text" class="floating-input w-100" ng-model="Loc.CommuneName">
+            </div>
+            <div class="col-md-9">
+                <label> Địa điểm công trình </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.ConstructionLocation">
+            </div>
+            <div class="col-md-3">
+                <label> Năm bắt đầu vận hành </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.StartDate">
+            </div>
+            <div class="col-md-6">
+                <label> Vĩ độ </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.X">
+            </div>
+            <div class="col-md-6">
+                <label> Kinh độ </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.Y">
+            </div>
+            <div class="col-md-9">
+                <div class="floating-label" ng-if="Id == 10">
+                    <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.ExplorationPurposes">
+                    <label> Mục đích khoan KT </label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label> Thời gian hành nghề khoan </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.DrillingDuration">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+        <legend class="font-18 font-weight-bold text-primary text-uppercase" style="width: auto">Số hiệu, vị trí và thông số của công trình khai thác </legend>
+        <div class="row col-12 m-0 p-0">
+            <div class="col-md-4">
+                <label>Quy mô khoan thăm dò </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.DrillingScale">
+            </div>
+            <div class="col-md-4">
+                <label> Tầng chứa nước thăm dò </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.ProbeAquifer">
+            </div>
+            <div class="col-md-4">
+                <label> Thời gian thi công  </label>
+                <input readonly type="text" class="floating-input w-100" ng-model="license.Construction.ConstructionTime">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+        <legend class="font-18 font-weight-bold text-primary" style="width: auto">VỊ TRÍ CÁC HẠNG MỤC CHÍNH CỦA CÔNG TRÌNH KHAI THÁC SỬ DỤNG NƯỚC</legend>
+        <div class="mb-2">
+            <div class="col-12 p-1 table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center align-middle font-13" rowspan="2">TT</th>
+                            <th class="text-center align-middle font-13" rowspan="2">Hạng mục</th>
+                            <th class="text-center align-middle font-13">Tọa độ X</th>
+                            <th class="text-center align-middle font-13">Tọa độ Y</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in license.Construction.ConstructionItems">
+                            <th class="text-center align-middle font-13" ng-bind-html="$index+1"></th>
+                            <td><input readonly type="text" name="tenhangmuc" class="floating-input w-100" ng-model="item.Name"></td>
+                            <td><input readonly type="number" name="x" class="floating-input w-100" ng-model="item.X"></td>
+                            <td><input readonly type="number" name="y" class="floating-input w-100" ng-model="item.Y"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</div>

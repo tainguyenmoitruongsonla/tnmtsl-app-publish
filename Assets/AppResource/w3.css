@@ -1,0 +1,60 @@
+﻿.sidenav {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 4;
+	top: 0;
+	right: 0;
+	background-color: #fff;
+	overflow-x: hidden;
+	transition: 0.5s;
+	-webkit-box-shadow: 0 0 15px rgba(0,0,0,0.35);
+	box-shadow: 0 0 15px rgba(0,0,0,0.35);
+}
+.sidenav a.link {
+	padding: 8px;
+	text-decoration: none;
+	font-size: 25px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+}
+
+.sidenav a:hover {
+	color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+	position: absolute;
+	right: 0px;
+	font-size: 23px;
+	width: 35px;height:35px;line-height:35px;
+	text-align: center;
+}
+
+.sidenav .closebtn:hover {
+	background: #f00
+}
+
+.sidenav .slide-title {
+	position: absolute;
+	left: 20px;
+	font-size: 19px;
+	color: #0467ac;
+	line-height:35px;
+}
+.sidenav-header{height: 35px;border-bottom:1px solid #ddd;background:#efefef;}
+.sidenav-main{padding:15px}
+@media screen and (max-height: 450px) {
+	.sidenav {
+		/* padding-top: 15px; */
+	}
+
+		.sidenav a {
+			font-size: 18px;
+		}
+}
+.btn-send{
+	padding:3.5px 10px;color:#fff;background:#008CBA;border:none;cursor:pointer;
+}
+.table-bordered th, .table-bordered td{vertical-align:inherit}

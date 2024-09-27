@@ -1,0 +1,193 @@
+﻿@{
+    ViewBag.Title = "ĐĂNG KÝ TÀI KHOẢN";
+    Layout = "";
+    var captcha = Html.Captcha("Refresh", "<label class='captcha__validate__title'>Nhập mã xác thực </label>", 5, "", true);
+    var captchaStr = captcha.RenderMarkup().ToHtmlString().Replace("<br />", "");
+
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title> @ViewBag.Title </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700,300'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/Assets/AppResource/Login/css/main.css">
+    <style>
+
+        #regForm input {
+            background-color: whitesmoke;
+        }
+
+        #regForm .floating-input:focus ~ label, .floating-input:not(:placeholder-shown) ~ label {
+            border: none;
+        }
+
+        #popup {
+            margin: 0 auto;
+            width: 600px;
+            height: 350px;
+            text-align: center;
+            top: calc(50vh - 175px);
+            padding: 95px 0;
+            justify-items: center;
+            color: #808080;
+        }
+
+        #reg-windows .logo {
+            width: 50px;
+        }
+    </style>
+    @model WaterResource.Web.Models.RegisterViewModel
+    @using CaptchaMvc.HtmlHelpers;
+
+    <div class="bg-register">
+        <img src="~/LocalFiles/images/thuy-dien-suoi-tan.jpg" alt="Alternate Text" />
+    </div>
+    @if (!Request.IsAuthenticated)
+        {
+            if (@ViewBag.success != null)
+            {
+    <div class="modal-dialog modal-dialog-centered" style="margin-top: calc(50vh - 300px) ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="popup">
+                    <h1 class="text-center mb-4">Đăng ký thành công</h1>
+                    <h4>Xin vui lòng kiểm tra mail của bạn.</h4>
+                    <h6>Bạn sẽ được chuyển đến trang đăng nhập sau 4 giây. Hoặc bấm vào <a href="/Account/Login">đây</a> để đăng nhập</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+                    setTimeout(function () {
+                        window.location.href = '/dang-nhap';
+                    }, 4000);
+    </script>
+            }
+
+            else
+            {
+
+    <div id="reg-windows">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                <div class="modal-body p-1 p-sm-3">
+                    <section id="regForm" class="mt-4">
+                        <div class="text-center pb-2">
+                            <img class="logo" src="~/LocalFiles/images/logo_sotnmtsonla.png" alt="logo_tnmt" />
+                            <h5 class="mt-2 text-danger font-weight-bold">SỞ TNMT TỈNH SƠN LA </h5>
+                            <p>HỆ THỐNG QUẢN LÝ CƠ SỞ DỮ LIỆU TÀI NGUYÊN NƯỚC</p>
+                        </div>
+                        @Html.AntiForgeryToken()
+
+                        <div class="floating-input w-100 d-flex m-0 center-center">
+                            <div class="form-check-inline">
+                                <label class="form-check-label position-sticky" for="AccountType1">
+                                    @Html.RadioButtonFor(m => m.AccountType, 0, new { @class = "form-check-input", @placeholder = " ", @id = "AccountType1", @Name = "AccountType" })
+                                    Cá nhân
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label position-sticky" for="AccountType2">
+                                    @Html.RadioButtonFor(m => m.AccountType, 1, new { @class = "form-check-input", @placeholder = " ", @id = "AccountType2", @Name = "AccountType" })
+                                    Tổ chức
+                                </label>
+                            </div>
+                        </div>
+                        <div class="m-0 text-center mb-4">
+                            @Html.ValidationMessage("AccountType", "", new { @class = "text-danger" })
+                        </div>
+                        <script type="text/javascript">
+
+                                            $("input[name='AccountType']").change(function () {
+                                                var selectedRadio = $("input[name='AccountType']:checked").val();
+                                                if (selectedRadio == 0) {
+                                                    $("#UserNameLabel").text('Số CMND/CCCD');
+                                                    $("#FullNameLabel").text('Tên cá nhân');
+                                                } else {
+                                                    $("#UserNameLabel").text('Mã số doanh nghiệp');
+                                                    $("#FullNameLabel").text('Tên tổ chức');
+                                                }
+                                            });
+                        </script>
+                        <div class="floating-label mb-4">
+                            @Html.TextBoxFor(m => m.FullName, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                            <label id="FullNameLabel">Tên cá nhân/Tổ chức</label>
+                            @Html.ValidationMessage("FullName", "", new { @class = "text-danger form-invalid" })
+                        </div>
+
+                        <div class="floating-label mb-4">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                            <label id="UserNameLabel">Số CMND/CCCD/Mã số doanh nghiệp</label>
+                            @Html.ValidationMessage("UserName", "", new { @class = "text-danger form-invalid" })
+                        </div>
+
+                        <div class="floating-label mb-4">
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                            <label>Số điện thoại</label>
+                            @Html.ValidationMessage("PhoneNumber", "", new { @class = "text-danger form-invalid" })
+                        </div>
+
+                        <div class="floating-label mb-4">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                            <label>Email</label>
+                            @Html.ValidationMessage("Email", "", new { @class = "text-danger form-invalid" })
+                        </div>
+
+                        <div class="floating-label mb-4">
+                            @Html.TextBoxFor(m => m.Address, new { @class = "floating-input w-100", @placeholder = " ", @id = "" })
+                            <label>Địa chỉ</label>
+                            @Html.ValidationMessage("Address", "", new { @class = "text-danger form-invalid" })
+                        </div>
+
+                        <div class="floating-label mb-3">
+                            <div class="captcha__validate">
+                                @*@Html.Captcha(5)*@
+                                @Html.Raw(captchaStr)
+
+                                @if (@ViewBag.error != null)
+                                                {
+                                <div class="text-danger form-invalid"> @ViewBag.error</div>
+                                                }
+                                <script>
+                                                    document.getElementById("CaptchaInputText").classList.add("floating-input");
+                                </script>
+                            </div>
+                        </div>
+
+                        <div class="container-login100-form-btn">
+                            <button type="submit" class="login100-form-btn font-16">
+                                Đăng ký
+                            </button>
+                        </div>
+
+                        <div class="text-center p-t-46 p-b-20">
+                            <span>hoặc <a class="font-16 text-primary" href="/dang-nhap">ĐĂNG NHẬP</a> nếu bạn đã có tài khoản</span>
+                        </div>
+                    </section>
+                </div>
+                            }
+            </div>
+        </div>
+    </div>
+            }
+        }
+        else
+        {
+    <script>
+                window.location = "/";
+    </script>
+        }
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
