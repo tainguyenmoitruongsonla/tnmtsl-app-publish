@@ -34,27 +34,13 @@
                     <div class="row mx-0">
                         <div class="input-group col-md-12 px-0">
                             <div class="col-md-12 p-0 mb-2 row mx-0 justify-content-end align-items-center">
-                                <div class="floating-label col-6 px-1 col-md-3 p-0">
+                                <div class="floating-label col-6 px-1 col-md-6 p-0">
                                     <div class="dropdown dropdown-scroll">
                                         <input class="floating-input w-100 text-left" type="text" data-toggle="dropdown" placeholder=" " ng-model="ConstructionName" />
                                         <label class="font-13">Chọn công trình</label>
                                         <ul class="dropdown-menu w-100" role="menu">
                                             <li class="border-bottom border-secondary p-0" ng-repeat='construction in DataConstruction | filter:ConstructionName '>
                                                 <a href="javascript:void(0)" class="text-primary nav-link py-0 px-1" ng-click="selectCons(construction)"> {{construction.ConstructionName}} </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="floating-label col-6 px-1 col-md-3 p-0">
-                                    <div class="dropdown dropdown-scroll">
-                                        <input class="floating-input w-100 text-left" type="text" readonly data-toggle="dropdown" placeholder=" " value="{{licenseTitle}}" />
-                                        <label class="font-13">Chọn giấy phép</label>
-                                        <ul class="dropdown-menu w-100" role="menu">
-                                            <li>
-                                                <input class="floating-input w-100 text-left" type="text" ng-model="licenseData.LicenseNumber" placeholder=" Tìm giấy phép " />
-                                            </li>
-                                            <li class="border-bottom border-secondary p-0" ng-repeat='license in Licenses | filter:licenseData '>
-                                                <a href="javascript:void(0)" class="text-primary nav-link py-0 px-1" ng-click="selectLicense(license)"> {{license.LicenseNumber}} - {{license.LicenseName}} </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -73,19 +59,19 @@
                                 <div class="col-md-4">
                                     <label class="font-13">Tên đơn vị XCP</label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.LicenseHolderName">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.Business.Name">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Địa chỉ đơn vị XCP </label>
                                     <div class="floating-label">
-                                        <textarea class="floating-input w-100 floating-textarea" placeholder=" " readonly ng-model="license.LicenseHolderAddress"></textarea>
+                                        <textarea class="floating-input w-100 floating-textarea" placeholder=" " readonly ng-model="Construction.Business.Address"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Thời hạn GP</label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Duration">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.Licenses[0].Duration">
                                     </div>
                                 </div>
                             </div>
@@ -94,19 +80,19 @@
                                 <div class="col-md-4">
                                     <label class="font-13">Cơ quan CP </label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.LicensingAuthoritiesName">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.Licenses[0].LicensingAuthoritiesName">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Ký hiệu CT </label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionCode">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.ConstructionCode">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Tên CT</label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionName">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.ConstructionName">
                                     </div>
                                 </div>
                             </div>
@@ -115,19 +101,19 @@
                                 <div class="col-md-4">
                                     <label class="font-13">Địa điểm CT </label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionLocation">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.ConstructionLocation">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Huyện </label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.Commune.DistrictName">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.DistrictName">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Xã</label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.Commune.CommuneName">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.CommuneName">
                                     </div>
                                 </div>
                             </div>
@@ -136,19 +122,19 @@
                                 <div class="col-md-4">
                                     <label class="font-13">Loại CT </label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionTypeName">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.ConstructionTypeName">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Tọa độ X </label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.X">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.X">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="font-13">Tọa độ Y</label>
                                     <div class="floating-label">
-                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.Y">
+                                        <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="Construction.Y">
                                     </div>
                                 </div>
                             </div>

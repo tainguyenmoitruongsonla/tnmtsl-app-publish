@@ -1484,8 +1484,6 @@
 
       $scope.license.Construction = construction;
 
-      console.log($scope.license);
-
       constructionService
         .getConsItems(construction.Id, true, "", 1, 0)
         .then(function (consItem) {
@@ -1517,6 +1515,9 @@
       constructionService
         .getSingleConstruction(item.Construction.Id)
         .then((item) => $scope.GetConsData(item.data));
+
+      // Add the Construction property to OldLicense
+      $scope.license.OldLicense.Construction = item.Construction;
     };
 
     //add construction item

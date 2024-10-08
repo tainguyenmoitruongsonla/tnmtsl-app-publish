@@ -80,6 +80,7 @@
         //TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, StartDate, TotalCapacity, isDetail, isPreData, Status, Keyword, PageIndex,PageSize
         constructionService.getAllConstructions(TypeOfConstructionId, -1, -1, -1, -1, -1, -1, true, -1, '', 1, 0).then(function (items) {
             $scope.DataConstruction = items.data.ListData;
+            console.log(items.data.ListData);
         });
     }
 
@@ -91,7 +92,9 @@
         $scope.Construction = cons;
 
         GetAllLicense(cons.Id)
-        $scope.disabledButton = true;
+        GetDataTransmission();
+        $scope.disabledButton = false;
+        console.log(cons);
     }
 
     function GetAllLicense(ConstructionId) {
