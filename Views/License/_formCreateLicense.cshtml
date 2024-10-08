@@ -113,28 +113,29 @@
                                 <label>Thiết bị quan trắc định kỳ</label>
                                 <input type="text" ng-model="license.ThietBiQuanTracDinhKy" class="floating-input w-100" placeholder="Thiết bị quan trắc định kỳ">
                             </div>
-                            <div class="col-sm-12 p-0 row m-0" ng-show="checkAddOldLicense">
-                                <div class="col-12 col-md-6">
-                                    <label class="font-13">Số giấy phép cũ<sup class="text-danger font-13">*</sup> </label>
-                                    <div class="dropdown dropdown-scroll">
-                                        <input class="floating-input w-100 text-left" type="text" data-toggle="dropdown" placeholder=" " ng-model="license.OldLicense.LicenseNumber" />
-                                        <ul class="dropdown-menu w-100 px-2" role="menu">
-                                            <li class="border-bottom border-secondary p-0" ng-repeat='item in AllLicenses | filter:license.OldLicense.LicenseNumber'>
-                                                <a href="javascript:void(0)" class="m-1 nav-link font-weight-normal py-0 px-1" ng-click="SetOldLicense(item)">
-                                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Số gp: <span ng-bind="item.LicenseNumber"></span></p>
-                                                    <p class="m-0 text-muted" style="font-size: 0.75rem">Ngày ký: <span ng-bind="item.SignDate | date:'dd/MM/yyyy'"></span></p>
-                                                </a>
-                                            </li>
-                                        </ul>
+                            <div class="col-sm-12 p-0 row m-0">
+                                @*<div class="col-sm-12 p-0 row m-0" ng-show="checkAddOldLicense">*@
+                                    <div class="col-12 col-md-6">
+                                        <label class="font-13">Số giấy phép cũ<sup class="text-danger font-13" ng-show="checkAddOldLicense">*</sup> </label>
+                                        <div class="dropdown dropdown-scroll">
+                                            <input class="floating-input w-100 text-left" type="text" data-toggle="dropdown" placeholder=" " ng-model="license.OldLicense.LicenseNumber" />
+                                            <ul class="dropdown-menu w-100 px-2" role="menu">
+                                                <li class="border-bottom border-secondary p-0" ng-repeat='item in AllLicenses | filter:license.OldLicense.LicenseNumber'>
+                                                    <a href="javascript:void(0)" class="m-1 nav-link font-weight-normal py-0 px-1" ng-click="SetOldLicense(item)">
+                                                        <p class="m-0 text-primary" style="font-size: 0.85rem">Số gp: <span ng-bind="item.LicenseNumber"></span></p>
+                                                        <p class="m-0 text-muted" style="font-size: 0.75rem">Ngày ký: <span ng-bind="item.SignDate | date:'dd/MM/yyyy'"></span></p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label class="font-13">Ngày ký giấy phép cũ<sup class="text-danger font-13">*</sup></label>
-                                    <input readonly class="floating-input w-100" ng-model="license.OldLicense.SignDate" type="text" placeholder="Ngày ký giấy phép cũ" />
+                                    <div class="col-12 col-md-6">
+                                        <label class="font-13">Ngày ký giấy phép cũ<sup class="text-danger font-13">*</sup></label>
+                                        <input readonly class="floating-input w-100" ng-model="license.OldLicense.SignDate" type="text" placeholder="Ngày ký giấy phép cũ" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </fieldset>

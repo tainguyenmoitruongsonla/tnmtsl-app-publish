@@ -49,7 +49,9 @@
       Effect = 0,
       LicensingAuthorities = -1;
 
-    var pathName = location.pathname.split("/")[2];
+      var pathName = location.pathname.split("/")[2];
+
+      console.log(pathName)
 
     $scope.StartYearFilter = "Từ năm: " + (d.getFullYear() - 25);
     $scope.EndYearFilter = "Đến năm: " + d.getFullYear();
@@ -1517,6 +1519,11 @@
       constructionService
         .getSingleConstruction(item.Construction.Id)
         .then((item) => $scope.GetConsData(item.data));
+
+      // Add the Construction property to OldLicense
+      $scope.license.OldLicense.Construction = item.Construction;
+
+      console.log($scope.license.OldLicense);
     };
 
     //add construction item
