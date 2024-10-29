@@ -1,0 +1,51 @@
+﻿<div class="modal fade addnew-windows" id="addNewBusinessName" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                        <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN TỔ CHỨC/CÁ NHÂN</legend>
+                        <div class="row col-12 m-0 p-0 py-3">
+                            <div class="col-md-6">
+                                <label class="font-13">Tên tổ chức/cá nhân được CP<sup class="text-danger font-13">*</sup></label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Tên tổ chức/cá nhân được CP" ng-model="license.Business.Name" />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="font-13">Địa chỉ<sup class="text-danger font-13">*</sup> </label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Địa chỉ" ng-model="license.Business.Address" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Số giấy đăng ký kinh doanh<sup class="text-danger font-13">*</sup></label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Số giấy đăng ký kinh doanh" ng-model="license.Business.IdentifierCode" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Số điện thoại</label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Số điện thoại" ng-model="license.Business.Phone" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Email</label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Email" ng-model="license.Business.Email" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Số Fax</label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Số Fax" ng-model="license.Business.Fax" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Người đại diện pháp luật</label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Người đại diện pháp luật" ng-model="license.Business.LegalRepresentative" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Người được ủy quyền</label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Người được ủy quyền" ng-model="license.Business.AuthorityPerson" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-addnew" data-dismiss="modal"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

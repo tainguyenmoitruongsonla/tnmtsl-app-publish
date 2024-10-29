@@ -1,0 +1,237 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+}
+<div id="formCreateLicense" class="sidenav p-0 font-13">
+    <div>
+        <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+            <div class="d-flex col-12 p-0 align-items-center">
+                <div class="col-10">
+                    <div class="admission-title d-flex center-center">
+                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16" ng-bind-html="asideHeader"></p>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('formCreateLicense')">&times;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+            <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN TỔ CHỨC/CÁ NHÂN </legend>
+            <div class="mb-2">
+                <div class="col-sm-12 p-0 py-3 row m-0">
+                    <div class="col-12 col-md-5 py-2">
+                        <label class="font-13">Tên tổ chức/cá nhân được CP<sup class="text-danger font-13">*</sup> </label>
+                        <div class="dropdown dropdown-scroll">
+                            <input class="floating-input w-100 text-left" type="text" data-toggle="dropdown" placeholder="Tên tổ chức/cá nhân được CP" ng-model="license.Business.Name" />
+                            <ul class="dropdown-menu w-100 px-2" role="menu">
+                                <li class="border-bottom border-secondary p-0" ng-repeat='item in Business | filter:license.Business.Name'>
+                                    <a href="javascript:void(0)" class="m-1 nav-link font-weight-normal py-0 px-1" ng-click="SetBusiness(item)">
+                                        <p class="m-0 text-primary" style="font-size: 0.85rem">{{item.Name}}</p>
+                                        <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.Address}}</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 py-2">
+                        <label class="font-13">Địa chỉ<sup class="text-danger font-13">*</sup> </label>
+                        <input class="floating-input w-100 text-left" type="text" placeholder="Địa chỉ" ng-model="license.Business.Address" />
+                    </div>
+                    <div class="col-12 col-md-2 row m-0 py-2 py-md-0 align-items-end">
+                        <button class="btn btn-sm btn-addnew" data-toggle="modal" data-target="#addNewBusinessName" ng-if="license.BusinessId">  <i class="fa fa-eye" aria-hidden="true"></i> </button>
+                        <button class="btn btn-sm btn-addnew" data-toggle="modal" ng-click="addNewBusiness()" data-target="#addNewBusinessName" ng-if="!license.BusinessId"> <i class="fa-solid fa-plus"></i> </button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="col-12">
+        <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+            <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN GIẤY PHÉP</legend>
+            <div class="mb-2">
+                <div class="col-sm-12 p-0 py-3 table-responsive">
+                    <div class="col-sm-12 p-0 row">
+                        <div class="table table-sm col-12 col-md-6 m-0">
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Số giấy phép<sup class="text-danger font-13">*</sup></label>
+                                <input class="floating-input w-100" ng-model="license.LicenseNumber" type="text" placeholder="Số giấy phép" />
+                            </div>
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Tên văn bản<sup class="text-danger font-13">*</sup></label>
+                                <input class="floating-input w-100" ng-model="license.LicenseName" type="text" placeholder="Tên văn bản" />
+                            </div>
+                            <label>Loại hình giấy phép<sup class="text-danger font-13">*</sup></label>
+                            <div class="floating-label w-100">
+                                <select ng-options="opt.Id as opt.Name for opt in LicensingTypes" ng-model="license.LicensingTypeId" ng-change="changeLicenseTypeAddNew(license.LicensingTypeId)" class="floating-select w-100">
+                                    <option value="" hidden>-- Chọn loại hình giấy phép --</option>
+                                </select>
+                            </div>
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Cơ quan cấp phép<sup class="text-danger font-13">*</sup></label>
+                                <select class="floating-select w-100" placeholder=" " ng-model="license.LicensingAuthorities">
+                                    <option value="" hidden ng-selected="license.LicensingAuthorities == -1">-- Chọn cơ quan cấp phép --</option>
+                                    <option value="0" ng-selected="license.LicensingAuthorities == 0">Bộ Tài nguyên và môi trường</option>
+                                    <option value="1" ng-selected="license.LicensingAuthorities == 1">Ủy ban nhân dân Tỉnh</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table table-sm col-12 col-md-6 m-0">
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Ngày ký<sup class="text-danger font-13">*</sup></label>
+                                <input type="text" class="floating-input w-100 dpicker" placeholder="Ngày ký" uib-datepicker-popup="{{format}}" ng-model="license.SignDate" is-open="LicenseSignDate.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" current-text="Hôm nay" clear-text="Xóa" alt-input-formats="altInputFormats" ng-click="openDatepicker('LicenseSignDate')" />
+                            </div>
+
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Ngày có hiệu lực<sup class="text-danger font-13"></sup></label>
+                                <input type="text" class="floating-input w-100 dpicker" placeholder="Ngày có hiệu lực" uib-datepicker-popup="{{format}}" ng-model="license.IssueDate" is-open="LicenseIssueDate.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" current-text="Hôm nay" clear-text="Xóa" alt-input-formats="altInputFormats" ng-click="openDatepicker('LicenseIssueDate')" />
+                            </div>
+
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Thời hạn giấy phép<sup class="text-danger font-13">*</sup></label>
+                                <input class="floating-input w-100" type="text" placeholder="Thời hạn giấy phép" ng-model="license.Duration" />
+                            </div>
+
+                            <div class="align-middle text-nowrap col-12 py-2">
+                                <label>Ngày hết hiệu lực<sup class="text-danger font-13">*</sup></label>
+                                <input type="text" class="floating-input w-100 dpicker" placeholder="Ngày hết hiệu lực" uib-datepicker-popup="{{format}}" ng-model="license.ExpireDate" is-open="LicenseExpireDate.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" current-text="Hôm nay" clear-text="Xóa" alt-input-formats="altInputFormats" ng-click="openDatepicker('LicenseExpireDate')" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 p-0 row" ng-show="checkAddOldLicense">
+                        <div class="col-12 col-md-6 py-2">
+                            <label class="font-13">Số giấy phép cũ<sup class="text-danger font-13">*</sup> </label>
+                            <div class="dropdown dropdown-scroll">
+                                <input class="floating-input w-100 text-left" readonly type="text" data-toggle="dropdown" placeholder=" " ng-model="license.OldLicense.LicenseNumber" />
+                                <ul class="dropdown-menu w-100 px-2" role="menu">
+                                    <li class="border-bottom border-secondary p-0" ng-repeat='item in Data | filter:license.OldLicense.LicenseNumber'>
+                                        <a href="javascript:void(0)" class="m-1 nav-link font-weight-normal py-0 px-1" ng-click="SetOldLicense(item)">
+                                            <p class="m-0 text-primary" style="font-size: 0.85rem">{{item.LicenseNumber}}</p>
+                                            <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.LicenseName}}</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 py-2">
+                            <label class="font-13">Ngày ký giấy phép cũ<sup class="text-danger font-13">*</sup></label>
+                            <input readonly class="floating-input w-100" ng-model="license.OldLicense.SignDate" type="text" placeholder="Ngày ký giấy phép cũ" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="col-12">
+        <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+            <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN TRẠM QUAN TRẮC KTTV</legend>
+            <div class="row col-12 m-0">
+                <div class="col-sm-12 p-0 py-3">
+                    <div class="row m-0">
+                        <div class="col-12 col-md-5">
+                            <label class="font-weight-bold">Loại trạm<sup class="text-danger font-13">*</sup></label>
+                            <div class="floating-label w-100">
+                                <select ng-options="opt.Id as opt.Name for opt in StationTypes" ng-model="Id" ng-change="changeTypeOfStation(Id, false)" class="floating-select w-100">
+                                    <option value="" hidden>-- Chọn loại trạm --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <label class="font-weight-bold">Trạm<sup class="text-danger font-13">*</sup></label>
+                            <input type="hidden" ng-model="license.LicenseId" />
+                            <div class="dropdown dropdown-scroll">
+                                <input class="floating-input w-100 text-left" type="text" data-toggle="dropdown" placeholder="Tên trạm" ng-model="license.Station.Name" />
+                                <ul class="dropdown-menu w-100 px-2" role="menu">
+                                    <li class="border-bottom border-secondary p-0" ng-repeat='station in DataStation | filter:license.Station.Name'>
+                                        <a href="javascript:void(0)" class="text-primary nav-link font-weight-normal py-0 px-1" ng-click="GetStationData(station)"> {{station.Name}} </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2 row m-0 py-2 py-md-0 align-items-end">
+                            <button class="btn btn-sm btn-addnew" data-toggle="modal" data-target="#addNewStationName" ng-if="license.Station.Id">  <i class="fa fa-eye" aria-hidden="true"></i> </button>
+                            <button class="btn btn-sm btn-addnew" data-toggle="modal" ng-click="addNewStation()" data-target="#addNewStationName" ng-if="!license.Station.Id"> <i class="fa-solid fa-plus"></i> </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 mb-3">
+                    <fieldset class="border p-2">
+                        <legend class="float-none w-auto font-15 m-0 text-dark">Vị trí công trình</legend>
+
+                        <div class="col-md-12 py-3 d-flex justify-content-between">
+                            <div class="floating-label font-14 col-6">
+                                <span>Lat:</span>
+                                <input type="number" placeholder="0" id="wgs_g_lat" class="wgs_grad coord-1 col-2 mx-1 floating-input d-inline">°
+                                <input type="number" placeholder="0.000000" id="wgs_m_lat" class="wgs_grad coord-2 col-5 floating-input d-inline">'
+                                <span class="stooltip" title="Nord"> (N)</span>
+                            </div>
+                            <div class="floating-label font-14 col-6">
+                                <span>Lng:&nbsp;</span>
+                                <input type="number" placeholder="0" id="wgs_g_lng" class="wgs_grad coord-1 col-2 mx-1 floating-input d-inline">°
+                                <input type="number" placeholder="0.000000" id="wgs_m_lng" class="wgs_grad coord-2 col-5 floating-input d-inline">'
+                                <span class="stooltip" title="East / Ost"> (E)</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 text-center">
+                            <button id="convert-position" class="btn btn-sm btn-outline-primary" title="Đổi hệ tọa độ"><i class="fa-solid fa-arrow-down-arrow-up"></i></button>
+                        </div>
+
+                        <div class="col-md-12 py-3 d-flex justify-content-between">
+                            <div class="floating-label col-6 font-14 d-flex align-items-center">
+                                <span>Lat:&nbsp;</span>
+                                <input type="number" id="lat-decimal" placeholder="0" class="floating-input w-100 mx-1" ng-model="station.Lat">
+                            </div>
+                            <div class="floating-label col-6 font-14 d-flex align-items-center">
+                                <span>Lng:&nbsp;</span>
+                                <input type="number" id="lng-decimal" placeholder="0" class="floating-input w-100" ng-model="station.Lng">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6 py-2">
+                    <label> Năm bắt đầu đo </label>
+                    <input type="text" class="floating-input w-100" placeholder=" " ng-model="station.StartDate">
+                </div>
+                <div class="col-md-6 py-2">
+                    <label> Năm kết thúc đo </label>
+                    <input type="text" class="floating-input w-100" placeholder=" " ng-model="station.EndDate">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="col-12">
+        <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+            <legend class="font-18 font-weight-bold text-primary" style="width: auto">GIẤY TỜ, TÀI LIỆU NỘP KÈM THEO (.pdf)</legend>
+            <div class="mb-2 row mx-0 p-0">
+                <div class="col-12 col-md-4 py-2">
+                    <label class="font-13">Hồ sơ cấp phép(giấy phép)<sup class="text-danger font-13">*</sup></label>
+                    <input class="floating-input w-100 h-auto" type="file" placeholder=" " id="fileAttachsLicense" ng-model="license.LicenseFile" />
+                </div>
+                <div class="col-12 col-md-4 py-2">
+                    <label class="font-13">Đơn xin cấp phép</label>
+                    <input class="floating-input w-100 h-auto" type="file" placeholder=" " id="fileAttachsLicenseRequest" ng-model="license.LicenseRequestFile" />
+                </div>
+                <div class="col-12 col-md-4 py-2">
+                    <label class="font-13">Hồ sơ pháp lý có liên quan</label>
+                    <input class="floating-input w-100 h-auto" type="file" placeholder=" " id="fileAttachsRelated" ng-model="license.RelatedDocumentFile" />
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="pb-4 col-sm-12 d-flex justify-content-end">
+        @if (_service.IsViewAction("/ho-so-giay-phep-hoat-dong", User.Identity.Name, "Save"))
+        {
+            <button type="button" class="btn btn-addnew mx-2 fw-bold font-14 d-flex align-items-center" ng-click="Save('formCreateLicense')">
+                XÁC NHẬN &nbsp; <i class="fa fa-edit"></i>
+            </button>
+        }
+        <button type="button" class="btn btn-cancel mx-2 fw-bold font-14 d-flex align-items-center" href="#" ng-click="closeAside('formCreateLicense')">
+            ĐÓNG &nbsp; <i class="fa fa-times-circle"></i>
+        </button>
+    </div>
+</div>

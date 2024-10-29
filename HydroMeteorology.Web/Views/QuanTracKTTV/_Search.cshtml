@@ -1,0 +1,11 @@
+﻿<div class="row m-0 col-lg-7 align-items-center justify-content-end">
+    <div class="col-12 col-md-auto row m-0 p-0 floating-label">
+        <input class="floating-input mx-md-2 col-12 col-md-auto" placeholder="Mã trạm hoặc tên trạm" ng-model="Keyword">
+        <input class="floating-input mx-md-2 col-12 col-md-auto" placeholder="Thời gian từ" ng-model="StartDate" />
+        <input class="floating-input mx-md-2 col-12 col-md-auto" placeholder="Thời gian đến" ng-model="EndDate" />
+    </div>
+    <div class="row m-0 align-items-center p-1">
+        <button class="btn btn-sm btn-addnew px-4 mx-2" ng-click="Search()">Lọc</button>
+        <button class="btn btn-sm btn-addnew px-4 m-2" title="Thêm mới" ng-click="AddDataStation('addnew')">Thêm mới</button>
+    </div>
+</div>

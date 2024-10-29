@@ -1,0 +1,14 @@
+﻿<div ng-controller="myCntrl as demo">
+    <script src="~/Scripts/HoSoKyThuat/Controller.js"></script>
+    <script src="~/Scripts/HoSoKyThuat/Service.js"></script>
+    <section class="content p-0">
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                @Html.Partial("_Search")
+                @Html.Partial("_Table")
+            </div>
+        </div>
+        @Html.Partial("_FormCreate")
+        @Html.Partial("_ViewPDF")
+    </section>
+</div>

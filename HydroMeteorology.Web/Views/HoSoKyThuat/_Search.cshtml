@@ -1,0 +1,18 @@
+﻿<div class="row mx-0 my-2 align-items-center justify-content-end">
+    <div class="mx-2 col-3 p-0 floating-label">
+        <input autocomplete="off" type="text" name="table_search" class="floating-input w-100" data-toggle="dropdown" placeholder=" " ng-model="Keyword">
+        <ul class="dropdown-menu w-100" role="menu">
+            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in AllStation | filter:Keyword'>
+                <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.StationCode)">
+                    <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.Name}}</p>
+                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.StationCode}}</p>
+                </a>
+            </li>
+        </ul>
+        <label>Tên trạm hoặc Mã trạm</label>
+    </div>
+    <div class="row m-0 align-items-center p-1">
+        <button class="btn btn-sm btn-addnew px-3 m-2" ng-click="Search()">Lọc</button>
+        <button class="btn btn-sm btn-addnew px-3 m-2" title="Thêm mới" ng-click="Add()">Thêm mới</button>
+    </div>
+</div>

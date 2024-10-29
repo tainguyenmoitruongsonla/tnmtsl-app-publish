@@ -1,0 +1,101 @@
+﻿<div id="addnew" class="sidenav p-0 ">
+    <div>
+        <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+            <div class="d-flex col-12 p-0 align-items-center">
+                <div class="col-12 p-0">
+                    <div class="admission-title d-flex center-center">
+                        <p class="m-0 col-12 p-0 text-center text-uppercase font-16"> {{headerAction}} TRẠM TRÊN ĐỊA BÀN TỈNH SƠN LA </p>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('addnew')">&times;</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="row col-12 m-0">
+                <div class="col-md-6 py-3">
+                    <div class="floating-label">
+                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.Name">
+                        <label> Tên trạm </label>
+                    </div>
+                </div>
+                <div class="col-md-6 py-3">
+                    <div class="floating-label">
+                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.StationCode">
+                        <label> Mã trạm </label>
+                    </div>
+                </div>
+                <div class="col-md-12 py-3">
+                    <div class="floating-label">
+                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.LocationName">
+                        <label> Vị trí trạm </label>
+                    </div>
+                </div>
+                <div class="col-md-6 py-3">
+                    <div class="floating-label">
+                        <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="station.DistrictId" ng-change="DistrictChange(station.DistrictId)" class="floating-select ng-pristine ng-untouched ng-valid ng-empty" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option></select>
+                        <label>Quận/Huyện :</label>
+                    </div>
+                </div>
+                <div class="col-md-6 py-3">
+                    <div class="floating-label">
+                        <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="station.CommuneId" class="floating-select ng-pristine ng-untouched ng-valid ng-empty" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option></select>
+                        <label>Xã/Phường :</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 mb-3">
+                    <fieldset class="border p-2">
+                        <legend class="float-none w-auto font-15 m-0">Vị trí công trình</legend>
+
+                        <div class="col-md-12 py-3 d-flex justify-content-between">
+                            <div class="floating-label font-14 col-6">
+                                <span>Lat:</span>
+                                <input type="number" placeholder="0" id="wgs_g_lat" class="wgs_grad coord-1 col-2 mx-1 floating-input d-inline">°
+                                <input type="number" placeholder="0.000000" id="wgs_m_lat" class="wgs_grad coord-2 col-5 floating-input d-inline">'
+                                <span class="stooltip" title="Nord"> (N)</span>
+                            </div>
+                            <div class="floating-label font-14 col-6">
+                                <span>Lng:&nbsp;</span>
+                                <input type="number" placeholder="0" id="wgs_g_lng" class="wgs_grad coord-1 col-2 mx-1 floating-input d-inline">°
+                                <input type="number" placeholder="0.000000" id="wgs_m_lng" class="wgs_grad coord-2 col-5 floating-input d-inline">'
+                                <span class="stooltip" title="East / Ost"> (E)</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 text-center">
+                            <button id="convert-position" class="btn btn-sm btn-outline-primary" title="Đổi hệ tọa độ"><i class="fa-solid fa-arrow-down-arrow-up"></i></button>
+                        </div>
+
+                        <div class="col-md-12 py-3 d-flex justify-content-between">
+                            <div class="floating-label col-6 font-14 d-flex align-items-center">
+                                <span>Lat:&nbsp;</span>
+                                <input type="number" id="lat-decimal" placeholder="0" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty mx-1" ng-model="station.Lat">
+                            </div>
+                            <div class="floating-label col-6 font-14 d-flex align-items-center">
+                                <span>Lng:&nbsp;</span>
+                                <input type="number" id="lng-decimal" placeholder="0" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" ng-model="station.Lng">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6 py-3">
+                    <div class="floating-label">
+                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.StartDate">
+                        <label> Năm bắt đầu đo </label>
+                    </div>
+                </div>
+                <div class="col-md-6 py-3">
+                    <div class="floating-label">
+                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.EndDate">
+                        <label> Năm kết thúc đo </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel" ng-click="closeAside('addnew')">Đóng</button>
+            <button type="button" class="btn btn-addnew" ng-click="Save('addnew')"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+        </div>
+    </div>
+</div>

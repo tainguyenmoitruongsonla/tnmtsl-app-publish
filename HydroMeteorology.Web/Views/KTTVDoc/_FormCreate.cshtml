@@ -1,0 +1,68 @@
+﻿<div class="sidenav p-0" id="aside">
+    <div>
+        <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+            <div class="d-flex col-12 p-0 align-items-center">
+                <div class="col-10">
+                    <div class="admission-title d-flex center-center">
+                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16">{{HeaderAction}} BẢN TIN DỰ BÁO, CẢNH BÁO </p>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside()">&times;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <fieldset class="col-12 border border-secondary p-3 mb-2 background-color bg-lightgray">
+            <legend class="font-18 font-weight-bold text-primary" style="width: auto">Thông tin bản tin dự báo, cảnh báo </legend>
+            <div class="mb-2">
+                <div class="col-sm-12 p-0 row">
+                    <div class="col-md-4 p-2">
+                        <div class="floating-label my-2">
+                            <input ng-model="item.Name" class="floating-input w-100" placeholder=" ">
+                            <label>Tên bản tin</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-2">
+                        <div class="floating-label my-2">
+                            <input ng-model="item.DocNumber" class="floating-input w-100" placeholder=" ">
+                            <label>Số bản tin</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-2">
+                        <div class="floating-label my-2">
+                            <input type="datetime-local" id="IssuedTime" value="{{item.IssuedTime | date:'yyyy-MM-ddTHH:mm'}}" ng-model="IssuedTime" ng-change="ChangeDateTime()" class="floating-input w-100" placeholder=" " />
+                            @*<input ng-model="item.IssuedTime" type="datetime-local" class="floating-input w-100" placeholder=" ">*@
+                            <label>Ngày giờ phát hành</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-2">
+                        <div class="floating-label my-2">
+                            <select class="floating-select w-100" ng-model="item.AgencyIssued">
+                                <option selected hidden value="">[--Chọn Cơ quan ban hành--]</option>
+                                <option value="Trung tâm DDBKTTV Quốc gia">Trung tâm DDBKTTV Quốc gia</option>
+                                <option value="Tổng cục KTTV">Tổng cục KTTV</option>
+                                <option value="Đài khí tượng Thủy Văn khu vực Tây Bắc">Đài khí tượng Thủy Văn khu vực Tây Bắc</option>
+                            </select>
+                            <label>Cơ quan ban hành</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-2">
+                        <div class="floating-label my-2">
+                            <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs" ng-model="item.FilePDF">
+                            <label>PDF</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 py-3">
+                        <div class="floating-label">
+                            <textarea class="floating-input floating-textarea w-100 h-100" rows="3" ng-model="item.Description" placeholder=" "></textarea>
+                            <label>Ghi chú</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="pt-1 col-sm-12 d-flex justify-content-end">
+        <button type="button" class="btn btn-sm btn-addnew mx-2" ng-click="Save()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu </button>
+    </div>
+</div>

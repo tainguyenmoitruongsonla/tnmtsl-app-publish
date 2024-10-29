@@ -1,0 +1,68 @@
+﻿<div class="table-responsive">
+    <table class="table no-margin table-hover table-bordered" id="table-show-license">
+        <thead class="custom-table-thead">
+            <tr>
+                <th class="text-center align-middle">STT </th>
+                <th class="text-center align-middle">Tên chương trình</th>
+                <th class="text-center align-middle">Nội dung chương trình</th>
+                <th class="text-center align-middle">Kinh phí thực hiện chương trình</th>
+                <th class="text-center align-middle">Ghi chú</th>
+                <th class="text-center align-middle">Tên đơn vị chương trình </th>
+                <th class="text-center align-middle">Số điện thoại</th>
+                <th class="text-center align-middle">Email </th>
+                <th class="text-center align-middle">Tên file chương trình kttv</th>
+                <th class="text-center align-middle">File PDF</th>
+                <th class="text-center align-middle">Chủ nghiệm đề tài</th>
+                <th class="text-center align-middle">Số điện thoại(Chủ nghiệm đề tài)</th>
+                <th class="text-center align-middle">Email(Chủ nghiệm đề tài)</th>
+                <th class="text-center align-middle">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody class="custom-table-tbody">
+            <tr class="text-center align-middle" ng-repeat="item in DataBDKHDoc">
+                <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                <td><span ng-bind="item.ProjectName"></span></td>
+                <td><span ng-bind="item.Name"></span></td>
+                <td><span ng-bind="item.Agency"></span></td>
+                <td><span ng-bind="item.Leader"></span></td>
+                <td><span ng-bind="item.Duration"></span></td>
+                <td><span ng-bind="item.Funding"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td><span ng-bind="item.Result"></span></td>
+                <td class="command text-center">
+                    <div class="tools d-flex justify-content-center" ng-if="item.FilePDF !== null">
+                        <a href="javascript:void(0)" ng-click="openAsideFile(item)">
+                            <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </td>
+                <td class="sticky-col end-col">
+                    <div class="tools d-flex justify-content-center">
+                        <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa công trình" ng-click="Edit(item)"><i class="fa fa-edit"></i></a>
+                        <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá công trình" ng-click="Delete(item)"><i class="fa-solid fa-trash-can"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- pagination -->
+    <div class="box-footer ">
+        <div class="box-tools pull-right">
+            <ul uib-pagination
+                total-items="TotalItem"
+                ng-model="currentPage"
+                items-per-page="numPerPage"
+                boundary-links="true"
+                previous-text=" &#xf104; " next-text=" &#xf105; "
+                first-text=" &#xf100; " last-text=" &#xf101; "
+                max-size="5" ng-change="pageChanged()"
+                            rotate ="true"
+                            force-ellipses="true" class="pagination pagination-sm inline fa d-flex m-0"></ul>
+        </div>
+    </div>
+</div>

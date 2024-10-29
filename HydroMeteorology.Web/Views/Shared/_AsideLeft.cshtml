@@ -1,0 +1,408 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+    string user = User.Identity.Name;
+}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a href="https://tnn.sotnmt.sonla.gov.vn" class="brand-link logo-switch">
+        <span class="brand-image-xs logo-xl"><img src="~/LocalFiles/images/logo_sotnmtsonla.png" width="40" height="40" alt="logo_sotnmtsonla" /> Sở TNMT Sơn La</span>
+    </a>
+    <nav>
+        <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu">
+            <li class="nav-item"> <a href="/" class="nav-link text-white"> <i class="nav-icon fa-solid fa-house"></i> <p> TRANG CHỦ</p></a></li>
+            <li class="nav-item has-treeview">
+                <a href="javascript:void(0)" class="nav-link text-white">
+                    <p> <i class="nav-icon fas fa-th"></i> Thông tin, dữ liệu KTTV<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> Quan trắc KTTV <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-4">
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm Quốc gia <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0">
+                                    <li class="nav-item"><a href="/quan-trac-kttv/quoc-gia/khi-tuong" class="nav-link ml-3"><i class="far fa-circle nav-icon"></i> Trạm khí tượng </a></li>
+                                    <li class="nav-item"><a href="/quan-trac-kttv/quoc-gia/thuy-van" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm thủy văn </a></li>
+                                    <li class="nav-item"><a href="/quan-trac-kttv/quoc-gia/mua" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm đo mưa </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm chuyên dùng <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>CT phải QT KTTV <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/san-bay" class="nav-link ml-4">Sân bay dân dụng </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/thuy-dien" class="nav-link ml-4">Hồ chứa thủy điện  </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/thuy-loi" class="nav-link ml-4">Hồ chứa thủy lợi </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/cau" class="nav-link ml-4">Cầu </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/thu-phat-song" class="nav-link ml-4">Tháp thu phát sóng </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/cap-treo" class="nav-link ml-4">Cáp treo </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/duong-cao-toc" class="nav-link ml-4">Tuyến đường cao tốc </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/cang-thuy-noi-dia" class="nav-link ml-4">Cảng thủy nội địa </a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>Trạm KTTV CD khác  <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/khi-tuong" class="nav-link ml-3"><i class="far fa-circle nav-icon"></i> Trạm khí tượng </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/thuy-van" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm thủy văn </a></li>
+                                            <li class="nav-item"><a href="/quan-trac-kttv/chuyen-dung/mua" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm đo mưa </a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> Dữ liệu KTTV (nguồn khác)<i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item"><a href="#" class="nav-link ml-2">Trạm khí tượng </a></li>
+                            <li class="nav-item"><a href="/quan-trac-kttv/nguon-khac/thuy-van" class="nav-link ml-2">Trạm thủy văn </a></li>
+                            <li class="nav-item"><a href="/quan-trac-kttv/nguon-khac/do-mua" class="nav-link ml-2">Trạm đo mưa </a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> Bản tin dự báo, cảnh báo <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Thời tiết <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thoi-tiet/han-cuc-ngan" class="nav-link ml-3">Hạn cực ngắn </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thoi-tiet/han-ngan" class="nav-link ml-3">Hạn ngắn </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thoi-tiet/han-vua" class="nav-link ml-3">Hạn vừa </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p> Khí hậu <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/khi-hau/han-dai" class="nav-link ml-3">Hạn dài </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/khi-hau/han-mua" class="nav-link ml-3">Hạn mùa </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/khi-hau/han-nam" class="nav-link ml-3">Hạn năm </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Thủy văn <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thuy-van/han-cuc-ngan" class="nav-link ml-3">Hạn cực ngắn </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thuy-van/han-ngan" class="nav-link ml-3">Hạn ngắn </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thuy-van/han-vua" class="nav-link ml-3">Hạn vừa </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thuy-van/han-dai" class="nav-link ml-3">Hạn dài </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thuy-van/han-mua" class="nav-link ml-3">Hạn mùa </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Nguồn nước <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/nguon-nuoc/han-ngan" class="nav-link ml-3">Hạn ngắn </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/nguon-nuoc/han-vua" class="nav-link ml-3">Hạn vừa </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/nguon-nuoc/han-dai" class="nav-link ml-3">Hạn dài </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/nguon-nuoc/han-mua" class="nav-link ml-3">Hạn mùa </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/nguon-nuoc/han-nam" class="nav-link ml-3">Hạn năm </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Thiên tai <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thien-tai/bao-ap-thap" class="nav-link ml-3">Bão áp thấp nhiệt đới </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thien-tai/mua-lu" class="nav-link ml-3">Mưa lớn, lũ quét, sạt lở đất </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thien-tai/giong-loc" class="nav-link ml-3">Giông, lốc sét, mưa đá </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/thien-tai/ret-suong-muoi" class="nav-link ml-3">Rét đậm, rét hại, sương muối </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>KTTV khác <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>Phục vụ NN <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/phuc-vu-nong-nghiep/han-ngan" class="nav-link ml-4">Hạn ngắn </a></li>
+                                            <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/phuc-vu-nong-nghiep/han-vua" class="nav-link ml-4">Hạn vừa </a></li>
+                                            <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/phuc-vu-nong-nghiep/han-dai" class="nav-link ml-4">Hạn dài </a></li>
+                                            <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/phuc-vu-nong-nghiep/han-mua" class="nav-link ml-4">Hạn mùa </a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/khong_khi-lanh" class="nav-link ml-3">Không khí lạnh hạn ngắn </a></li>
+                                    <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/tong-hop" class="nav-link ml-3">KTTV tổng hợp </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item"><a href="/ban-tin-du-bao/khi-tuong-thuy-van-khac/chuyen-de" class="nav-link ml-2">Chuyên đề </a></li>
+                            <li class="nav-item" id="NotificationParent"><a href="/ban-tin-du-bao/thong-bao" class="nav-link ml-2"><p>Thông báo </p> <span id="Notification" class="badge badge-pill badge-danger">N</span> </a></li>
+                        </ul>
+                    </li>
+
+                    @*<li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> HSKT của các trạm <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-4">
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm Quốc gia <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0">
+                                    <li class="nav-item"><a href="/ho-so-ky-thuat/quoc-gia/khi-tuong" class="nav-link ml-3"><i class="far fa-circle nav-icon"></i> Trạm khí tượng </a></li>
+                                    <li class="nav-item"><a href="/ho-so-ky-thuat/quoc-gia/thuy-van" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm thủy văn </a></li>
+                                    <li class="nav-item"><a href="/ho-so-ky-thuat/quoc-gia/mua" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm đo mưa </a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm chuyên dùng <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>CT phải QT KTTV <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/san-bay" class="nav-link ml-4">Sân bay dân dụng </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/thuy-dien" class="nav-link ml-4">Hồ chứa thủy điện  </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/thuy-loi" class="nav-link ml-4">Hồ chứa thủy lợi </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/cau" class="nav-link ml-4">Cầu </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/thu-phat-song" class="nav-link ml-4">Tháp thu phát sóng </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/cap-treo" class="nav-link ml-4">Cáp treo </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/duong-cao-toc" class="nav-link ml-4">Tuyến đường cao tốc </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/cang-thuy-noi-dia" class="nav-link ml-4">Cảng thủy nội địa </a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>Trạm KTTV CD khác  <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/khi-tuong" class="nav-link ml-3"><i class="far fa-circle nav-icon"></i> Trạm khí tượng </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/thuy-van" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm thủy văn </a></li>
+                                            <li class="nav-item"><a href="/ho-so-ky-thuat/chuyen-dung/mua" class="nav-link ml-3"> <i class="far fa-circle nav-icon"></i> Trạm đo mưa </a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>*@
+
+                    <li class="nav-item"><a href="/ho-ky-thuat-tram" class="nav-link ml-1"><i class="fa fa-fw fa-genderless"></i> HSKT trạm  </a></li>
+
+                    <li class="nav-item"><a href="/ho-so-giay-phep-hoat-dong" class="nav-link ml-1"><i class="fa fa-fw fa-genderless"></i> HSGP hoạt động  </a></li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> NCKH,CT, Dự án về KTTV<i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item"><a href="/nghien-cuu-khoa-hoc/kttv" class="nav-link ml-1"> NCKH,CT về KTTV </a></li>
+                            <li class="nav-item"><a href="/nghien-cuu-khoa-hoc/du-an-kttv" class="nav-link ml-1"> Dự án về KTTV </a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="nav-item"><a href="/van-ban-phap-luat/kttv" class="nav-link ml-1"> <i class="fa fa-fw fa-genderless"></i> Văn bản QPPL </a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item has-treeview">
+                <a href="javascript:void(0)" class="nav-link text-white">
+                    <p><i class="nav-icon fa-solid fa-binoculars"></i> Giám sát BĐKH<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                    <li class="nav-item"><a href="/yeu-cau-ket-noi" class="nav-link ml-2"> <i class="fa fa-fw fa-genderless"></i>Yêu cầu kết nối </a></li>
+                    @if (_service.IsSuperUser(user))
+                    {
+
+                        <li class="nav-item"><a href="/quan-ly-yeu-cau-ket-noi" class="nav-link ml-2"> <i class="fa fa-fw fa-genderless"></i>Quản lý yêu cầu kết nối </a></li>
+                    }
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> Lịch sử thông tin, dữ liệu KTTV <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm Quốc gia <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="/lich-su-thong-tin/quoc-gia/mua" class="nav-link ml-3">Trạm đo mưa </a></li>
+                                    <li class="nav-item"><a href="/lich-su-thong-tin/quoc-gia/thuy-van" class="nav-link ml-3">Trạm thủy văn</a></li>
+                                    <li class="nav-item"><a href="#" class="nav-link ml-3">Trạm đo mưa</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm chuyên dùng <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>CT phải QT KTTV <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/san-bay" class="nav-link ml-4"> Sân bay dân dụng </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/thuy-dien" class="nav-link ml-4"> Hồ chứa thủy điện  </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/thuy-loi" class="nav-link ml-4"> Hồ chứa thủy lợi </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/cau" class="nav-link ml-4"> Cầu </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/thu-phat-song" class="nav-link ml-4"> Tháp thu phát sóngTháp thu phát sóng </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/cap-treo" class="nav-link ml-4"> Cáp treo </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/duong-cao-toc" class="nav-link ml-4"> Tuyến đường cao tốc </a></li>
+                                            <li class="nav-item"><a href="/lich-su-thong-tin/chuyen-dung/cang-thuy-noi-dia" class="nav-link ml-4"> Cảng thủy nội địa </a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0)" class="nav-link ml-3">
+                                            <p>Trạm KTTV CD khác  <i class="right fas fa-angle-left"></i></p>
+                                        </a>
+                                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                            <li class="nav-item"><a href="#" class="nav-link ml-4">Trạm đo mưa </a></li>
+                                            <li class="nav-item"><a href="#" class="nav-link ml-4">Trạm thủy văn</a></li>
+                                            <li class="nav-item"><a href="#" class="nav-link ml-4">Trạm đo mưa</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link ml-2">
+                                    <p>Trạm BĐKH <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                                    <li class="nav-item"><a href="#" class="nav-link ml-3">Trạm khí tượng</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> Thông tin, tác động của BĐKH <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item"><a href="/thong-tin-tac-dong/tnn-mat" class="nav-link ml-4"> Đánh giá tác động của BĐKH đến TNN mặt  </a></li>
+                            <li class="nav-item"><a href="/thong-tin-tac-dong/tnn-duoi-dat" class="nav-link ml-4"> Đánh giá tác động của BĐKH đến TNN dưới đất  </a></li>
+                            <li class="nav-item"><a href="/thong-tin-tac-dong/moi-truong" class="nav-link ml-4"> Đánh giá tác động của BĐKH đến môi trường   </a></li>
+                            <li class="nav-item"><a href="/thong-tin-tac-dong/sinh-thai" class="nav-link ml-4"> Đánh giá tác động của BĐKH đến môi hệ sinh thái </a></li>
+                            <li class="nav-item"><a href="/thong-tin-tac-dong/kinh-te" class="nav-link ml-4"> Đánh giá tác động của BĐKH đến kinh tế - xã hội  </a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-1">
+                            <p> <i class="fa fa-fw fa-genderless"></i> Phát thải khí nhà kính <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/nang-luong" class="nav-link ml-4"> Ngành năng lượng  </a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/gtvt" class="nav-link ml-4"> Ngành GTVT  </a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/xay-dung" class="nav-link ml-4"> Ngành xây dựng   </a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/cong-nghiep" class="nav-link ml-4"> Các quá trình công nghiệp </a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/nong-lam-nghiep" class="nav-link ml-4"> Nông, lâm nghiệp  </a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/chat-thai" class="nav-link ml-4"> Chất thải  </a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item"><a href="/thong-tin-du-lieu/O-zon" class="nav-link ml-1"> <i class="fa fa-fw fa-genderless"></i> Thông tin, dữ liệu về Ô Zôn </a></li>
+                    <li class="nav-item"><a href="/bien-doi-khi-hau/bo-chuan-khi-hau" class="nav-link ml-1"> <i class="fa fa-fw fa-genderless"></i>  Bộ chuẩn khí hậu</a></li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-2">
+                            <p><i class="fa fa-fw fa-genderless"></i> Kết quả đánh giá khí hậu <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-quoc-gia" class="nav-link ml-3">Đánh giá khí hậu Sơn La</a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-son-la" class="nav-link ml-3">Đánh giá khí hậu quốc gia </a></li>
+                            @*<li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-vung-khi-hau" class="nav-link ml-3">Vùng khí hậu </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-nhiet-do-trung-binh" class="nav-link ml-3">Đánh giá xu thế nhiệt độ trung bình</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-nhiet-do-cuc-tri" class="nav-link ml-3">Đánh giá xu thế nhiệt độ cực trị </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-luong-mua-nam" class="nav-link ml-3">Đánh giá xu thế lượng mưa năm</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-luong-mua-1-ngay" class="nav-link ml-3">Đánh giá xu thế lượng mưa 1 ngày max </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-han-han" class="nav-link ml-3">Đánh giá xu thế hạn hán</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-xam-nhap-man" class="nav-link ml-3">Đánh giá xu thế xâm nhập mặn </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-bao" class="nav-link ml-3">Đánh giá xu thế bão và áp thấp nhiệt đới</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-lu" class="nav-link ml-3">Đánh giá xu thế lũ </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-sat-lo" class="nav-link ml-3">Đánh giá xu thế lũ quét và sạt lở đất</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-ret-dam" class="nav-link ml-3">Đánh giá xu thế rét đậm, rét hại </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/danh-gia-khi-hau-nuoc-bien-dang" class="nav-link ml-3">Đánh giá xu thế nước biển dâng</a></li>*@
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link ml-2">
+                            <p><i class="fa fa-fw fa-genderless"></i> Kịch bản BĐKH tỉnh Sơn La <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview p-0 ml-3" style="display: 'none'">
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-quoc-gia" class="nav-link ml-3">Kịch bản biến đổi khí hậu và nước biển dâng Việt Nam</a></li>
+                            <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-son-la" class="nav-link ml-3">Kịch bản biến đổi khí hậu chi tiết cho tỉnh Sơn La</a></li>
+                            @*<li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-loai-kich-ban" class="nav-link ml-3">Loại kịch bản BĐKH</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-nhiet-do-nam" class="nav-link ml-3">Kịch bản BĐKH về nhiệt độ trung bình năm</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-nhiet-do-cuc-tri" class="nav-link ml-3">Kịch bản BĐKH về nhiệt độ cực trị </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-luong-mua-nam" class="nav-link ml-3">Kịch bản BĐKH về lượng mưa năm</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-luong-mua-cuc-tri" class="nav-link ml-3">Kịch bản BĐKH về lượng mưa cực trị </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-han-han" class="nav-link ml-3">Kịch bản BĐKH về hạn hán</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-bao" class="nav-link ml-3">Kịch bản BĐKH về bão và ATNĐ </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-ret-dam" class="nav-link ml-3">Kịch bản BĐKH về rét đậm rét hại</a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-nang-nong" class="nav-link ml-3">Kịch bản BĐKH về nắng nóng </a></li>
+                <li class="nav-item"><a href="/thong-tin-du-lieu/kich-ban-bien-doi-khi-hau-thoi-tiet" class="nav-link ml-3">Kịch bản BĐKH về hiện thời tiết cực đoan</a></li>*@
+                        </ul>
+                    </li>
+
+                    <li class="nav-item"><a href="/ho-so-tram-bdkh" class="nav-link ml-1"> <i class="fa fa-fw fa-genderless"></i>Hồ sơ trạm giám sát BĐKH  </a></li>
+                    <li class="nav-item"><a href="/nghien-cuu-khoa-hoc/bdkh" class="nav-link ml-1"> <i class="fa fa-fw fa-genderless"></i> NCKH, Chương trình, dự án về BĐKH </a></li>
+                    <li class="nav-item"><a href="/van-ban-phap-luat/bdkh" class="nav-link ml-1"> <i class="fa fa-fw fa-genderless"></i> Văn bản quy phạm pháp luật về BĐKH </a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item"> <a href="/quan-ly-tai-lieu" class="nav-link text-white"> <p> <i class="nav-icon fa-solid fa-file"></i> Quản lý tài liệu </p></a></li>
+
+            <li class="nav-item"> <a href="/huong-dan-su-dung" class="nav-link text-white"> <p> <i class="nav-icon fas fa-question-circle"></i> Hướng dẫn sử dụng </p></a></li>
+            @if (_service.IsSuperUser(user))
+            {
+                <li class="text-dark border-bottom bg-light nav-link rounded-0"> <i class="nav-icon fa fa-fw fa-institution"></i> HỆ THỐNG</li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link text-white">
+                        <p> Quản lý hệ thống <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview p-0" style="display: none;">
+                        <li class="nav-item"><a href="/dashboard" class="nav-link ml-2"> <i class="far fa-circle nav-icon"></i> Quản lý trang truy cập </a></li>
+                        <li class="nav-item"><a href="/roleman" class="nav-link ml-2"> <i class="far fa-circle nav-icon"></i> Quản lý nhóm người dùng </a></li>
+                        <li class="nav-item"><a href="/userman" class="nav-link ml-2"> <i class="far fa-circle nav-icon"></i> Quản lý người dùng </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link text-white">
+                        <p> Phân quyền <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview p-0" style="display: none;">
+                        <li class="nav-item"><a href="/rolepermit" class="nav-link ml-2"> <i class="far fa-circle nav-icon"></i> Phân quyền nhóm người dùng </a></li>
+                        <li class="nav-item"><a href="/userpermit" class="nav-link ml-2"> <i class="far fa-circle nav-icon"></i> Phân quyền người dùng </a></li>
+                    </ul>
+                </li>
+            }
+        </ul>
+    </nav>
+</aside>
+

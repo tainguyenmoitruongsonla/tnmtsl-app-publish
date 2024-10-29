@@ -1,0 +1,26 @@
+﻿@using WaterResource.Service;
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "DỰ BÁO KHÍ TƯỢNG THỦY VĂN";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="myCtrl as demo">
+    <script src="~/Scripts/KTTVDoc/Controller.js"></script>
+    <script src="~/Scripts/KTTVDoc/Service.js"></script>
+    <!-- Main content -->
+    <section class="content p-0">
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <p class="m-0 font-weight-bold h4 font-sm-14">BẢN TIN DỰ BÁO NGUỒN NƯỚC THỜI HẠN MÙA  </p>
+                </div>
+                @Html.Partial("_Search")
+                @Html.Partial("_Table")
+            </div>
+            @Html.Partial("_ViewPDF")
+            @Html.Partial("_FormCreate")
+        </div>
+    </section>
+</div>

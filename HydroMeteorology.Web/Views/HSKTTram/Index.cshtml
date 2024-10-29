@@ -1,0 +1,312 @@
+﻿@using Microsoft.AspNet.Identity
+@using WaterResource.Service;
+
+@{
+    UserRightService _service = new UserRightService();
+    ViewBag.Title = " HỒ SƠ KỸ THUẬT TRẠM KHÍ TƯỢNG THỦY VĂN ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div ng-controller="myCntrl as demo">
+    <script src="~/Scripts/HoSoKyThuat/Controller.js"></script>
+    <script src="~/Scripts/HoSoKyThuat/Service.js"></script>
+    <section class="content p-1">
+        <div class="col-12">
+            <div class="col-12 p-1 row justify-content-end align-items-center">
+                @*<div class="floating-label mx-2">
+                    <select class="floating-select w-100" ng-model="filterLicense" ng-change="checkLicenseType(filterLicense)">
+                        <option value="">Tất cả</option>
+                        <option value="1">Cấp phép hoạt động</option>
+                        <option value="2">Gia hạn, sửa đổi, bổ xung</option>
+                        <option value="3">Cấp lại giấy phép</option>
+                    </select>
+                    <label>Loại hồ sơ cấp phép </label>
+                </div>*@
+                <div class="floating-label col-12 col-md-4 p-0">
+                    <input autocomplete="off" type="text" name="table_search" class="floating-input w-100" data-toggle="dropdown" placeholder=" " ng-model="Keyword">
+                    <ul class="dropdown-menu w-100" role="menu">
+                        <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in ItemForSearch | filter:Keyword'>
+                            <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.LicenseNumber)">
+                                <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.LicenseNumber}}</p>
+                                <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.LicenseHolderName}} - {{item.Duration}}</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <label>Tìm kiếm</label>
+                </div>
+                <div class="row m-0 col-12 col-md-auto align-items-center justify-content-end p-1">
+                    <button class="btn btn-sm btn-addnew px-4 col-auto m-1" ng-click="Search()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button class="btn btn-sm btn-addnew px-4 m-2" title="Thêm văn bản mới" ng-click="Add('HSKT_addnew-window')">Thêm mới</button>
+                </div>
+            </div>
+            <div class="table-responsive wrapper-sticky">
+                <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                    <thead class="custom-table-thead">
+                        <tr>
+                            <th class="text-nowrap text-center align-middle" colspan="4">Vị trí trạm, điểm đo</th>
+                            <th class="text-nowrap text-center align-middle" colspan="12">Thiết bị đo</th>
+                            <th class="text-nowrap text-center align-middle" colspan="4">Vận hành các thiết bị</th>
+                            <th class="text-nowrap text-center align-middle" colspan="8">Kiểm tra</th>
+                            <th class="text-nowrap text-center align-middle" colspan="4">Bảo dưỡng</th>
+                        </tr>
+                        <tr>
+                            <th class="text-nowrap text-center align-middle">Vị trí đo mực nước</th>
+                            <th class="text-nowrap text-center align-middle">Vị trí đo lưu lượng</th>
+                            <th class="text-nowrap text-center align-middle">Mặt cắt ngang tuyến đo</th>
+                            <th class="text-nowrap text-center align-middle">Vị trí điểm đo mưa</th>
+
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo hướng và tốc độ gió</th>
+                            <th class="text-nowrap text-center align-middle">Các bộ cảm biến đo nhiệt độ, độ ẩm không khí</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo mưa</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo thời gian nắng</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo bốc hơi</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo áp suất khí quyển</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo nhiệt độ mặt đất</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo lượng mưa</th>
+                            <th class="text-nowrap text-center align-middle">bộ cảm biến đo bức xạ</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo mực nước</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo lưu lượng nước</th>
+                            <th class="text-nowrap text-center align-middle">Bộ cảm biến đo hàm lượng chất lơ lửng</th>
+
+                            <th class="text-nowrap text-center align-middle">Chế độ vận hành</th>
+                            <th class="text-nowrap text-center align-middle">Tần suất đo</th>
+                            <th class="text-nowrap text-center align-middle">Tần suất truyền số liệu</th>
+                            <th class="text-nowrap text-center align-middle">Lưu trữ số liệu</th>
+
+                            <th class="text-nowrap text-center align-middle">Kiểm tra các bộ cảm biến</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra hệ thống cấp nguồn điện cho trạm</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra hệ thống chống sét</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra hệ thống thông tin</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra hệ thống xử lý và lưu trữ số liệu</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra công trình lắp đặt thiết bị</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra định kỳ</th>
+                            <th class="text-nowrap text-center align-middle">Kiểm tra đột xuất</th>
+
+                            <th class="text-nowrap text-center align-middle">Bão dưỡng hàng năm</th>
+                            <th class="text-nowrap text-center align-middle">Bảo dưỡng 6 tháng</th>
+                            <th class="text-nowrap text-center align-middle">Bão dưỡng thiết bị</th>
+                            <th class="text-nowrap text-center align-middle">Thay thế vật tư, linh kiện theo định kỳ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="custom-table-tbody">
+                        <tr class="text-center align-middle" ng-repeat="item in Data">
+                            <th class="text-nowrap text-center align-middle">{{(currentPage -1)*numPerPage+$index+1}}</th>
+                            <td class="text-nowrap text-center align-middle"><span ng-bind="item.LicenseNumber"></span></td>
+                            <td class="align-middle" ng-bind-html="calcDate(item.ExpireDate)"></td>
+                            <td class="align-middle" ng-bind="item.SignDate | date:'dd/MM/yyyy'"></td>
+                            <td class="align-middle" ng-bind="item.Duration"></td>
+                            <td class="align-middle" ng-bind="item.IssueDate | date:'dd/MM/yyyy'"></td>
+                            <td class="align-middle" ng-bind="item.ExpireDate | date:'dd/MM/yyyy'"></td>
+                            <td class="text-nowrap text-center align-middle"><span ng-bind="item.LicenseHolderName"></span></td>
+                            <td class="text-nowrap text-left align-middle"><span ng-bind="item.LicenseHolderAddress"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span ng-bind="item.ActivityRange"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span ng-bind="item.ActivityType"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span ng-bind="item.Target"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span class="btn-link" ng-click="openAsideFile(item.Id,item.ActivityResult)" ng-bind="item.ActivityResult"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span class="btn-link" ng-click="openAsideFile(item.Id,item.LicenseProfile)" ng-bind="item.LicenseProfile"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span class="btn-link" ng-click="openAsideFile(item.Id,item.LicenseRenewal)" ng-bind="item.LicenseRenewal"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span class="btn-link" ng-click="openAsideFile(item.Id,item.LicenseSuspension)" ng-bind="item.LicenseSuspension"></span></td>
+                            <td class="text-nowrap text-center align-middle"><span class="btn-link" ng-click="openAsideFile(item.Id,item.LicenseRevocation)" ng-bind="item.LicenseRevocation"></span></td>
+                            <td class="align-middle sticky-col end-col">
+                                <div class="d-flex">
+                                    <button style="padding-left:10px" class="btn btn-link" ng-click="Edit(item)" title="Xem">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button style="padding-left:10px" class="btn text-red" ng-click="Delte(item)" title="Xóa giấy phép">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- pagination -->
+            <div class="box-footer ">
+                <div class="box-tools pull-right">
+                    <ul uib-pagination
+                        total-items="TotalItem"
+                        ng-model="currentPage"
+                        items-per-page="numPerPage"
+                        boundary-links="true"
+                        previous-text=" &#xf104; " next-text=" &#xf105; "
+                        first-text=" &#xf100; " last-text=" &#xf101; "
+                        max-size="5" ng-change="pageChanged()"
+                        rotate="true"
+                        force-ellipses="true" class="pagination pagination-sm d-flex fa my-3"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- add form-->
+        <div id="HSKT_addnew-window" class="sidenav p-0 font-13">
+            <div>
+                <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                    <div class="d-flex col-12 p-0 align-items-center">
+                        <div class="col-10">
+                            <div class="admission-title d-flex center-center">
+                                <p class="m-0 col-12 p-0 text-left text-uppercase font-16">THÔNG TIN HỒ SƠ KỸ THUẬT TRẠM KHÍ TƯỢNG THỦY VĂN</p>
+                            </div>
+                        </div>
+                        <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('HSKT_addnew-window')">&times;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                            <legend class="font-18 font-weight-bold text-primary" style="width: auto">VỊ TRÍ TRẠM, ĐIỂM ĐO</legend>
+                            <div class="row col-12 m-0">
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionLevel">
+                                        <label> Cấp công trình </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.BasinArea">
+                                        <label> Diện tích lưu vực </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.RainAvgForYears">
+                                        <label> Lượng mưa trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.FlowAvgForYears">
+                                        <label> Lưu lượng trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                            <legend class="font-18 font-weight-bold text-primary" style="width: auto">THIẾT BỊ ĐO</legend>
+                            <div class="row col-12 m-0">
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionLevel">
+                                        <label> Cấp công trình </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.BasinArea">
+                                        <label> Diện tích lưu vực </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.RainAvgForYears">
+                                        <label> Lượng mưa trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.FlowAvgForYears">
+                                        <label> Lưu lượng trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                            <legend class="font-18 font-weight-bold text-primary" style="width: auto">VẬN HÀNH CÁC THIẾT BỊ</legend>
+                            <div class="row col-12 m-0">
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionLevel">
+                                        <label> Cấp công trình </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.BasinArea">
+                                        <label> Diện tích lưu vực </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.RainAvgForYears">
+                                        <label> Lượng mưa trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.FlowAvgForYears">
+                                        <label> Lưu lượng trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                            <legend class="font-18 font-weight-bold text-primary" style="width: auto">KIỂM TRA</legend>
+                            <div class="row col-12 m-0">
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionLevel">
+                                        <label> Cấp công trình </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.BasinArea">
+                                        <label> Diện tích lưu vực </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.RainAvgForYears">
+                                        <label> Lượng mưa trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.FlowAvgForYears">
+                                        <label> Lưu lượng trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                            <legend class="font-18 font-weight-bold text-primary" style="width: auto">BẢO DƯỠNG</legend>
+                            <div class="row col-12 m-0">
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionLevel">
+                                        <label> Cấp công trình </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.BasinArea">
+                                        <label> Diện tích lưu vực </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.RainAvgForYears">
+                                        <label> Lượng mưa trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.FlowAvgForYears">
+                                        <label> Lưu lượng trung bình nhiều năm </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" ng-click="closeAside('HSKT_addnew-window')">Đóng</button>
+                    <button type="button" class="btn btn-addnew" ng-click="Save('HSKT_addnew-window')"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+

@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = " ĐÁNH GIÁ TÁC ĐỘNG CỦA BIẾN ĐỔI KHÍ HẬU ĐẾN SINH THÁI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="myCtrl as demo">
+    <script src="~/Scripts/BDKHDoc/Controller.js"></script>
+    <script src="~/Scripts/BDKHDoc/Service.js"></script>
+    <!-- Main content -->
+    <!-- Main content -->
+    <section class="content p-0">
+
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <p class="m-0 font-weight-bold font-sm-13"> (Bao gồm: Đánh giá tác động đến tài nguyên nước, tài nguyên đất, tài nguyên rừng, khoáng sản, năng lượng, đa dạng sinh học)</p>
+                </div>
+                @Html.Partial("_Search")
+                @Html.Partial("_Table")
+            </div>
+        </div>
+        @Html.Partial("_ViewPDF")
+        @Html.Partial("_FormCreate")
+    </section>
+</div>

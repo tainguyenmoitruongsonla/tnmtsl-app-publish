@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "KẾT QUẢ ĐÁNH GIÁ KHÍ HẬU TỈNH SƠN LA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}<!--Begin Nav Pane-->
+<div class="p-0 ">
+    <script src="~/Scripts/FilePDF/Controller.js"></script>
+    <script src="~/Scripts/FilePDF/Service.js"></script>
+
+    <section class="content">
+        <div class="p-0" ng-controller="myCtrl as demo">
+            <object ng-attr-data="~/LocalFiles/pdf/{{FilePDF.FileName}}#view=Fit" type="application/pdf" style="width:100%;height:100vh;z-index:12;">
+            </object>
+        </div>
+    </section>
+</div>
+
+<!--End Nav Pane-->

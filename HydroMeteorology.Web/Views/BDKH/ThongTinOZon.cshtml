@@ -1,0 +1,157 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = " THÔNG TIN DỮ LIỆU QUAN TRẮC VỀ Ô DÔN, BẢO VỆ TẦNG Ô DÔN VÀ QUẢN LÝ CÁC CHẤT LÀM SUY GIẢM TẦNG Ô DÔN ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="myCtrl as demo">
+    <script src="~/Scripts/OzonInformation/Controller.js"></script>
+    <script src="~/Scripts/OzonInformation/Service.js"></script>
+    <!-- Main content -->
+    <!-- Main content -->
+    <section class="content p-0">
+
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                <div class="row mx-0 my-2 align-items-center justify-content-end">
+                    <div class="mx-2 col-3 p-0 floating-label">
+                        <input autocomplete="off" type="text" name="table_search" class="floating-input w-100" data-toggle="dropdown" placeholder=" " ng-model="Keyword">
+                        <ul class="dropdown-menu w-100" role="menu">
+                            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in ItemForSearch | filter:Keyword'>
+                                <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.Agency)">
+                                    <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.Agency}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <label>Tên văn bản</label>
+                    </div>
+                    <div class="row m-0 align-items-center p-1">
+                        <button class="btn btn-sm btn-addnew px-4 m-2" ng-click="Search()">Lọc</button>
+                        <button class="btn btn-sm btn-addnew rounded-0" ng-click="Add()" title="Thêm văn bản mới">Thêm mới</button>
+                    </div>
+                </div>
+                <!--hết copy fom lọc + nút thêm mới-->
+                <!--bảng trang đầu tiên-->
+                <div class="table-responsive">
+                    <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th class="text-center align-middle">STT </th>
+                                <th class="text-center align-middle">Tổ chức thực hiện bảo vệ tầng ô dôn </th>
+                                <th class="text-center align-middle">Đơn đăng ký sử dụng các chất được KS (file PDF) </th>
+                                <th class="text-center align-middle">Báo cáo tình hình sử dụng các chất được KS (file PDF)  </th>
+                                <th class="text-center align-middle">QĐ về việc phân bổ hạn ngạch SX, NK các chất được KS (file PDF)  </th>
+                                <th class="text-center align-middle">Thông báo phân bổ hạn ngạch (file PDF)  </th>
+                                <th class="text-center align-middle">Thông tin, dữ liệu về các chất làm suy giảm tầng ô-dôn, chất gây hiệu ứng nhà kính được KS(file PDF)  </th>
+                                <th class="text-center align-middle">Thông tin, dữ liệu hải quan về các chất làm suy giảm tầng ô-dôn, chất gây hiệu ứng nhà kính được KS (file PDF)  </th>
+                                <th class="text-center align-middle">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr class="text-center align-middle" ng-repeat="item in DataOzon">
+                                <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                <td><span ng-bind="item.Agency"></span></td>
+                                <td><span class="btn-link" ng-click="openAsideFile(item.Id,item.ApplicationForm)" ng-bind="item.ApplicationForm"></span></td>
+                                <td><span class="btn-link" ng-click="openAsideFile(item.Id,item.UsageReport)" ng-bind="item.UsageReport"></span></td>
+                                <td><span class="btn-link" ng-click="openAsideFile(item.Id,item.ProvisionQuota)" ng-bind="item.ProvisionQuota"></span></td>
+                                <td><span class="btn-link" ng-click="openAsideFile(item.Id,item.NoticeQuota)" ng-bind="item.NoticeQuota"></span></td>
+                                <td><span class="btn-link" ng-click="openAsideFile(item.Id,item.SubstanceInformation)" ng-bind="item.SubstanceInformation"></span></td>
+                                <td><span class="btn-link" ng-click="openAsideFile(item.Id,item.CustomInformation)" ng-bind="item.CustomInformation"></span></td>
+                                <td class="sticky-col end-col">
+                                    <div class="tools d-flex justify-content-center">
+                                        <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa" ng-click="Edit(item)"><i class="fa fa-edit"></i></a>
+                                        <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá" ng-click="Delete(item)"><i class="fa-solid fa-trash-can"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- pagination -->
+                    <div class="box-footer ">
+                        <div class="box-tools pull-right">
+                            <ul uib-pagination
+                                total-items="TotalItem"
+                                ng-model="currentPage"
+                                items-per-page="numPerPage"
+                                boundary-links="true"
+                                previous-text=" &#xf104; " next-text=" &#xf105; "
+                                first-text=" &#xf100; " last-text=" &#xf101; "
+                                max-size="5" ng-change="pageChanged()"
+                            rotate ="true"
+                            force-ellipses="true" class="pagination pagination-sm inline fa d-flex m-0"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sidenav p-0" id="aside">
+            <div>
+                <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                    <div class="d-flex col-12 p-0 align-items-center">
+                        <div class="col-10">
+                            <div class="admission-title d-flex center-center">
+                                <p class="m-0 col-12 p-0 text-left text-uppercase font-16">{{HeaderAction}}</p>
+                            </div>
+                        </div>
+                        <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside()">&times;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <fieldset class="col-12 border border-secondary p-3 mb-2 background-color bg-lightgray">
+                    <legend class="font-18 font-weight-bold text-primary" style="width: auto">Thông tin</legend>
+                    <div class="mb-2">
+                        <div class="col-sm-12 p-0 row">
+                            <div class="col-md-8 p-2">
+                                <div class="floating-label my-2">
+                                    <input ng-model="item.Agency" class="floating-input w-100" placeholder=" ">
+                                    <label>Tổ chức</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs0" ng-model="item.ApplicationForm">
+                                    <label>Đơn đăng ký sử dụng các chất được KS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs1" ng-model="item.UsageReport">
+                                    <label>Báo cáo tình hình sử dụng các chất được KS </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs2" ng-model="item.ProvisionQuota">
+                                    <label>QĐ về việc phân bổ hạn ngạch SX, NK các chất được KS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs3" ng-model="item.NoticeQuota">
+                                    <label>Thông báo phân bổ hạn ngạch</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs4" ng-model="item.SubstanceInformation">
+                                    <label>Thông tin, dữ liệu về các chất làm suy giảm tầng ô-dôn, chất gây hiệu ứng nhà kính được KS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs5" ng-model="item.CustomInformation">
+                                    <label>Thông tin, dữ liệu hải quan về các chất làm suy giảm tầng ô-dôn, chất gây hiệu ứng nhà kính được KS</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="pt-1 col-sm-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-sm btn-addnew mx-2" ng-click="Save()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu </button>
+            </div>
+        </div>
+        @Html.Partial("_ViewPDF")
+    </section>
+</div>

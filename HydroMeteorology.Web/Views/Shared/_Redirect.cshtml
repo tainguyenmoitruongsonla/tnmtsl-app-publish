@@ -1,0 +1,13 @@
+﻿@using WaterResource.Service;
+@{
+    string user = User.Identity.Name;
+    UserRightService _service = new UserRightService();
+}
+@if (!Request.IsAuthenticated)
+{
+    var path = Request.Url.PathAndQuery;
+    if (path != "/onegate")
+    {
+        Response.Redirect("/dang-nhap");
+    }
+}

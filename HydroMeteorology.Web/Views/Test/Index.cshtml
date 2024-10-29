@@ -1,0 +1,11 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "TEST";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div ng-controller="myCntrl as demo">
+    <script src="~/Scripts/Test/Controller.js"></script>
+    <script src="~/Scripts/Test/Service.js"></script>
+    <button ng-click="send()">send test</button>
+</div>

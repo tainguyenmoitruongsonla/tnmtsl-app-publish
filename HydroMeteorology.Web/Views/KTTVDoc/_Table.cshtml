@@ -1,0 +1,50 @@
+﻿<div @using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+}
+     class="col-12 d-flex border rounded" style="height: 285px" ng-repeat="DataDoc in DataKTTVDoc | orderBy:'-Id'" ng-if="$first">
+    <div class="col-2 h-100 position-relative text-center" style="line-height: 250px; background: lightskyblue;">
+        <img src="http://tainguyenmoitruongsonla.vn/assets/image/hydrometeorology-sign.png" alt="hydrometeorology sign" class="w-50">
+    </div>
+    <div class="col-10 p-2">
+        <div class="col-12 d-flex mb-4"><button class="bg-danger btn text-white">MỚI NHẤT</button><h3 class="m-2 font-weight-bold">{{DataDoc.Name}}</h3></div>
+        <p class="col-12">Số bản tin: {{DataDoc.DocNumber}}</p>
+        <div class="col-12 d-flex p-0 row">
+            <div class="col-md-6">
+                <p>Ngày gửi bản tin: {{DataDoc.IssuedTime | date:'dd/MM/yyyy'}}</p>
+                <p>Giờ phát bản tin: {{DataDoc.IssuedTime | date:'HH:mm:ss'}}</p>
+                <p>Cơ quan ban hành: {{DataDoc.AgencyIssued}}</p>
+            </div>
+            <div class="col-md-6 justify-content-end d-flex">
+                <div>
+                    <a href="#" class="btn btn-addnew" ng-click="openAsideFile(DataDoc)">Xem file PDF <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i></a>
+                    <a href="#" class="btn btn-addnew" ng-click="Edit(DataDoc)">Sửa<i class="fa-solid fa-pen" title="Sửa bản tin" aria-hidden="true"></i></a>
+                    <a href="#" class="btn btn-cancel" ng-click="Delete(DataDoc)">Xóa<i class="fa-solid fa-trash" title="Xóa bản tin" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row m-0" ng-repeat="DataDoc in DataKTTVDoc | orderBy:'-Id'" ng-if="!$first">
+    <div class="col-12 border rounded p-3 mt-2 ">
+        <h4 class="col-12 font-weight-bold">{{DataDoc.Name}}</h4>
+        <div class="col-12 d-flex p-0 row">
+            <div class="col-md-6">
+                <p class="m-0">Số bản tin: {{DataDoc.DocNumber}}</p>
+                <p class="m-0">Ngày gửi bản tin: {{DataDoc.IssuedTime | date:'dd/MM/yyyy'}}</p>
+                <p class="m-0">Cơ quan ban hành: {{DataDoc.AgencyIssued}}</p>
+            </div>
+            <div class="col-md-6 justify-content-end d-flex margin-top-2">
+                <div>
+                    <a href="#" class="btn btn-addnew" ng-click="openAsideFile(DataDoc)">Xem file PDF <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i></a>
+                    @if (_service.IsViewAction("/giay-phep", User.Identity.Name, "EDIT"))
+                    {
+                        <a href="#" class="btn btn-addnew" ng-click="Edit(DataDoc)">Sửa<i class="fa-solid fa-pen" title="Sửa bản tin" aria-hidden="true"></i></a>
+                    }
+
+                    <a href="#" class="btn btn-cancel" ng-click="Delete(DataDoc)">Xóa<i class="fa-solid fa-trash" title="Xóa bản tin" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

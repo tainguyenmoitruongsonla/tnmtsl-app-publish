@@ -1,0 +1,102 @@
+﻿@*@using WaterResource.Web.Models*@
+@using WaterResource.Service;
+@*@model LoginViewModel*@
+@{
+    ViewBag.Title = "KHÍ TƯỢNG THỦY VĂN - HƯỚNG DẪN SỬ DỤNG";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_LayoutBlankPage.cshtml";
+
+}
+<style>
+    .content-wrapper {
+        margin-left: 0 !important;
+        height: 100vh !important;
+    }
+
+    .sidebar-toggle {
+        display: none;
+    }
+</style>
+<img src="~/LocalFiles/images/ANHSOTNMT.png" alt="banner" style=" height: 140px; width:100% " />
+@Html.Partial("_Header")
+
+<div ng-controller="myCntrl as demo">
+    <script src="~/Scripts/GioiThieuChung/Service.js"></script>
+    <script src="~/Scripts/GioiThieuChung/Controller.js"></script>
+    <div class="row m-0" id="homeLayout">
+        <div class="col-12 col-xl-3 px-0" id="homePageNav">
+
+            <div class="row m-0">
+                <div class="col-12 row m-0 center-center h-100 py-3">
+                    <a href="/" class="nav-link">Trang chủ</a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/gioithieuchung" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/01_KTTV.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Giới thiệu chung </p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/biendoikhihau" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/BDKH.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Biến đổi khí hậu</p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/quantrackttv" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/03_QUANTRACKTTV.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Quan trắc KTTV</p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/chuongtrinhkttv" class="nav-link position-relative">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/CHUONGTRINHKTTV.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Chương trình KTTV </p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/dubaokttv" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/DBKTTV.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Dự báo KTTV</p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/baocaobieumaukttv" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/BAOCAOBIEUMAU.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Báo cáo biểu mẫu - văn bản pháp luật</p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="/hosogiayphep" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/HOSOGIAYPHEP.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Hồ sơ giấy phép</p>
+                    </a>
+                </div>
+
+                <div class="col-6 row m-0 center-center">
+                    @*<a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#Register-window">*@
+                    <a href="/account/register" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/DANGKY.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Đăng ký</p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="huongdanquydinh" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/HUONGDANQUYDINH.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Hướng dẫn quy định</p>
+                    </a>
+                </div>
+                <div class="col-6 row m-0 center-center">
+                    <a href="yeucauketnoi" class="nav-link">
+                        <img class="grid-item-image" src="~/LocalFiles/images/KHI_TUONG_THUY_VAN/YEUCAUKETNOI.png" alt="altImg" />
+                        <p class="text-center font-weight-bold">Yêu cầu kết nối</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-9 p-0" style="height: calc(100vh - 200px)">
+            <object ng-attr-data="LocalFiles/pdf/huongdanduan_KTTV_LAN2.pdf#view=Fit&toolbar=0&zoom=FitH" type="application/pdf" style="width:100%;height:100%;z-index:12;">
+            </object>
+        </div>
+    </div>
+</div>

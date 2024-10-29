@@ -1,0 +1,148 @@
+﻿<div class="modal fade addnew-windows" id="addNewConsName" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type="hidden" ng-model="license.Construction.TypeOfConstructionId" />
+                    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+                        <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN CÔNG TRÌNH</legend>
+                        <div class="row col-12 m-0 p-0">
+                            <div class="col-md-6">
+                                <label class="font-13">Loại công trình<sup class="text-danger font-13">*</sup></label>
+                                <div class="floating-label w-100">
+                                    <select ng-options="opt.Id as opt.TypeName for opt in TypeOfConstructions" ng-model="Id" ng-change="changeTypeOfCons(Id, false)" class="floating-select w-100">
+                                        <option value="" hidden>-- Chọn loại công trình --</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Tên công trình<sup class="text-danger font-13">*</sup></label>
+                                <input id="inputGroundwaterCons" class="floating-input w-100 text-left" type="text" placeholder=" " ng-model="license.Construction.ConstructionName" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Tỉnh :</label>
+                                <select ng-options="opt.Id as opt.CityName for opt in Provinces" ng-model="license.Construction.ProvinceId" ng-change="ProvinceChange(license.Construction.ProvinceId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Tỉnh/TP--]</option><option label="Tỉnh Sơn La" value="number:1">Tỉnh Sơn La</option></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Quận/Huyện :</label>
+                                <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="license.License_Fk.DistrictId" ng-change="DistrictChange(license.License_Fk.DistrictId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Xã/Phường :</label>
+                                <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="license.License_Fk.CommuneId" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option></select>
+                            </div>
+                            <div class="col-md-9">
+                                <label> Địa điểm công trình </label>
+                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.ConstructionLocation">
+                            </div>
+                            <div class="col-md-3">
+                                <label> Năm bắt đầu vận hành </label>
+                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.StartDate">
+                            </div>
+                            <div class="col-md-6 row m-0 p-0">
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.X">
+                                        <label> X (VN2000) </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.Y">
+                                        <label> Y (VN2000) </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 row m-0 p-0">
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.Lat">
+                                        <label> X (WGS84) </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.Lng">
+                                        <label> Y (WGS84) </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <label> Mục đích khoan KT </label>
+                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.ExplorationPurposes">
+                            </div>
+                            <div class="col-md-3">
+                                <label> Thời gian hành nghề khoan </label>
+                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DrillingDuration">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+                        <legend class="font-18 font-weight-bold text-primary text-uppercase" style="width: auto">Số hiệu, vị trí và thông số của công trình khai thác </legend>
+                        <div class="row col-12 m-0 p-0">
+                            <div class="col-md-4">
+                                <label>Quy mô khoan thăm dò </label>
+                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.DrillingScale">
+                            </div>
+                            <div class="col-md-4">
+                                <label> Tầng chứa nước thăm dò </label>
+                                <select ng-options="opt.Id as opt.Name for opt in AllAquifers" ng-model="license.License_Fk.AquiferId" ng-change="AquiferChange(license.License_Fk.AquiferId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Tầng chứa nước--]</option></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label> Thời gian thi công  </label>
+                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="license.Construction.ConstructionTime">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+                        <legend class="font-18 font-weight-bold text-primary" style="width: auto">VỊ TRÍ CÁC HẠNG MỤC CHÍNH CỦA CÔNG TRÌNH KHAI THÁC SỬ DỤNG NƯỚC</legend>
+                        <div class="mb-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center align-middle font-13" rowspan="2">TT</th>
+                                            <th class="text-center align-middle font-13" rowspan="2">Hạng mục</th>
+                                            <th colspan="2" class="text-center align-middle font-13">Tọa độ (VN2000)</th>
+                                            <th colspan="2" class="text-center align-middle font-13">Tọa độ (WGS84)</th>
+                                            <th rowspan="2" class="text-center align-middle font-13" style="width:50px">
+                                                <button title="Tạo mới hạng mục" type="button" ng-click="AddConstructionItem()" class="w-100 d-flex center-center btn btn-link btn-sm">
+                                                    Thêm
+                                                </button>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center align-middle font-13">X</th>
+                                            <th class="text-center align-middle font-13">Y</th>
+                                            <th class="text-center align-middle font-13">X</th>
+                                            <th class="text-center align-middle font-13">Y</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in license.Construction.ConstructionItems">
+                                            <th class="text-center align-middle font-13" ng-bind-html="$index"></th>
+                                            <td style="min-width: 250px;"><input type="text" name="tenhangmuc" class="floating-input w-100" ng-model="item.Name"></td>
+                                            <td style="min-width: 100px;"><input type="number" name="x" class="floating-input w-100" ng-model="item.X"></td>
+                                            <td style="min-width: 100px;"><input type="number" name="y" class="floating-input w-100" ng-model="item.Y"></td>
+                                            <td style="min-width: 100px;"><input type="number" name="lat" class="floating-input w-100" ng-model="item.Lng"></td>
+                                            <td style="min-width: 100px;"><input type="number" name="long" class="floating-input w-100" ng-model="item.Lat"></td>
+                                            <td class="text-center align-middle">
+                                                <button type="button" ng-click="RemoveConstructionItem($index, item)" class="center-center text-danger btn btn-link btn-sm">
+                                                    <i class="fa fa-trash text-danger"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-addnew" data-dismiss="modal"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

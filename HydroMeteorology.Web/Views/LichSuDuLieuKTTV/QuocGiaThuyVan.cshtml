@@ -1,0 +1,374 @@
+﻿@using WaterResource.Service;
+@{
+    UserRightService _service = new UserRightService();
+    ViewBag.Title = "THÔNG TIN DỮ LIỆU KHÍ TƯỢNG THỦY VĂN TRONG QUÁ KHỨ VÀ HIỆN TẠI TỪ CÁC THỦY VĂN QUỐC GIA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (_service.IsViewAction("/lich-su-thong-tin", User.Identity.Name, "VIEW"))
+{
+<style>
+    .leaflet-popup-content {
+        width: 450px !important;
+    }
+</style>
+<link href="~/Assets/leaflet/leaflet.css" rel="stylesheet" />
+<script src="~/Assets/leaflet/leaflet.js"></script>
+<script src="~/Assets/leaflet/L.KML.js"></script>
+ <!-- Load Esri Leaflet from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.0.4/esri-leaflet.js"></script>
+
+ <!-- Load Esri Leaflet Vector from CDN -->
+<script src="https://unpkg.com/esri-leaflet-vector@3.1.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+<script src="~/Assets/leaflet/leaflet-bing-layer.js"></script>
+<script src="~/Assets/leaflet/Bing.js"></script>
+<script src="~/Scripts/QuanTracKTTV/Controller.js"></script>
+<script src="~/Scripts/QuanTracKTTV/Service.js"></script>
+
+<div ng-controller="myCtrl as demo">
+    <!-- Main content -->
+    <section class="content p-0">
+        <!--copy tư doan nay the hien noi dung thay doi -->
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                <div style="width: 100%; height: calc( 60vh - 50px )">
+                    <div class="common-map" id="Map"></div>
+                </div>
+
+                <div class="col-md-12 p-0 row m-0">
+                    <div class="col-md-12 row m-0 justify-content-end align-items-center py-2">
+                        <div class="col-lg-5 p-0 row m-0 align-items-center">
+                            <div class="col-12 p-0" style="color:blue;">
+                                Tổng số trạm:  <b>{{TotalStation}} </b>
+                            </div>
+                            <div class="col-12 p-0" style="color:red;">
+                                Tổng số trạm dừng hoạt động: <b> {{InActiveStation}}</b>
+                            </div>
+                            <div class="col-12 p-0" style="color:green;">
+                                Tổng số trạm đang hoạt động:  <b>{{ActiveStation}}</b>
+                            </div>
+                        </div>
+                        <!--đếm số trạm -->
+                        <div class="row m-0 col-lg-7 align-items-center justify-content-end">
+                            <div>
+                                <input class="form-control form-control-sm" type="text" list="MaTram" placeholder="Mã trạm hoặc tên trạm" ng-model="Keyword">
+                                <datalist id="MaTram">
+                                    <option ng-repeat="item in AllDataStation" value={{item.MaTram}}>{{item.Name}}</option>
+                                </datalist>
+                            </div>
+                            <span class="px-2">Thời gian từ: </span>
+                            <div class="row m-0">
+                                <input type="number" class="form-control form-control-sm col-md-12" list="StartDate" min="1800" max="2200" ng-model="StartDate" />
+                                <datalist id="StartDate">
+                                    <option ng-repeat="item in AllDataStation" value={{item.StartDate}}></option>
+                                </datalist>
+                            </div>
+                            <span class="px-2">Đến: </span>
+                            <div class="row m-0">
+                                <input type="number" class="form-control form-control-sm col-md-12" list="EndDate" min="1800" max="2200" ng-model="EndDate" />
+                                <datalist id="EndDate">
+                                    <option ng-repeat="item in AllDataStation" value={{item.EndDate}}></option>
+                                </datalist>
+                            </div>
+                            <div class="row m-0 align-items-center p-1">
+                                <button class="btn btn-sm btn-addnew px-4 mx-2" ng-click="Search()">Lọc</button>
+
+                                <button class="btn btn-sm btn-addnew px-4 m-2" title="Thêm văn bản mới" ng-click="AddDataStation('ThuyVanQuocGia_addnew')">Thêm mới</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--bảng trang đầu tiên-->
+                    <div class="col-md-12 row p-0 m-0">
+                        <div class="table-responsive">
+                            <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                                <thead class="custom-table-thead">
+                                    <tr>
+                                        <th class="text-center align-middle">STT </th>
+                                        <th class="text-center align-middle">Mã trạm </th>
+                                        <th class="text-center align-middle">Tên trạm </th>
+                                        <th class="text-center align-middle">Xã</th>
+                                        <th class="text-center align-middle">Huyện</th>
+                                        <th class="text-center align-middle">Vĩ độ</th>
+                                        <th class="text-center align-middle">Kinh Độ</th>
+                                        <th class="text-center align-middle"> Năm bắt đầu đo </th>
+                                        <th class="text-center align-middle"> Năm kết thúc đo </th>
+                                        <th class="text-center align-middle"> Mực nước (cm) </th>
+                                        <th class="text-center align-middle"> Lưu lượng (m<sup>3</sup>/s) </th>
+                                        <th class="text-center align-middle"> Trạng thái quan trắc </th>
+                                        <th class="text-center align-middle"> Chi tiết </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="custom-table-tbody">
+                                    <tr class="text-center align-middle" ng-repeat="item in DataStation">
+                                        <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                        <td><span ng-bind="item.StationCode"></span></td>
+                                        <td class="text-nowrap text-left" style="min-width:100px">
+                                            <span ng-bind="item.Name" class="text-primary" ng-click="zoomStation(item.Lng, item.Lat, item.Id)"></span>
+                                        </td>
+                                        <td><span ng-bind="item.CommuneName"></span></td>
+                                        <td><span ng-bind="item.DistrictName"></span></td>
+                                        <td><span ng-bind="item.Lat"></span></td>
+                                        <td><span ng-bind="item.Lng"></span></td>
+                                        <td><span ng-bind="item.StartDate"></span></td>
+                                        <td><span ng-bind="item.EndDate"></span></td>
+                                        <td><span ng-bind="item.Mucnuoc"></span></td>
+                                        <td><span ng-bind="item.Luuluong"></span></td>
+                                        <td ng-bind-html="checkDeviceStatus(item)"></td>
+                                        <td class="sticky-col end-col">
+                                            <div class="d-flex">
+                                                <a href="javascript:void(0)" ng-click="openAsideV2('TramQuanTrac_QuocGiaThuyVanDetail','TramQuanTrac_QuocGiaThuyVan',item)"><i class="fa fa-eye"></i></a>
+                                                <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa công trình" ng-click="EditDataStation(item, 'ThuyVanQuocGia_addnew')"><i class="fa fa-edit"></i></a>
+                                                <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá công trình" ng-click="DeleteItem(item)"><i class="fa-solid fa-trash-can"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-12 row m-0">
+                            <p class="col-md-6"> * Ghi chú: Nếu năm kết thúc đo không có số liệu là quan trắc đến nay </p>
+
+                            <div class="row m-0 col-md-6 align-items-center justify-content-end">
+                                <!-- pagination phân trang -->
+                                <div class="box-footer ">
+                                    <div class="box-tools pull-right">
+                                        <ul uib-pagination
+                                            total-items="TotalFoundStation"
+                                            ng-model="currentPage"
+                                            items-per-page="numPerPage"
+                                            boundary-links="true"
+                                            previous-text=" &#xf104; " next-text=" &#xf105; "
+                                            first-text=" &#xf100; " last-text=" &#xf101; "
+                                            max-size="5" ng-change="pageChanged()"
+                            rotate ="true"
+                            force-ellipses="true" class="pagination pagination-sm inline fa d-flex m-0"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- addnew, edit -->
+                <div id="ThuyVanQuocGia_addnew" class="sidenav p-0 ">
+                    <div>
+                        <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                            <div class="d-flex col-12 p-0 align-items-center">
+                                <div class="col-10 p-0">
+                                    <div class="admission-title d-flex center-center">
+                                        <p class="m-0 col-12 p-0 text-center text-uppercase font-16"> CÁC TRẠM ĐO MƯA QUỐC GIA TRÊN ĐỊA BÀN TỈNH SƠN LA </p>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('ThuyVanQuocGia_addnew')">&times;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="row col-12 m-0">
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.Name">
+                                        <label> Tên trạm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.StationCode">
+                                        <label> Mã trạm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.LocationName">
+                                        <label> Vị trí trạm </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="station.DistrictId" ng-change="DistrictChange(station.DistrictId)" class="floating-select ng-pristine ng-untouched ng-valid ng-empty" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option></select>
+                                        <label>Quận/Huyện :</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="station.CommuneId" class="floating-select ng-pristine ng-untouched ng-valid ng-empty" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option></select>
+                                        <label>Xã/Phường :</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.Lat">
+                                        <label> Vĩ độ </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.Lng">
+                                        <label> Kinh độ </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.StartDate">
+                                        <label> Năm bắt đầu đo </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 py-3">
+                                    <div class="floating-label">
+                                        <input type="text" class="floating-input w-100 ng-pristine ng-untouched ng-valid ng-empty" placeholder=" " ng-model="station.EndDate">
+                                        <label> Năm kết thúc đo </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-cancel" ng-click="closeAside('ThuyVanQuocGia_addnew')">Đóng</button>
+                            <button type="button" class="btn btn-addnew" ng-click="Save('ThuyVanQuocGia_addnew')"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+                        </div>
+                    </div>
+                </div>
+                <!--Detail-->
+                <div id="TramQuanTrac_QuocGiaThuyVanDetail" class="sidenav p-0 ">
+                    <div>
+                        <div class="doc-title p-2 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                            <div class="d-flex col-12 p-0 align-items-center">
+                                <div class="col-10 p-0">
+                                    <div class="admission-title d-flex center-center">
+                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16">
+                                            Số liệu quan trắc trạm thuỷ văn - {{detailTitle}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAsideV2('TramQuanTrac_QuocGiaThuyVanDetail','TramQuanTrac_QuocGiaThuyVan')"><i class="fa fa-arrow-right font-20"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-md-12 p-0">
+                            <div class="card card-light card-tabs rounded-0 tabs">
+                                <div class="card-header rounded-0 p-0">
+                                    <ul class="nav nav-tabs" id="TramQuanTracThuyVanChuyenDung_ChuyenDungThuyDien-main-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded-0 active" id="TramQuanTrac_QuocGiaThuyVan_SoLieuVanHanh-tab" data-toggle="pill" href="#TramQuanTrac_QuocGiaThuyVan_SoLieuVanHanh" role="tab" aria-controls="TramQuanTrac_QuocGiaThuyVan_SoLieuVanHanh" aria-selected="false">Số liệu quan trắc </a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded-0" id="TramQuanTrac_QuocGiaThuyVan_LichSuQuanTrac-tab" data-toggle="pill" href="#TramQuanTrac_QuocGiaThuyVan_LichSuQuanTrac" role="tab" aria-controls="TramQuanTrac_QuocGiaThuyVan_LichSuQuanTrac" aria-selected="true">Lịch sử quan trắc</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded-0" id="TramQuanTrac_QuocGiaThuyVan_TrungBinhThang-tab" data-toggle="pill" href="#TramQuanTrac_QuocGiaThuyVan_TrungBinhThang" role="tab" aria-controls="TramQuanTrac_QuocGiaThuyVan_TrungBinhThang" aria-selected="true">Trung bình tháng</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--copy fom lọc + nút thêm mới-->
+                            <div class="row m-0 align-items-center justify-content-end">
+
+                                <span class="px-2">Thời gian từ: </span>
+                                <div class="row m-0">
+                                    <input type="date" class="form-control form-control-sm col-md-12" style="width:150px;" ng-model="DetailStartDate" />
+                                </div>
+                                <span class="px-2">Đến: </span>
+                                <div class="row m-0">
+                                    <input type="date" class="form-control form-control-sm col-md-12" style="width:150px;" ng-model="DetailEndDate" />
+                                </div>
+                                <div class="row m-0 align-items-center p-1">
+                                    <button class="btn btn-sm btn-info px-4 mx-2" ng-click="SearchDetail()">Lọc</button>
+                                </div>
+                            </div>
+                            <!--hết copy fom lọc + nút thêm mới-->
+
+                            <div class="tab-content">
+                                <!--Xem số liệu quan trắc -->
+                                <div class="tab-pane fade active show" id="TramQuanTrac_QuocGiaThuyVan_SoLieuVanHanh" role="tabpanel" aria-labelledby="TramQuanTrac_QuocGiaThuyVan_SoLieuVanHanh-tab">
+                                    <div class="table-responsive">
+                                        <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                                            <thead class="custom-table-thead">
+                                                <tr>
+                                                    <th rowspan="2" class="text-center align-middle">STT</th>
+                                                    <th rowspan="2" class="text-center align-middle">Thời gian </th>
+                                                    <th rowspan="2" class="text-center align-middle">Mực nước (cm)</th>
+                                                    <th rowspan="2" class="text-center align-middle">Lưu lượng (m<sup>3</sup>/s)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="custom-table-tbody">
+                                                <tr class="text-center align-middle" ng-repeat="item in DataPre">
+                                                    <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                                    <td><span ng-bind="item.time"></span></td>
+                                                    <td><span ng-bind="item.mucnuoc | number:2 "></span></td>
+                                                    <td><span ng-bind="item.luuluong | number:2 "></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!--Xem lịch sử quan trắc -->
+                                <div class="tab-pane fade " id="TramQuanTrac_QuocGiaThuyVan_LichSuQuanTrac" role="tabpanel" aria-labelledby="TramQuanTrac_QuocGiaThuyVan_LichSuQuanTrac-tab">
+                                    <div class="col-12">
+                                        <div id="ObservationHistory_TramQuanTrac_QuocGiaThuyVan"></div>
+                                    </div>
+                                </div>
+
+                                <!--Xem đặc trưng trung bình tháng năm -->
+                                <div class="tab-pane fade " id="TramQuanTrac_QuocGiaThuyVan_TrungBinhThang" role="tabpanel" aria-labelledby="TramQuanTrac_QuocGiaThuyVan_TrungBinhThang-tab">
+                                    <div class="col-12 p-0">
+                                        <div class="table-responsive">
+                                            <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                                                <thead class="custom-table-thead">
+                                                    <tr>
+                                                        <th class="text-center align-middle">Năm</th>
+                                                        <th class="text-center align-middle">Tháng I </th>
+                                                        <th class="text-center align-middle">Tháng II</th>
+                                                        <th class="text-center align-middle">Tháng III</th>
+                                                        <th class="text-center align-middle">Tháng IV</th>
+                                                        <th class="text-center align-middle">Tháng V</th>
+                                                        <th class="text-center align-middle">Tháng VI</th>
+                                                        <th class="text-center align-middle">Tháng VII</th>
+                                                        <th class="text-center align-middle">Tháng VIII</th>
+                                                        <th class="text-center align-middle">Tháng IX</th>
+                                                        <th class="text-center align-middle">Tháng X</th>
+                                                        <th class="text-center align-middle">Tháng XI</th>
+                                                        <th class="text-center align-middle">Tháng XII</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="custom-table-tbody">
+                                                    <tr class="text-center align-middle" ng-repeat="item in GetDataTramMuaPCTT">
+                                                        <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                                        <td class="text-left text-nowrap"><span ng-bind="item.Name"></span></td>
+                                                        <td><span ng-bind="item.LocationName"></span></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--End Nav Pane-->
+                </div>
+            </div>
+        </div>
+        <!--Het copy tư doan nay the hien noi dung thay doi -->
+    </section>
+    <!-- /.content -->
+    <!--Tram QG-->
+</div>
+ <!-- /.content-wrapper -->
+}
+else
+{
+@Html.Partial("_401")
+}

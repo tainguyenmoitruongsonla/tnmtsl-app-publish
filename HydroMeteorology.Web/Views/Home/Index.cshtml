@@ -1,0 +1,307 @@
+﻿@*@using WaterResource.Web.Models*@
+@using WaterResource.Service;
+@*@model LoginViewModel*@
+@{
+    ViewBag.Title = "KHÍ TƯỢNG THỦY VĂN - BIẾN ĐỔI KHÍ HẬU TỈNH SƠN LA";
+    UserRightService _service = new UserRightService();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Assets/leaflet/leaflet.css" rel="stylesheet" />
+<script src="~/Assets/leaflet/leaflet.js"></script>
+<script src="~/Assets/leaflet/L.KML.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.0.4/esri-leaflet.js"></script>
+
+<!-- Load Esri Leaflet Vector from CDN -->
+<script src="https://unpkg.com/esri-leaflet-vector@3.1.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+<script src="~/Assets/leaflet/leaflet-bing-layer.js"></script>
+<script src="~/Assets/leaflet/Bing.js"></script>
+<div ng-controller="HomeCntrl as demo">
+    <script src="~/Scripts/Home/Controller.js"></script>
+    <script src="~/Scripts/Home/Service.js"></script>
+
+    <section class="content p-0">
+
+        <aside class="p-2" id="Constructions">
+            <div class="">
+                <div class="card-header border-0">
+                    <h3 class="card-title font-sm-14">
+                        THỐNG KÊ DỮ LIỆU KHÍ TƯỢNG THỦY VĂN ( {{currentTime}} )
+                    </h3>
+                </div>
+                <div class="row m-0">
+                    <div class="col-12 col-md-4 p-0 p-md-1">
+                        <div class="card">
+                            <div class="row m-0 col-12 p-0">
+                                <div class="col-lg-12 row m-0">
+                                    <div class="col-12 row mx-0 mb-2 px-1">
+                                        <div class="col-12 p-2">
+                                            <p class="m-0"> Trạng thái giám sát công trình trạm</p>
+                                            <div class="box-body p-0" style="">
+                                                <div class="row m-0 font-14 px-sm-5 py-2">
+                                                    <span class="font-weight-bold d-block col-4">Tổng số: </span>
+                                                    <span class="d-block col-3 text-end">{{StationNum}}</span>
+                                                </div>
+                                                <div class="row m-0 font-14 px-sm-5 py-2">
+                                                    <span class="font-weight-bold d-block col-12">Trạm kết nối bình thường: </span>
+                                                    <div class="col-12">
+                                                        <div class="progress progress-xxl active border border-success">
+                                                            <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                                                <span class="font-weight-bold">(33/100)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-0 font-14 px-sm-5 py-2">
+                                                    <span class="font-weight-bold d-block col-12">Trạm mất kết nối: </span>
+                                                    <div class="col-12">
+                                                        <div class="progress progress-xxl active border border-warning">
+                                                            <div class="progress-bar bg-warning progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                                                <span class="font-weight-bold">(33/100)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-0 font-14 px-sm-5 py-2">
+                                                    <span class="font-weight-bold d-block col-12">Trạm chưa gửi dữ liệu: </span>
+                                                    <div class="col-12">
+                                                        <div class="progress progress-xxl active border border-secondary">
+                                                            <div class="progress-bar bg-secondary progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                                                <span class="font-weight-bold">(33/100)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-0 font-14 px-sm-5 py-2">
+                                                    <span class="font-weight-bold d-block col-12">Trạm thực hiện chưa đúng: </span>
+                                                    <div class="col-12">
+                                                        <div class="progress progress-xxl active border border-secondary">
+                                                            <div class="progress-bar bg-danger progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                                                <span class="font-weight-bold">(<span ng-bind-html="warningCons"></span>/<span ng-bind-html="ConstructionNum"></span>)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Trạm quốc gia: {{CountStations.khituong[0] - 0 + CountStations.thuyvan[0] - 0 + CountStations.domua[0] - 0}}</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool p-4" data-card-widget="collapse">
+                                            <i class="fas fa-caret-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body p-0" style="display: block;">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Trạm khí tượng</span> <span class="float-right badge bg-primary">{{CountStations.khituong[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Trạm thủy văn</span> <span class="float-right badge bg-info">{{CountStations.thuyvan[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Trạm mưa</span> <span class="float-right badge bg-info">{{CountStations.domua[0] - 0}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">Trạm chuyên dùng: {{CountStations.sanbaydandung[0] - 0 + CountStations.hochuathuydien[0] - 0 + CountStations.hochuathuyloi[0] - 0 + CountStations.cau[0] - 0 + CountStations.thapthuphatsong[0] - 0 + CountStations.captreo[0] - 0 + CountStations.tuyenduongcaotoc[0] - 0 + CountStations.cangthuynoidia[0] - 0}}</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool p-4" data-card-widget="collapse">
+                                            <i class="fas fa-caret-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body p-0" style="display: block;">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Hồ chứa thủy điện</span> <span class="float-right badge bg-success">{{CountStations.hochuathuydien[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Hồ chứa thủy lợi</span> <span class="float-right badge bg-info">{{CountStations.hochuathuyloi[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Sân bay dân dụng</span> <span class="float-right badge bg-warning">{{CountStations.sanbaydandung[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Cầu</span> <span class="float-right badge bg-info">{{CountStations.cau[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Tháp thu phát sóng</span> <span class="float-right badge bg-success">{{CountStations.thapthuphatsong[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Đường cao tốc</span> <span class="float-right badge bg-dark">{{CountStations.tuyenduongcaotoc[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Cáp treo</span> <span class="float-right badge bg-info">{{CountStations.captreo[0] - 0}}</span>
+                                        </li>
+                                        <li class="nav-item py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <span>Cảng thủy nội địa</span> <span class="float-right badge bg-danger">{{CountStations.cangthuynoidia[0] - 0}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 p-0 p-md-1" style="height: calc(100vh - 120px);">
+                        <div style="width: 100%; height: 100%">
+                            <span class="showAnnotateLayerBtn btn btn-light"> << </span>
+                            <ul class="annotate-layer cursor-pointer" id="annotate-layer">
+                                <li><span class="showAnnotateLayerBtn btn btn-danger"> &times; </span></li>
+                                <li class="m-0 d-flex">
+                                    <input type="checkbox" class="mr-2" id="cons-name" ng-click="toggleShow()">
+                                    <label for="cons-name">Hiển thị tên công trình</label>
+                                </li>
+
+                                <li class="ng-scope m-0 d-flex"><hr class="m-1" /></li>
+                                <li class="m-0">
+                                    <input type="checkbox" checked id="checkbox-thuydien" ng-click="toggleMarker('thuydien')">
+                                    <span class="p-1 ng-binding"></span>
+                                    <label for="thuydien">Kết nối bình thường</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" id="checkbox-thuydien" ng-click="toggleMarker('thuydien')">
+                                    <span class="p-1 ng-binding"></span>
+                                    <label for="thuydien">Mất kết nối</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" id="checkbox-thuydien" ng-click="toggleMarker('thuydien')">
+                                    <span class="p-1 ng-binding"></span>
+                                    <label for="thuydien">Chưa gửi dữ liệu</label>
+                                </li>
+                                <li class="m-0">
+                                    <input type="checkbox" id="checkbox-thuydien" ng-click="toggleMarker('thuydien')">
+                                    <span class="p-1 ng-binding"></span>
+                                    <label for="thuydien">Thực hiện chưa đúng</label>
+                                </li>
+
+                                <li class="ng-scope">
+                                    <div class="header mt-3 mb-0 ng-binding d-flex">
+                                        <input type="checkbox" checked id="checkbox-tramquocgia" class="mr-2" ng-click="toggleMarker('tramquocgia')">
+                                        <div class="d-flex justify-content-between w-100 dropdown-text">
+                                            <span>TRẠM QUỐC GIA</span><i class="fa-solid fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <ul class="dropdown-content">
+                                        <li class="m-0">
+                                            <input type="checkbox" checked id="checkbox-khituongquocgia" ng-click="toggleMarker('khituongquocgia')">
+                                            <span class="ng-binding"><img width="15" class="m-1" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/icon-khituong.png" /></span>
+                                            <label for="khaithac">Trạm khí tượng</label>
+                                        </li>
+                                        <li class="m-0">
+                                            <input type="checkbox" checked id="checkbox-thuyvanquocgia" ng-click="toggleMarker('thuyvanquocgia')">
+                                            <span class="ng-binding"><img width="15" class="m-1" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/icon-thuyvan.png" /></span>
+                                            <label for="thamdo">Trạm thủy văn</label>
+                                        </li>
+                                        <li class="m-0">
+                                            <input type="checkbox" checked id="checkbox-muaquocgia" ng-click="toggleMarker('muaquocgia')">
+                                            <span class="ng-binding"><img width="15" class="m-1" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/icon-mua.png" /></span>
+                                            <label for="thamdo">Trạm mưa</label>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="ng-scope">
+                                    <div class="header mt-3 mb-0 ng-binding d-flex">
+                                        <input type="checkbox" checked id="checkbox-tramchuyendung" class="mr-2" ng-click="toggleMarker('tramchuyendung')">
+                                        <div class="d-flex justify-content-between w-100 dropdown-text">
+                                            <span>TRẠM CHUYÊN DÙNG</span><i class="fa-solid fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <ul class="dropdown-content">
+                                        <li class="m-0">
+                                            <input type="checkbox" checked id="checkbox-khituongchuyendung" ng-click="toggleMarker('khituongchuyendung')">
+                                            <span class="ng-binding"><img width="15" class="m-1" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/icon-khituong.png" /></span>
+                                            <label for="khaithac">Trạm khí tượng</label>
+                                        </li>
+                                        <li class="m-0">
+                                            <input type="checkbox" checked id="checkbox-thuyvanchuyendung" ng-click="toggleMarker('thuyvanchuyendung')">
+                                            <span class="ng-binding"><img width="15" class="m-1" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/icon-thuyvan.png" /></span>
+                                            <label for="thamdo">Trạm thủy văn</label>
+                                        </li>
+                                        <li class="m-0">
+                                            <input type="checkbox" checked id="checkbox-muachuyendung" ng-click="toggleMarker('muachuyendung')">
+                                            <span class="ng-binding"><img width="15" class="m-1" src="~/LocalFiles/images/ICON_GHICHUCONGTRINH/icon-mua.png" /></span>
+                                            <label for="khaithac">Trạm mưa</label>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @*<li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-thamdo" ng-click="toggleMarker('cau')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="thamdo">Hồ chứa thủy lợi</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-khaithac" ng-click="toggleMarker('thapthuphatsong')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="khaithac">Tháp thu phát sóng</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-thamdo" ng-click="toggleMarker('hothuyloi')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="thamdo">Cáp treo</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-khaithac" ng-click="toggleMarker('thapthuphatsong')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="khaithac">Đường cao tốc</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-thamdo" ng-click="toggleMarker('hothuyloi')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="thamdo">Cảng thủy nội địa</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-khaithac" ng-click="toggleMarker('muapctt')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="khaithac">Trạm mưa PCTT</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-thamdo" ng-click="toggleMarker('hothuyloi')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="thamdo">Trạm thủy văn PCTT</label>
+                                            </li>
+                                            <li class="m-0">
+                                                <input type="checkbox" checked id="checkbox-thamdo" ng-click="toggleMarker('canhbaochayrung')">
+                                                <span class="p-1 ng-binding"></span>
+                                                <label for="thamdo">Trạm thủy văn cảnh báo cháy rừng</label>
+                                            </li>
+                                        </ul>
+                                    </li>*@
+                            </ul>
+
+                            <div class="common-map" id="Map_Home"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.dropdown-content').hide();
+
+        $(".dropdown-text").click(function () {
+            $(this).parent().next().slideToggle();
+        });
+
+        $('.showAnnotateLayerBtn').click(function () {
+            $('.annotate-layer').toggle('slow');
+        });
+    });
+</script>

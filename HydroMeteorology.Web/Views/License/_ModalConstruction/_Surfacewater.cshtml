@@ -1,0 +1,61 @@
+﻿<div class="modal fade addnew-windows" id="addNewStationName" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type="hidden" ng-model="license.StationTypeId" />
+                    <fieldset class="col-12 border border-secondary p-2 mb-2 background-color bg-lightgray">
+                        <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN TRẠM</legend>
+                        <div class="row col-12 m-0 p-0">
+                            <div class="col-md-6">
+                                <label class="font-13">Loại công trình<sup class="text-danger font-13">*</sup></label>
+                                <div class="floating-label w-100">
+                                    <select ng-options="opt.Id as opt.Name for opt in StationTypes" ng-model="Id" ng-change="changeTypeOfStation(Id, false)" class="floating-select w-100">
+                                        <option value="" hidden>-- Chọn loại trạm --</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13">Tên trạm<sup class="text-danger font-13">*</sup></label>
+                                <input class="floating-input w-100 text-left" type="text" placeholder="Tên trạm" ng-model="license.Station.Name" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="font-13">Quận/Huyện</label>
+                                <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="license.Station.DistrictId" ng-change="DistrictChange(license.Station.DistrictId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="font-13">Xã/Phường</label>
+                                <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="license.Station.CommuneId" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="font-13"> Mã trạm </label>
+                                <input type="text" class="floating-input w-100" placeholder="Mã trạm" ng-model="license.Station.StationCode">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13"> Địa điểm trạm </label>
+                                <input type="text" class="floating-input w-100" placeholder="Địa điểm trạm" ng-model="license.Station.LocationName">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13"> Loại trạm </label>
+                                <input type="text" class="floating-input w-100" placeholder="Loại trạm" ng-model="license.Station.StationTypeName">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13"> Vĩ độ </label>
+                                <input type="text" class="floating-input w-100" placeholder="Vĩ độ" ng-model="license.Station.Lat">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="font-13"> Kinh độ </label>
+                                <input type="text" class="floating-input w-100" placeholder="Kinh độ" ng-model="license.Station.Lng">
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-addnew" data-dismiss="modal"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

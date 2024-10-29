@@ -1,0 +1,299 @@
+﻿@using WaterResource.Service;
+
+@{
+    ViewBag.Title = "Phân quyền nhóm người dùng";
+    UserRightService _service = new UserRightService();
+}
+
+@if (_service.IsSuperUser(User.Identity.Name))
+{
+
+<div ng-controller="myCntrl as demo">
+
+    <script src="~/Scripts/RolePermit/Service.js"></script>
+    <script src="~/Scripts/RolePermit/Controller.js"></script>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="row m-0 py-2">
+                    <div class="col-md-4">
+                        <h3 class="box-title"><i class="fa fa-user" aria-hidden="true"></i> @ViewBag.Title</h3>
+                    </div>
+                    <div class="col-md-8 d-flex justify-content-end">
+                        <div class="col-sm-3 p-1">
+                            <div class="box-tools pull-right">
+                                <div class="input-group input-group-sm-">
+                                    <input type="text" class="form-control pull-right" placeholder="Tìm kiếm user" ng-model="Keyword">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-1">
+                            <button type="button" class="btn btn-addnew" data-toggle="modal" data-target="#addnew-window" ng-click="AddItem()"><i class="fa fa-plus"></i> Thêm mới</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="box-body">
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên Role</th>
+                                <th>Mô tả</th>
+
+                                <th class="command" style="text-align:center">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in Roles | filter:Keyword">
+                                <td ng-bind-html="(currentPage -1)*numPerPage+$index+1"></td>
+                                <td ng-bind-html="item.Name" ng-click="openAside('mySidenav',item)" style="cursor:pointer"></td>
+                                <td ng-bind-html="item.Description"></td>
+
+                                <td class="command" style="text-align:center;width:75px">
+                                    <div class="tools d-flex">
+                                        <a href="javascript:void(0)" ng-click="openAsideWork('myWorkflow',item)">
+                                            <i class="fa fa-cogs" aria-hidden="true"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" ng-click="openAsideDash('myDasboard',item)">
+                                            <i class="fa fa-television" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="box-tools pull-right">
+                        <ul uib-pagination
+                            total-items="TotalItem"
+                            ng-model="currentPage"
+                            items-per-page="numPerPage"
+                            boundary-links="true"
+                            previous-text=" &#xf104; " next-text=" &#xf105; "
+                            first-text=" &#xf100; " last-text=" &#xf101; "
+                            max-size="5" ng-change="pageChanged()"
+                            rotate ="true"
+                            force-ellipses="true" class="pagination pagination-sm inline fa d-flex"></ul>
+                    </div>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </section>
+    <!-- /.content -->
+    <!--Begin Nav Pane-->
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" style="top:0;" ng-click="closeAside('mySidenav')">&times;</a>
+        <div style="margin-left:20px;margin-right:18px">
+            <div class="doc-title">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN NHÓM NGƯỜI DÙNG</h4>
+                        </div>
+                    </div>
+                    <div></div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tên nhóm người dùng (Role name)</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td ng-bind-html="role.Name" style="width:35%"></td>
+                            <td ng-bind-html="role.Description"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-sm-12 col-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-cogs" aria-hidden="true"></i> PHÂN QUYỀN CÁC CHỨC NĂNG</h4>
+                        </div>
+                    </div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:35px">TT</th>
+                            <th>Dashboard</th>
+                            <th>URL</th>
+                            <th>Quyền thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="dash in role.dashboards">
+                            <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                            <td ng-bind="dash.Name"></td>
+                            <td ng-bind="dash.FileControl"></td>
+                            <td>
+                                <span ng-repeat="func in dash.Functions">
+                                    <label style="display: inline-block;padding: 5px 8px 5px 5px">
+                                        <input type="checkbox" ng-change="CheckFunction(role, dash, func)" ng-model="func.Status" ng-true-value="true" ng-false-value="false"> <span ng-bind-html="func.Description"></span> {{func.PermitName}}
+                                    </label>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="input-group input-group-sm" style="padding-bottom:50px">
+            </div>
+        </div>
+    </div>
+    <!--End Nav Pane-->
+    <!----Begin Add Dashboard By Role---->
+    <div id="myDasboard" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" style="top:5px; right: 20px" ng-click="closeAsideDash('myDasboard')">&times;</a>
+        <div style="margin-left:20px;margin-right:20px">
+            <div class="doc-title">
+                <div class="row">
+                    <div class="col-sm-12 col-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN ROLE</h4>
+                        </div>
+                    </div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tên Role</th>
+                            <th>Mô Tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td ng-bind="role.Name"></td>
+                            <td ng-bind="role.Description"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-sm-12 col-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-television" aria-hidden="true"></i> MÀN HÌNH CHỨC NĂNG</h4>
+                        </div>
+                    </div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:35px">TT</th>
+                            <th>Dashboard</th>
+                            <th>URL</th>
+                            <th style="text-align:center">Cho phép truy cập</th>
+                            <th style="text-align:center">Truy cập theo Role</th>
+                            <th style="text-align:center">Truy cập theo Portal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="rdash in dashforroles">
+                            <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                            <td ng-bind="rdash.DashboardName"></td>
+                            <td ng-bind="rdash.FileControl"></td>
+                            <td style="text-align:center">
+                                <label style="padding:0px"><input type="checkbox" ng-model="rdash.PermitAccess" ng-click="CheckDashAccess(rdash)" />&nbsp;&nbsp;</label>
+                            </td>
+                            <td style="text-align:center">
+                                <label style="padding:0px"><input type="checkbox" ng-model="rdash.PermitByRole" ng-click="CheckDashByRole(rdash)" ng-if="rdash.PermitAccess==true" /></label>
+                            </td>
+                            <td style="text-align:center">
+                                <label style="padding:0px"><input type="checkbox" ng-model="rdash.PermitByPortal" ng-click="CheckDashByPortal(rdash)" ng-if="rdash.PermitAccess==true" /></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="input-group input-group-sm" style="padding-bottom:50px">
+            </div>
+        </div>
+    </div>
+    <!----End Dashboard---->
+    <!----Begin Workflow---->
+    <div id="myWorkflow" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" style="top:5px; right: 20px" ng-click="closeAsideWork('myWorkflow')">&times;</a>
+        <div style="margin-left:20px;margin-right:20px">
+            <div class="doc-title">
+                <div class="row">
+                    <div class="col-sm-12 col-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-info-circle" aria-hidden="true"></i> THÔNG TIN ROLE</h4>
+                        </div>
+                    </div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tên Role</th>
+                            <th>Mô Tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td ng-bind="role.Name"></td>
+                            <td ng-bind="role.Description"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-sm-12 col-12">
+                        <div class="admission-title" style="background:#001373;height:40px;color:#fff;padding:1px 10px">
+                            <h4><i class="fa fa-cogs" aria-hidden="true"></i> LUỒNG CÔNG VIỆC</h4>
+                        </div>
+                    </div>
+                </div>
+                <table class="table no-margin table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:35px">TT</th>
+                            <th>Tên luồng công việc</th>
+                            <th>Luồng công việc của Role</th>
+                            <th style="text-align:center">#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="flow in WorkFlows">
+                            <td style="text-align:center;width:35px" ng-bind="(currentPage -1)*numPerPage+$index+1"></td>
+                            <td ng-bind="flow.FlowName"></td>
+                            <td style="text-align:center">
+                                <input type="text" ng-model="flow.RoleFlowName" class="form-control" ng-if="flow.IsViewByRole" />
+                            </td>
+                            <td style="text-align:center">
+                            <td style="text-align:center">
+                                <label style="padding:0px"><input type="checkbox" ng-model="flow.IsViewByRole" ng-click="CheckIsView(flow)" /></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="input-group-sm" style="padding-bottom:60px;padding-top:15px">
+                <button type="button" class="btn btn-addnew pull-right" ng-click="SaveRoleWork(role, WorkFlows)">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+    <!----End myWorkflow---->
+</div>
+}
+else
+{
+@Html.Partial("_401")
+}

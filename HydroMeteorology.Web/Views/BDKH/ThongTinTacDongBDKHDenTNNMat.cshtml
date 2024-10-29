@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = " ĐÁNH GIÁ TÁC ĐỘNG CỦA BIẾN ĐỔI KHÍ HẬU ĐẾN TÀI NGUYÊN NƯỚC MẶT";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="myCtrl as demo">
+    <script src="~/Scripts/BDKHDoc/Controller.js"></script>
+    <script src="~/Scripts/BDKHDoc/Service.js"></script>
+    <section class="content p-0">
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                @Html.Partial("_Search")
+                @Html.Partial("_Table")
+            </div>
+        </div>
+        @Html.Partial("_ViewPDF")
+        @Html.Partial("_FormCreate")
+    </section>
+</div>

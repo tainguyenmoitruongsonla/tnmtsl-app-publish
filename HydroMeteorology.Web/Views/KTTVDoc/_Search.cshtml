@@ -1,0 +1,42 @@
+﻿<div class="row mx-0 my-2 align-items-center justify-content-end display-unset">
+    <div class="mx-2 col-12 col-md-3 p-0 floating-label mt-4">
+        <input autocomplete="off" type="text" name="table_search" class="floating-input w-100" data-toggle="dropdown" placeholder=" " ng-model="Keyword">
+        <ul class="dropdown-menu w-100" role="menu">
+            <li class="border-bottom border-secondary m-0 p-1" ng-repeat='item in DocForSearch | filter:Keyword'>
+                <a href="javascript:void(0)" class="m-0" ng-click="SetKeyword(item.DocNumber)">
+                    <p class="m-0 text-dark" style="font-size: 0.85rem">{{item.Name}}</p>
+                    <p class="m-0 text-muted" style="font-size: 0.75rem">{{item.DocNumber}}</p>
+                </a>
+            </li>
+        </ul>
+        <label>Tên bản tin</label>
+    </div>
+    <div class="floating-label mx-2 p-0 mt-4">
+        <select class="floating-select w-100" ng-model="CoQuanBanHanh">
+            <option selected value="">[--Chọn Cơ quan ban hành--]</option>
+            <option value="Trung tâm DDBKTTV Quốc gia">Trung tâm DDBKTTV Quốc gia</option>
+            <option value="Tổng cục KTTV">Tổng cục KTTV</option>
+            <option value="Đài khí tượng Thủy Văn khu vực Tây Bắc">Đài khí tượng Thủy Văn khu vực Tây Bắc</option>
+        </select>
+        <label>Cơ quan ban hành</label>
+    </div>
+
+
+
+    <div class="floating-label mx-2  mt-4">
+        <input type="text" class="floating-input w-100 dpicker" uib-datepicker-popup="{{format}}" ng-model="TuNgay" is-open="TuNgay.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" current-text="Hôm nay" clear-text="Xóa" alt-input-formats="altInputFormats" ng-click="openDatepicker('TuNgay')" />
+        <label>Từ ngày<sup class="text-danger font-13"></sup></label>
+    </div>
+
+
+    <div class="floating-label mx-2 mt-4">
+        <input type="text" class="floating-input w-100 dpicker" uib-datepicker-popup="{{format}}" ng-model="DenNgay" is-open="DenNgay.opened" datepicker-options="dateOptions" ng-required="true" close-text="Đóng" current-text="Hôm nay" clear-text="Xóa" alt-input-formats="altInputFormats" ng-click="openDatepicker('DenNgay')" />
+        <label>Đến ngày<sup class="text-danger font-13"></sup></label>
+    </div>
+
+
+    <div class="row m-0 align-items-center p-1 mt-4">
+        <button class="btn btn-sm btn-addnew px-4 m-2" ng-click="Search()">Lọc</button>
+        <button class="btn btn-sm btn-addnew rounded-0" ng-click="Add()" title="Thêm văn bản mới">Thêm mới</button>
+    </div>
+</div>

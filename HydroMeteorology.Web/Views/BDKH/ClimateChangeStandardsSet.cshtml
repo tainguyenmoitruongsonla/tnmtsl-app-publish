@@ -1,0 +1,189 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = " BỘ CHUẨN KHÍ HẬU QUỐC GIA ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="myCtrl as demo">
+    <script src="~/Scripts/ClimateChangeStandardsSet/Controller.js"></script>
+    <script src="~/Scripts/ClimateChangeStandardsSet/Service.js"></script>
+    <!-- Main content -->
+    <section class="content p-0">
+        <div class="row m-0">
+            <div class="col-12 col-xl-12 p-0">
+                <div class="form-title col-12 text-center mt-2 my-4">
+                    <p class="m-0 font-weight-bold h4 font-sm-14"> THÔNG TIN DỮ LIỆU VỀ BỘ CHUẨN KHÍ HẬU</p>
+                </div>
+                <div class="row m-0 align-items-center justify-content-end">
+                    <div class="floating-label p-2 col-auto">
+                        <select name="TypeOfStandardsSet" ng-options="opt.Id as opt.Name for opt in AllTypeOfStandardsSet track by opt.Id" ng-model="TypeOfStandardsSet" ng-change="ChangeTypeOfStandardsSet(TypeOfStandardsSet)" class="floating-select w-100">
+                            <option value="">-- Loại dữ liệu bộ chuẩn --</option>
+                        </select>
+                        <label>Loại dữ liệu bộ chuẩn</label>
+                    </div>
+                    <div class="row m-0 align-items-center p-1">
+                        @*<button class="btn btn-sm btn-addnew px-4 m-2" ng-click="Search()">Lọc</button>*@
+                        <button class="btn btn-sm btn-addnew px-4 m-2" title="Thêm văn bản mới" ng-click="Add('BCKH_addnew-window')">Thêm mới</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table no-margin table-hover table-bordered" id="table-show-license">
+                        <thead class="custom-table-thead">
+                            <tr>
+                                <th rowspan="2" class="text-center align-middle">STT </th>
+                                <th rowspan="2" class="text-center align-middle">Trạm </th>
+                                <th colspan="12" class="text-center align-middle">Tháng </th>
+                                <th rowspan="2" class="text-center align-middle">Năm </th>
+                                <th rowspan="2" class="text-center align-middle">Thao tác</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle">I</th>
+                                <th class="text-center align-middle">II</th>
+                                <th class="text-center align-middle">III</th>
+                                <th class="text-center align-middle">IV</th>
+                                <th class="text-center align-middle">V</th>
+                                <th class="text-center align-middle">VI</th>
+                                <th class="text-center align-middle">VII</th>
+                                <th class="text-center align-middle">VIII</th>
+                                <th class="text-center align-middle">IX</th>
+                                <th class="text-center align-middle">X</th>
+                                <th class="text-center align-middle">XI</th>
+                                <th class="text-center align-middle">XII</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle">(1)</th>
+                                <th class="text-center align-middle">(2)</th>
+                                <th class="text-center align-middle">(3)</th>
+                                <th class="text-center align-middle">(4)</th>
+                                <th class="text-center align-middle">(5)</th>
+                                <th class="text-center align-middle">(6)</th>
+                                <th class="text-center align-middle">(7)</th>
+                                <th class="text-center align-middle">(8)</th>
+                                <th class="text-center align-middle">(9)</th>
+                                <th class="text-center align-middle">(10)</th>
+                                <th class="text-center align-middle">(11)</th>
+                                <th class="text-center align-middle">(12)</th>
+                                <th class="text-center align-middle">(13)</th>
+                                <th class="text-center align-middle">(14)</th>
+                                <th class="text-center align-middle">(15)</th>
+                                <th class="text-center align-middle">(16)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="custom-table-tbody">
+                            <tr ng-repeat="item in Data">
+                                <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                                <td class="text-center align-middle" ng-bind="item.Station"></td>
+                                <td class="text-center align-middle" ng-bind="item.Jan"></td>
+                                <td class="text-center align-middle" ng-bind="item.Feb"></td>
+                                <td class="text-center align-middle" ng-bind="item.Mar"></td>
+                                <td class="text-center align-middle" ng-bind="item.Apr"></td>
+                                <td class="text-center align-middle" ng-bind="item.May"></td>
+                                <td class="text-center align-middle" ng-bind="item.June"></td>
+                                <td class="text-center align-middle" ng-bind="item.July"></td>
+                                <td class="text-center align-middle" ng-bind="item.Aug"></td>
+                                <td class="text-center align-middle" ng-bind="item.Sep"></td>
+                                <td class="text-center align-middle" ng-bind="item.Oct"></td>
+                                <td class="text-center align-middle" ng-bind="item.Nov"></td>
+                                <td class="text-center align-middle" ng-bind="item.Dec"></td>
+                                <td class="text-center align-middle" ng-bind="item.Year"></td>
+                                <td class="sticky-col end-col">
+                                    <div class="tools d-flex justify-content-center">
+                                        <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa công trình"><i class="fa fa-edit"></i></a>
+                                        <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá công trình"><i class="fa-solid fa-trash-can"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- pagination -->
+                <div class="row m-0 col-md-12 align-items-center justify-content-end">
+                    <div class="box-footer ">
+                        <div class="box-tools pull-right">
+                            <ul uib-pagination
+                                total-items="TotalData"
+                                ng-model="currentPage"
+                                items-per-page="numPerPage"
+                                boundary-links="true"
+                                previous-text=" &#xf104; " next-text=" &#xf105; "
+                                first-text=" &#xf100; " last-text=" &#xf101; "
+                                max-size="5" ng-change="pageChanged()"
+                            rotate ="true"
+                            force-ellipses="true" class="pagination pagination-sm inline fa d-flex m-0"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sidenav p-0" id="BCKH_addnew-window">
+            <div>
+                <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                    <div class="d-flex col-12 p-0 align-items-center">
+                        <div class="col-10">
+                            <div class="admission-title d-flex center-center">
+                                <p class="m-0 col-12 p-0 text-left text-uppercase font-16">THÔNG TIN DỮ LIỆU VỀ BỘ CHUẨN KHÍ HẬU</p>
+                            </div>
+                        </div>
+                        <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('BCKH_addnew-window')">&times;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <fieldset class="col-12 border border-secondary p-3 mb-2 background-color bg-lightgray">
+                    <legend class="font-18 font-weight-bold text-primary" style="width: auto">Thông tin</legend>
+                    <div class="mb-2">
+                        <div class="col-sm-12 p-0 row">
+                            <div class="col-md-8 p-2">
+                                <div class="floating-label my-2">
+                                    <input ng-model="item.Agency" class="floating-input w-100" placeholder=" ">
+                                    <label>Tổ chức</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs0" ng-model="item.ApplicationForm">
+                                    <label>Đơn đăng ký sử dụng các chất được KS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs1" ng-model="item.UsageReport">
+                                    <label>Báo cáo tình hình sử dụng các chất được KS </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs2" ng-model="item.ProvisionQuota">
+                                    <label>QĐ về việc phân bổ hạn ngạch SX, NK các chất được KS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs3" ng-model="item.NoticeQuota">
+                                    <label>Thông báo phân bổ hạn ngạch</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs4" ng-model="item.SubstanceInformation">
+                                    <label>Thông tin, dữ liệu về các chất làm suy giảm tầng ô-dôn, chất gây hiệu ứng nhà kính được KS</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 p-2">
+                                <div class="floating-label my-2">
+                                    <input type="file" accept="application/pdf" class="floating-input w-100" placeholder=" " id="fileAttachs5" ng-model="item.CustomInformation">
+                                    <label>Thông tin, dữ liệu hải quan về các chất làm suy giảm tầng ô-dôn, chất gây hiệu ứng nhà kính được KS</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" ng-click="closeAside('BCKH_addnew-window')">Đóng</button>
+                <button type="button" class="btn btn-addnew" ng-click="Save('BCKH_addnew-window')"><i class="fa fa-fw fa-save"></i>&nbsp;Lưu</button>
+            </div>
+        </div>
+        @Html.Partial("_ViewPDF")
+    </section>
+</div>

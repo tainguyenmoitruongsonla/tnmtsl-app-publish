@@ -1,0 +1,650 @@
+﻿@using WaterResource.Service;
+@{
+    ViewBag.Title = "YÊU CẦU KẾT NỐI";
+    UserRightService _service = new UserRightService();
+    string user = User.Identity.Name;
+}
+
+<style>
+    .sidebar-toggle {
+        display: none;
+    }
+</style>
+
+@if (_service.IsViewAction("/quan-ly-yeu-cau-ket-noi", User.Identity.Name, "VIEW"))
+{
+    <input type="hidden" id="userName" value="@user" />
+
+    <link href="~/Assets/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="~/Assets/leaflet/leaflet.js"></script>
+    <script src="~/Assets/leaflet/L.KML.js"></script>
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.0.4/esri-leaflet.js"></script>
+
+    <!-- Load Esri Leaflet Vector from CDN -->
+    <script src="https://unpkg.com/esri-leaflet-vector@3.1.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+    <div ng-controller="myCntrl as demo" style="margin-left: 0%">
+        <script src="~/Scripts/YeuCauKetNoi/Controller.js"></script>
+        <script src="~/Scripts/YeuCauKetNoi/Service.js"></script>
+        <script src="~/Scripts/DataTransmission/Service.js"></script>
+        <script src="~/Scripts/Construction/Service.js"></script>
+        <script src="~/Scripts/License/Service.js"></script>
+
+        <div class="box box-primary m-0">
+            <div class="box-body">
+                <div class="row m-0">
+                    <div class="col-md-8 p-0 p-4">
+                        <div class="row mx-0">
+                            <div class="input-group col-md-12 px-0">
+                                <div class="col-md-12 p-0 mb-2 row mx-0 justify-content-end align-items-center">
+                                    <div class="floating-label col-6 px-1 col-md-3 p-0">
+                                        <div class="dropdown dropdown-scroll">
+                                            <input class="floating-input w-100 text-left" type="text" readonly data-toggle="dropdown" placeholder=" " value="{{ConstructionName}}" />
+                                            <label>Chọn công trình</label>
+                                            <ul class="dropdown-menu w-100" role="menu">
+                                                <li>
+                                                    <input class="floating-input w-100 text-left" ng-model="constructionData.ConstructionName" type="text" placeholder=" Tìm công trình " />
+                                                </li>
+                                                <li class="border-bottom border-secondary p-0" ng-repeat='construction in DataConstruction | filter:constructionData '>
+                                                    <a href="javascript:void(0)" class="text-primary nav-link py-0 px-1" ng-click="selectCons(construction)"> {{construction.ConstructionName}} </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="floating-label col-6 px-1 col-md-3 p-0">
+                                        <div class="dropdown dropdown-scroll">
+                                            <input class="floating-input w-100 text-left" type="text" readonly data-toggle="dropdown" placeholder=" " value="{{licenseTitle}}" />
+                                            <label>Chọn giấy phép</label>
+                                            <ul class="dropdown-menu w-100" role="menu">
+                                                <li>
+                                                    <input class="floating-input w-100 text-left" type="text" ng-model="licenseData.LicenseNumber" placeholder=" Tìm giấy phép " />
+                                                </li>
+                                                <li class="border-bottom border-secondary p-0" ng-repeat='license in Licenses | filter:licenseData '>
+                                                    <a href="javascript:void(0)" class="text-primary nav-link py-0 px-1" ng-click="selectLicense(license)"> {{license.LicenseNumber}} - {{license.LicenseName}} </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3 m-auto py-3">
+                                        <button ng-disabled="disabledButton" class="btn btn-sm btn-addnew w-100" type="button" ng-click="zoomConstruction(license.Construction, license.Construction.Lng, license.Construction.Lat)">
+                                            Xem vị trí công trình <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <fieldset class="col-12 border border-dark p-3 mb-2 background-color bg-lightgray">
+                                <legend class="font-18" style="width: auto">Thông tin công trình</legend>
+                                <div class="row mb-2 mx-0">
+                                    <div class="col-md-4 mb-2">
+                                        <label>Tên đơn vị XCP</label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.LicenseHolderName">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Địa chỉ đơn vị XCP </label>
+                                        <div class="floating-label">
+                                            <textarea class="floating-input w-100 floating-textarea" placeholder=" " readonly ng-model="license.LicenseHolderAddress"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Thời hạn GP</label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Duration">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2 mx-0">
+                                    <div class="col-md-4 mb-2">
+                                        <label>Cơ quan CP </label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.LicensingAuthoritiesName">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Ký hiệu CT </label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionCode">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Tên CT</label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionName">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2 mx-0">
+                                    <div class="col-md-4 mb-2">
+                                        <label>Địa điểm CT </label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionLocation">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Huyện </label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.Huyen">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Xã</label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.Xa">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2 mx-0">
+                                    <div class="col-md-4 mb-2">
+                                        <label>Loại CT </label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.ConstructionTypeName">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Tọa độ X </label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.X">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label>Tọa độ Y</label>
+                                        <div class="floating-label">
+                                            <input class="floating-input w-100" type="text" placeholder=" " readonly ng-model="license.Construction.Y">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-if="checkAccount()" class="row m-0 align-items-center px-0 pb-3 pt-1 ng-scope">
+                                    <button class="btn btn-sm btn-addnew px-4 mx-2" title="Chỉnh sửa bản mới" ng-click="SaveDataTransmission()">Gửi yêu cầu phê duyệt </button>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-12 border border-dark p-3 mb-2 table-responsive">
+                                <legend class="font-18" style="width: auto ">Tài khoản kết nối đến công trình </legend>
+                                <div class="table-responsive">
+                                    <table class="table no-margin table-hover table-bordered">
+                                        <thead class="custom-table-thead">
+                                            <tr>
+                                                <th rowspan="2" class="text-center align-middle">STT</th>
+                                                <td class="text-nowrap">Địa chỉ FTP</td>
+                                                <td class="text-nowrap">Tài Khoản</td>
+                                                <td class="text-nowrap">Mật khẩu</td>
+                                                <td class="text-nowrap">Đường dẫn Camera</td>
+                                                <td class="text-nowrap">Giao thức truyền</td>
+                                                <td class="text-nowrap">Cổng kết nối FTP</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="custom-table-tbody">
+                                            <tr ng-repeat="item in DataTransmission">
+                                                <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                <td>{{item.FTPAddress}}</td>
+                                                <td>{{item.Account}}</td>
+                                                <td>{{item.Password}}</td>
+                                                <td ng-bind-html="cameraLink(item)"></td>
+                                                <td>{{item.protocol}}</td>
+                                                <td>{{item.port}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="modal fade addnew-windows" id="ThemMoi_addnew-window" ng-show="divFrm">
+                        <div class="modal-dialog" style="max-width: 60%">
+                            <div class="modal-content p-2 rounded">
+                                <div class="modal-header">
+                                    <h5 class="text-center">Thêm trạm quan trắc truyền dữ liệu</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row m-0">
+                                        <!--dàn hàng ngang các thẻ bên trong -->
+                                        <div class="form-group col-4">
+                                            <label>Tên trạm </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Kiểu kết nối </label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">FTP Sevice</option>
+                                                    <option value="2">Web service </option>
+                                                    <option value="3">Chưa gửi dữ liệu </option>
+                                                    <option value="4">Không sử dụng </option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Ký hiệu trạm </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.ThoiKyQuanTrac" placeholder=" ">
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Loại trạm </label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">Đo mực nước hồ thượng lưu </option>
+                                                    <option value="2">Đo mực nước hồ hạ lưu </option>
+                                                    <option value="3">Đo Q xả DCTT </option>
+                                                    <option value="4">Đo lưu lượng xả qua nhà máy </option>
+                                                    <option value="5">Đo lưu lượng xả qua qua tràn </option>
+                                                    <option value="6">Lưu lượng khai thác </option>
+                                                    <option value="7">Quan trắc CLN </option>
+                                                    <option value="8">Lưu lượng khai thác NDD </option>
+                                                    <option value="9">Mực nước trong giếng khai thác </option>
+                                                    <option value="10">Mực nước giếng quan trắc </option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Điểm đo/ Thông số đo </label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">Mực nước </option>
+                                                    <option value="2">Lưu lượng </option>
+                                                    <option value="3">BOD </option>
+                                                    <option value="4">COD </option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Trong giấy phép</label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">Có </option>
+                                                    <option value="2">Không</option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Tọa độ X</label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.ThoiKyQuanTrac" placeholder=" ">
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Tọa độ Y</label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.ThoiKyQuanTrac" placeholder=" ">
+                                        </div>
+
+                                        <p class="text-violet col-12 ">Ngưỡng cảnh báo </p>
+                                        <div class="form-group col-4">
+                                            <label>Chỉ số </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Giới hạn dưới </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Giới hạn trên </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Đơn vị </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label> Ngày bắt đầu </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Ngày kết thúc </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+
+                                        <div class="form-group col-12">
+                                            <label for="ghichu">Ghi chú </label>
+                                            <input type="text" class="form-control form-control-sm">
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center justify-content-end col-12">
+                                            <button type="button" class="btn btn-sm btn-info border-info mx-2">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                                            <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade addnew-windows" id="ChinhSua_addnew-window" ng-show="divFrm">
+                        <div class="modal-dialog" style="max-width: 60%">
+                            <div class="modal-content p-2 rounded">
+                                <div class="modal-header">
+                                    <h5 class="text-center">Chỉnh sửa trạm quan trắc truyền dữ liệu</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row m-0">
+                                        <!--dàn hàng ngang các thẻ bên trong -->
+                                        <div class="form-group col-4">
+                                            <label>Tên trạm </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Kiểu kết nối </label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">FTP Sevice</option>
+                                                    <option value="2">Web service </option>
+                                                    <option value="3">Chưa gửi dữ liệu </option>
+                                                    <option value="4">Không sử dụng </option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Ký hiệu trạm </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.ThoiKyQuanTrac" placeholder=" ">
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Loại trạm </label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">Đo mực nước hồ thượng lưu </option>
+                                                    <option value="2">Đo mực nước hồ hạ lưu </option>
+                                                    <option value="3">Đo Q xả DCTT </option>
+                                                    <option value="4">Đo lưu lượng xả qua nhà máy </option>
+                                                    <option value="5">Đo lưu lượng xả qua qua tràn </option>
+                                                    <option value="6">Lưu lượng khai thác </option>
+                                                    <option value="7">Quan trắc CLN </option>
+                                                    <option value="8">Lưu lượng khai thác NDD </option>
+                                                    <option value="9">Mực nước trong giếng khai thác </option>
+                                                    <option value="10">Mực nước giếng quan trắc </option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Điểm đo/ Thông số đo </label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">Mực nước </option>
+                                                    <option value="2">Lưu lượng </option>
+                                                    <option value="3">BOD </option>
+                                                    <option value="4">COD </option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Trong giấy phép</label>
+                                            <div class="floating-label">
+                                                <select class="floating-select" onclick="this.setAttribute('value', this.value);" value="">
+                                                    <option value="" hidden></option>
+                                                    <option value="1">Có </option>
+                                                    <option value="2">Không</option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Tọa độ X</label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.ThoiKyQuanTrac" placeholder=" ">
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label>Tọa độ Y</label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.ThoiKyQuanTrac" placeholder=" ">
+                                        </div>
+
+                                        <p class="text-violet col-12 ">Ngưỡng cảnh báo </p>
+                                        <div class="form-group col-4">
+                                            <label>Chỉ số </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Giới hạn dưới </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Giới hạn trên </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Đơn vị </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label> Ngày bắt đầu </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>Ngày kết thúc </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+
+                                        <div class="form-group col-12">
+                                            <label for="ghichu">Ghi chú </label>
+                                            <input type="text" class="form-control form-control-sm">
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center justify-content-end col-12">
+                                            <button type="button" class="btn btn-sm btn-info border-info mx-2">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                                            <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade addnew-windows" id="XemThongSo_edit-windows" ng-show="divFrm">
+                        <div class="modal-dialog" style="max-width: 60%">
+                            <div class="modal-content p-2 rounded">
+                                <div class="modal-header">
+                                    <h5 class="text-center">Thông số hồ chứa</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row m-0">
+                                        <!--dàn hàng ngang các thẻ bên trong -->
+                                        <div class="form-group col-12">
+                                            <label>Tên công trình </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <table class="table no-margin table-hover table-bordered">
+                                            <thead class="custom-table-thead">
+                                                <tr>
+                                                    <th rowspan="2" class="text-center align-middle">STT</th>
+                                                    <th rowspan="2" class="text-center align-middle">F (km2)</th>
+                                                    <th rowspan="2" class="text-center align-middle">W (m3) </th>
+                                                    <th rowspan="2" class="text-center align-middle">Z (m) </th>
+                                                    <th rowspan="2" class="text-center align-middle">Thao tác </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="custom-table-tbody">
+                                                <tr>
+                                                    <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                    <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                    <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                    <td>a </td>
+                                                    <td>a </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="d-flex">
+
+                                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa thông số " data-toggle="modal" data-target="#ChinhSuaThongSo_edit-windows"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá thông số "><i class="fa-solid fa-trash-can"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                    <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                    <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                    <td>a </td>
+                                                    <td>a </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="d-flex">
+
+                                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa thông số " data-toggle="modal" data-target="#ChinhSuaThongSo_edit-windows"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá thông số "><i class="fa-solid fa-trash-can"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                    <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                    <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                    <td>a </td>
+                                                    <td>a </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="d-flex">
+
+                                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa thông số " data-toggle="modal" data-target="#ChinhSuaThongSo_edit-windows"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá thông số "><i class="fa-solid fa-trash-can"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="form-group col-12">
+                                            <label for="ghichu">Ghi chú </label>
+                                            <input type="text" class="form-control form-control-sm">
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center justify-content-end col-12">
+                                            <button type="button" class="btn btn-sm btn-info border-info mx-2">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                                            <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade addnew-windows" id="ChinhSuaThongSo_edit-windows" ng-show="divFrm">
+                        <div class="modal-dialog" style="max-width: 60%">
+                            <div class="modal-content p-2 rounded">
+                                <div class="modal-header">
+                                    <h5 class="text-center">Thông số hồ chứa</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row m-0">
+                                        <!--dàn hàng ngang các thẻ bên trong -->
+                                        <div class="form-group col-12">
+                                            <label>Tên công trình </label>
+                                            <input type="text" class="form-control form-control-sm" ng-model="myitem.LuuVucSong" placeholder=" ">
+                                        </div>
+                                        <table class="table no-margin table-hover table-bordered">
+                                            <thead class="custom-table-thead">
+                                                <tr>
+                                                    <th rowspan="2" class="text-center align-middle">STT</th>
+                                                    <th rowspan="2" class="text-center align-middle">F (km2)</th>
+                                                    <th rowspan="2" class="text-center align-middle">W (m3) </th>
+                                                    <th rowspan="2" class="text-center align-middle">Z (m) </th>
+                                                    <th rowspan="2" class="text-center align-middle">Thao tác </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="custom-table-tbody">
+                                                <tr>
+                                                    <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                    <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                    <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                    <td>a </td>
+                                                    <td>a </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="d-flex">
+
+                                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa thông số " data-toggle="modal" data-target="#ChinhSuaThongSo_edit-windows"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá thông số "><i class="fa-solid fa-trash-can"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                    <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                    <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                    <td>a </td>
+                                                    <td>a </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="d-flex">
+
+                                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa thông số " data-toggle="modal" data-target="#ChinhSuaThongSo_edit-windows"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá thông số "><i class="fa-solid fa-trash-can"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <!-- lấy DataBieuMauSo3 từ file scrip/controler.js-->
+                                                    <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                    <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
+                                                    <td>a </td>
+                                                    <td>a </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="d-flex">
+
+                                                            <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa thông số " data-toggle="modal" data-target="#ChinhSuaThongSo_edit-windows"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá thông số "><i class="fa-solid fa-trash-can"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="form-group col-12">
+                                            <label for="ghichu">Ghi chú </label>
+                                            <input type="text" class="form-control form-control-sm">
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center justify-content-end col-12">
+                                            <button type="button" class="btn btn-sm btn-info border-info mx-2">Lưu lại <i class="fa fa-chevron-right"></i> </button>
+                                            <button type="button" class="btn btn-sm btn-cancel mx-2 pull-left" data-dismiss="modal">Huỷ <i class="fa fa-times-circle"></i> </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MAP -->
+                    <div class="col-md-4 p-0 bg-info">
+                        <div style="width: 100%; height: calc( 100vh - 57px )">
+                            <select id="basemaps" class="form-select switch-basemap" aria-label="Select map layer">
+                                <option value="Imagery">Bản đồ vệ tinh</option>
+                                <option value="Topographic">Bản đồ địa hình</option>
+                                <option value="Streets">Bản đồ đường</option>
+                                <option value="Gray">Bản đồ xám</option>
+                            </select>
+
+                            <div class="bg-map" id="Map_RequestConnection" style="width:100%;height:100%"></div>
+                        </div>
+                    </div>
+                    <!-- END MAP -->
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @Html.Partial("_401")
+}

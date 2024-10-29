@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNet.Identity
+
+<div class="table-responsive wrapper-sticky">
+    <!--thêm class để co giãn màn hình -->
+    <table class="table no-margin table-hover table-bordered" id="table-show-license">
+        <thead class="custom-table-thead">
+            <tr>
+                <th class="text-center align-middle">STT </th>
+                <th class="text-center align-middle">Mã trạm </th>
+                <th class="text-center align-middle">Loại trạm </th>
+                <th class="text-center align-middle">Tên trạm </th>
+                <th class="text-center align-middle">Xã</th>
+                <th class="text-center align-middle">Huyện</th>
+                <th class="text-center align-middle">Vĩ độ</th>
+                <th class="text-center align-middle">Kinh Độ</th>
+                <th class="text-center align-middle"> Năm bắt đầu đo </th>
+                <th class="text-center align-middle"> Năm kết thúc đo </th>
+                <th class="text-center align-middle"> Hồ sơ thành lập trạm </th>
+                <th class="text-center align-middle"> Hồ sơ trạm hoạt động </th>
+                <th rowspan="2" class="text-center align-middle text-nowrap" style="width:50px">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody class="custom-table-tbody">
+            <tr class="" ng-repeat="item in DataStation">
+                <th>{{(currentPage -1)*numPerPage+$index+1}}</th>
+                <td><span ng-bind="item.StationCode"></span></td>
+                <td><span ng-bind="AllStationType[item.StationTypeId-1].Name"></span></td>
+                <td><span ng-bind="item.Name"></span></td>
+                <td><span ng-bind="item.CommuneName"></span></td>
+                <td><span ng-bind="item.DistricName"></span></td>
+                <td><span ng-bind="item.Lat"></span></td>
+                <td><span ng-bind="item.Lng"></span></td>
+                <td><span ng-bind="item.StartDate"></span></td>
+                <td><span ng-bind="item.EndDate"></span></td>
+                <td class="command text-center">
+                    <div class="tools d-flex justify-content-center" ng-if="item.HoSoThanhLap !== null">
+                        <a href="javascript:void(0)" ng-click="openAsideFile(item.StationCode, item.HoSoThanhLap)">
+                            <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </td>
+                <td class="command text-center">
+                    <div class="tools d-flex justify-content-center" ng-if="item.HoSoHoatDong !== null">
+                        <a href="javascript:void(0)" ng-click="openAsideFile(item.StationCode, item.HoSoHoatDong)">
+                            <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </td>
+                <td class="sticky-col end-col">
+                    <div class="tools d-flex justify-content-center">
+                        <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa" ng-click="Edit(item)"><i class="fa fa-edit"></i></a>
+                        <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá" ng-click="Delete(item)"><i class="fa-solid fa-trash-can"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- pagination -->
+    <div class="box-footer ">
+        <div class="box-tools pull-right">
+            <ul uib-pagination
+                total-items="TotalItem"
+                ng-model="currentPage"
+                items-per-page="numPerPage"
+                boundary-links="true"
+                previous-text=" &#xf104; " next-text=" &#xf105; "
+                first-text=" &#xf100; " last-text=" &#xf101; "
+                max-size="5" 
+                ng-change="pageChanged()"
+                rotate ="true"
+                force-ellipses="true" 
+                class="pagination pagination-sm inline fa d-flex m-0">
+
+            </ul>
+        </div>
+    </div>
+</div>
