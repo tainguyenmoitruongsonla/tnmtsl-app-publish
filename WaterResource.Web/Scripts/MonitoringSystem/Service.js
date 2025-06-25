@@ -1,7 +1,15 @@
 ﻿app.service("monitoringSystemService", function ($http) {
     'use strict';
 
-   
+    this.saveStorePreData = function (Item) {
+        var response = $http({
+            method: "post",
+            url: "/api/StoragePreData/save",
+            data: JSON.stringify(Item),
+            datatype: "json"
+        });
+        return response;
+    }
 
     this.getStorePreData = function (ConstructionCode, StartDate, EndDate, PageIndex, PageSize) {
         var response = $http({

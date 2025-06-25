@@ -413,14 +413,15 @@
 
     GetProvince();
     function GetProvince() {
-
         datainfoService.getAllProvince($scope.Keyword, 0, 0).then(function (items) {
             $scope.Provinces = items.data.ListData;
         });
     }
     function GetDistricts(CityId) {
         datainfoService.getDistrict(CityId, CityCode, '', 0, 0).then(function (items) {
-            $scope.Districts = items.data.ListData;
+            $scope.DistrictsBefore = items.data.ListData;
+            $scope.DistrictsAfter = items.data.ListData;
+            
         }, function () {
             toastr.error('Error in getting records', 'Error');
         });
@@ -433,29 +434,125 @@
         });
     }
 
-    $scope.ProvinceChange = function (CityId) {
+    $scope.ProvinceBeforeChange = function (CityId) {
         if (CityId !== null) {
             GetDistricts(1);
         }
         else {
-            $scope.Districts = [];
-            $scope.Communes = [];
+            $scope.DistrictsBefore = [];
+            $scope.CommunesBefore = [];
         }
     }
-    $scope.DistrictChange = function (DistrictId) {
+    $scope.DistrictBeforeChange = function (DistrictId) {
         if (DistrictId !== null) {
-            GetCommune(DistrictId);
+            datainfoService.getCommunes(DistrictId, CityCode, DistrictCode, '', 0, 0).then(function (items) {
+                $scope.CommunesBefore = items.data.ListData;
+            }, function () {
+                toastr.error('Error in getting records', 'Error');
+            });
         }
         else {
-            $scope.Communes = [];
+            $scope.CommunesBefore = [];
         }
+    }
+
+    $scope.ProvinceAfterChange = function (CityId) {
+        if (CityId !== null) {
+            GetDistricts(1);
+        }
+        else {
+            $scope.DistrictsAfter = [];
+            $scope.CommunesAfter = [];
+        }
+    }
+
+    $scope.DistrictAfterChange = function (DistrictId) {
+        if (DistrictId !== null) {
+            datainfoService.getCommunes(DistrictId, CityCode, DistrictCode, '', 0, 0).then(function (items) {
+                $scope.CommunesAfter = items.data.ListData;
+            }, function () {
+                toastr.error('Error in getting records', 'Error');
+            });
+        }
+        else {
+            $scope.CommunesAfter = [];
+        }
+    }
+
+
+    var mymap = null;
+    function initMap() {
+        mymap = L.map('Map', {
+            maxZoom: 15,
+            minZoom: 8,
+        },).setView([21.248632, 104.118988], 8);
+
+        var bounds = L.latLngBounds([[23.104700, 101.332302], [20.056898, 106.013564]]);
+        mymap.setMaxBounds(bounds);
+        mymap.on('drag', function () {
+            mymap.panInsideBounds(bounds, { animate: false });
+        });
+
+        var layer = L.esri.basemapLayer('Imagery').addTo(mymap);
+        var layerLabels = L.esri.basemapLayer('Imagery' + 'Labels');
+        mymap.addLayer(layerLabels);
+
+        function setBasemap(basemap) {
+            if (layer) {
+                mymap.removeLayer(layer);
+            }
+
+            layer = L.esri.basemapLayer(basemap);
+
+            mymap.addLayer(layer);
+
+            if (layerLabels) {
+                mymap.removeLayer(layerLabels);
+            }
+
+            if (basemap === 'ShadedRelief'
+                || basemap === 'Oceans'
+                || basemap === 'Gray'
+                || basemap === 'Imagery'
+            ) {
+                layerLabels = L.esri.basemapLayer(basemap + 'Labels');
+                mymap.addLayer(layerLabels);
+            } else if (basemap.includes('Imagery')) {
+                layerLabels = L.esri.basemapLayer('ImageryLabels');
+                mymap.addLayer(layerLabels);
+            }
+        }
+
+        var basemaps = document.getElementById('basemaps');
+
+        basemaps.addEventListener('change', function () {
+            setBasemap(basemaps.value);
+        });
+
+        // Load kml file
+        fetch('/LocalFiles/kml/Province.kml')
+            .then(res => res.text())
+            .then(kmltext => {
+                // Create new kml overlay
+                const parser = new DOMParser();
+                const kml = parser.parseFromString(kmltext, 'text/xml');
+                const track = new L.KML(kml);
+                mymap.addLayer(track);
+            });
+
+        var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
+        var bing = new L.BingLayer(BING_KEY);
+        mymap.addLayer(bing);
     }
 
     init();
     function init() {
         AllLicense();
+        GetDistricts(1);
+        GetCommune(0)
         GetBasins();
         WaterResourcesData();
+        initMap();
         $scope.Keyword = '';
         $scope.currentPage = 1;
 

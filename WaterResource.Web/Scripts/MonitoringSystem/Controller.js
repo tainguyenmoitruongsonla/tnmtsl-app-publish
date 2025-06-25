@@ -58,7 +58,13 @@
       { Id: -1, Name: "Chọn trạng thái kết nối" },
       { Id: 0, Name: "Bình thường" },
       { Id: 1, Name: "Mất kết nối" },
-    ];
+      ];
+
+    $scope.storePreData = {
+        ConstructionCode: '',
+        Time: '',
+        Data: {}
+    };
 
     $scope.filterPreData = function (chartId) {
       if ($scope.inputStartTime != "" || $scope.inputEndTime != "")
@@ -1325,7 +1331,7 @@
         GetDataConstruction();
         GetWaterQualities("A1");
       }
-    }
+      }
 
     $scope.openAside = function (
       asideId,
@@ -1336,12 +1342,15 @@
     ) {
       $scope.Keyword = "";
       $scope.currentPage = 1;
-
       if (construction !== undefined) {
+        $scope.storePreData.ConstructionCode = construction.ConstructionCode;
         $scope.ConsName = construction.ConstructionName;
+        $scope.ConsID = construction.Id;
         $scope.con = construction;
-        getPreData(construction, yesterday, today, chartId);
-      }
+          getPreData(construction, yesterday, today, chartId);
+        }
+
+        
 
       //if (totalCapacity == 1) {
       //    TotalCapacity = 1;
@@ -1455,6 +1464,38 @@
     // Show/hide construction name on map
     $scope.toggleShow = function () {
       $(".title-of-marker").fadeToggle("slow");
-    };
+      };
+
+      function formatForSQLDatetime(isoString) {
+          const date = new Date(isoString);
+
+          const yyyy = date.getFullYear();
+          const MM = String(date.getMonth() + 1).padStart(2, '0'); // Tháng tính từ 0
+          const dd = String(date.getDate()).padStart(2, '0');
+
+          const HH = String(date.getHours()).padStart(2, '0');
+          const mm = String(date.getMinutes()).padStart(2, '0');
+          const ss = String(date.getSeconds()).padStart(2, '0');
+          const SSS = String(date.getMilliseconds()).padStart(3, '0');
+
+          return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}.${SSS}`;
+      }
+
+    $scope.saveStorePreData = function () {
+        const result = Object.entries($scope.storePreData.Data).map(([key, value]) => ({
+            ConstructionCode: $scope.storePreData.ConstructionCode,
+            Time: formatForSQLDatetime($scope.storePreData.Time),
+            StationCode: key,
+            Value: value,
+            DeviceStatus: 0,
+            Status: true
+        }));
+
+        monitoringSystemService.saveStorePreData(result).then(function (msg) {
+            toastr.success('Lưu số liệu thành công!', 'THÀNH CÔNG');
+            closeAside('Hydroelectric_Online_Operate_Monitoring');
+        });
+    }
+    
   }
 );
