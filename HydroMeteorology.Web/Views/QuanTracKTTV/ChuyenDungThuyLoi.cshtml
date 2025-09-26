@@ -51,12 +51,7 @@
                                     <tr>
                                         <th class="text-center align-middle text-nowrap">STT </th>
                                         <th class="text-center align-middle text-nowrap">Mã trạm </th>
-                                        <th class="text-center align-middle text-nowrap">Tên trạm </th>
-                                        <th class="text-center align-middle text-nowrap">Địa điểm</th>
-                                        <th class="text-center align-middle text-nowrap">Vĩ độ</th>
-                                        <th class="text-center align-middle text-nowrap">Kinh Độ</th>
-                                        <th class="text-center align-middle text-nowrap"> Năm bắt đầu đo </th>
-                                        <th class="text-center align-middle text-nowrap"> Năm kết thúc đo </th>
+                                        <th class="text-center align-middle text-nowrap">Loại đập </th>
                                         <th class="text-center align-middle text-nowrap">Lượng mưa (mm)</th>
                                         <th class="text-center align-middle text-nowrap">Mực nước thượng lưu hồ (m) <span class="text-danger">(*)</span></th>
                                         <th class="text-center align-middle text-nowrap">Mực nước hạ lưu (m)</th>
@@ -73,15 +68,8 @@
                                 <tbody class="custom-table-tbody">
                                     <tr ng-repeat="item in DataConstruction">
                                         <th class="text-center align-middle" ng-bind="(currentPage -1)*10+$index+1"> </th>
-                                        <td><span ng-bind="item.ConstructionCode"></span></td>
-                                        <td class="text-nowrap text-left" style="min-width:100px">
-                                            <span ng-bind="item.Name" class="text-primary" ng-click="zoomConstruction(item.Lng, item.Lat, item.Id)"></span>
-                                        </td>
-                                        <td class="text-nowrap text-left"><span ng-bind="item.ConstructionLocation"></span></td>
-                                        <td><span ng-bind="item.Lat"></span></td>
-                                        <td><span ng-bind="item.Lng"></span></td>
-                                        <td><span ng-bind="item.StartDate"></span></td>
-                                        <td><span ng-bind="item.EndDate"></span></td>
+                                        <td class="align-middle"><span ng-bind="item.ConstructionCode" title="{{item.ConstructionName}}" class="text-primary" ng-click="zoomConstruction(item.Lng, item.Lat, item.Id)"></span></td>
+                                        <td class="text-center align-middle" ng-bind-html="renderDamTypeHtml(item.DamTypes)"></td>
                                         <td><span ng-bind="item.Muathuongluu"></span></td>
                                         <td class="text-center align-middle"><span ng-bind="item.Mucnuocho"></span></td>
                                         <td><span ng-bind="item.Mucnuochaluu"></span></td>
