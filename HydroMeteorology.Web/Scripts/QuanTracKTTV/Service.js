@@ -140,7 +140,7 @@ app.service("myService", function ($http) {
         return response;
     }
 
-    this.getAllConstructions = function (TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, StartDate, Status, LicensingAuthorities, Keyword, PageIndex, PageSize) {
+    this.getAllConstructions = function (TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, StartDate, Status, LicensingAuthorities, Keyword, PageIndex, PageSize, DamType) {
         var response = $http({
             method: "get",
             url: "/api/Construction/list",
@@ -156,7 +156,8 @@ app.service("myService", function ($http) {
                 LicensingAuthorities: LicensingAuthorities,
                 Keyword: Keyword,
                 PageIndex: PageIndex,
-                PageSize: PageSize
+                PageSize: PageSize,
+                DamType: DamType
             }
         });
         return response;

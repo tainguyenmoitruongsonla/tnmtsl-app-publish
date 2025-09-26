@@ -1,5 +1,8 @@
 ﻿//var app = angular.module("myApp", ['ui.bootstrap', 'toastr', 'ngAnimate', 'blockUI', 'ngSanitize']);
 app.controller('myCtrl', function ($scope, myService, $window, toastr) {
+    
+    'use strict';
+
     var CityCode = '',
         DistrictId = '',
         Status = true,
@@ -19,6 +22,7 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
 
     $scope.station = {};
     $scope.Keyword = '';
+    $scope.DamType = ''; // Chuyen dung thuy dien
     $scope.currentPage = 1, $scope.numPerPage = 10, $scope.maxSize = 5;
 
     //use for get preData
@@ -48,9 +52,11 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
                 mymap.addLayer(track);
             });
 
-        var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-        var bing = new L.BingLayer(BING_KEY);
-        mymap.addLayer(bing);
+        // Thay thế Bing layer bằng Esri World Imagery (vệ tinh)
+        var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles © Esri'
+        });
+        mymap.addLayer(satellite);
     }
 
     // 4. Khởi tạo đối tượng html sẽ hiển thị trên cửa sổ bản đồ
@@ -415,7 +421,7 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
     function GetDataConstruction() {
         var datas = [];
         $scope.$watch('currentPage + numPerPage', function () {
-            myService.getAllConstructions(TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage).then(function (items) {
+            myService.getAllConstructions(TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage, $scope.DamType).then(function (items) {
                 $scope.DataConstruction = items.data.ListData;
                 $scope.TotalCons = items.data.TotalCount;
 
@@ -1331,6 +1337,7 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
         $scope.Keyword = '';
         $scope.currentPage = 1;
         let pathName = location.pathname.split('/');
+
         //quocgia
         if (pathName[2] == 'quoc-gia' && pathName[3] == 'mua') {
             StationTypeId = 3;
@@ -1570,6 +1577,20 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
         }
         else {
             reader.readAsBinaryString($("#upload-monitoring-data")[0].files[0]);
+        }
+    };
+
+        // Hiển thị DamTypes dưới dạng HTML sinh động
+    $scope.renderDamTypeHtml = function (damType) {
+        switch (damType) {
+            case "tran":
+                return '<div title="Tràn tự do"><i class="fas fa-water"></i>&nbsp;Tràn</div>';
+            case "van":
+                return '<div title="Có van điều tiết"><i class="fas fa-sliders-h"></i>&nbsp;Van</div>';
+            case "van+tran":
+                return '<div title="Tràn + Van"><i class="fas fa-exchange-alt"></i></div>';
+            default:
+                return '<div style="color:#757575;font-style:italic;" title="Không xác định">-</div>';
         }
     };
 });

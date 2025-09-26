@@ -634,6 +634,7 @@ thead[class*="custom-table-thead"] th {
     background-color: #b7eb8f;
     border: 1px solid green;
     width: 75px;
+    margin: auto;
 }
 
 .custom-table-tbody th {

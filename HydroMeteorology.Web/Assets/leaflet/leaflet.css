@@ -206,7 +206,6 @@
 
 .leaflet-interactive {
 	cursor: pointer;
-	stroke: red;
 	}
 .leaflet-grab {
 	cursor: -webkit-grab;
@@ -556,10 +555,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* div icon */
 
 .leaflet-div-icon {
-	width: 15px !important;
-	height: 15px !important;
-	background: red;
-	border-radius: 100%;
+	background: #fff;
 	border: 1px solid #666;
 	}
 
