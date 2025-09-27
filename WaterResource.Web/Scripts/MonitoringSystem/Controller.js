@@ -25,6 +25,7 @@
       ),
       today = fromDateToString(new Date());
 
+    $scope.DamType = "";
     $scope.Keyword = "";
     $scope.currentPage = 1;
     $scope.numPerPage = 10;
@@ -476,7 +477,8 @@
               LicensingAuthorities,
               $scope.Keyword,
               $scope.currentPage,
-              $scope.numPerPage
+              $scope.numPerPage,
+              $scope.DamType
             )
             .then(function (items) {
               $scope.DataConstruction = items.data.ListData;
@@ -740,7 +742,8 @@
           -1,
           "",
           $scope.currentPage,
-          $scope.numPerPage
+          $scope.numPerPage,
+          $scope.DamType
         )
         .then(function (items) {
           $scope.TotalCons = items.data.TotalCount;

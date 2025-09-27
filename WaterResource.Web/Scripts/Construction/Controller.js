@@ -26,6 +26,7 @@
         LicensingAuthorities = -1;
 
     $scope.Keyword = '',
+        $scope.DamType = "";
         $scope.currentPage = 1,
         $scope.numPerPage = 10,
         $scope.maxSize = 5,
@@ -440,7 +441,7 @@
     function GetDataConstruction() {
         var datas = [];
         $scope.$watch('currentPage + numPerPage', function () {
-            constructionService.getAllConstructions($scope.TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage).then(function (items) {
+            constructionService.getAllConstructions($scope.TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage, $scope.DamType).then(function (items) {
                 $scope.DataConstruction = items.data.ListData;
                 $scope.TotalConstruction = items.data.TotalCount;
                 CountAssignCons(items.data.ListData)
@@ -609,14 +610,14 @@
 
     //count total construction no have license
     function ConsNoLicense() {
-        constructionService.getAllConstructions($scope.TypeOfConstructionId, 0, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, 1, 0).then(function (items) {
+        constructionService.getAllConstructions($scope.TypeOfConstructionId, 0, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, 1, 0, $scope.DamType).then(function (items) {
             $scope.TotalConsNoLicense = items.data.TotalCount;
         });
     }
 
     //get all construction
     function AllCons() {
-        constructionService.getAllConstructions($scope.TypeOfConstructionId, -1, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, '', 1, 0).then(function (items) {
+        constructionService.getAllConstructions($scope.TypeOfConstructionId, -1, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, '', 1, 0, $scope.DamType).then(function (items) {
             $scope.DataConsForExportExcel = items.data.ListData;
         });
     }

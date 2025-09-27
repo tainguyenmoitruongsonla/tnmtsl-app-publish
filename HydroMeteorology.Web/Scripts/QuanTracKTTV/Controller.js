@@ -18,11 +18,12 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
         ProvinceId = 0,
         LicenseId = -1,
         LicensingAuthorities = -1,
-        isViewObservationHistory = false;
+        isViewObservationHistory = false,
+        DamType = '';
 
     $scope.station = {};
     $scope.Keyword = '';
-    $scope.DamType = ''; // Chuyen dung thuy dien
+    
     $scope.currentPage = 1, $scope.numPerPage = 10, $scope.maxSize = 5;
 
     //use for get preData
@@ -421,7 +422,7 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
     function GetDataConstruction() {
         var datas = [];
         $scope.$watch('currentPage + numPerPage', function () {
-            myService.getAllConstructions(TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage, $scope.DamType).then(function (items) {
+            myService.getAllConstructions(TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage, DamType).then(function (items) {
                 $scope.DataConstruction = items.data.ListData;
                 $scope.TotalCons = items.data.TotalCount;
 
@@ -1352,10 +1353,12 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
         if (pathName[2] == 'chuyen-dung' && pathName[3] == 'thuy-dien') {
             StationTypeId = 9;
             TypeOfConstructionId = 4;
+            DamType = 'td';
         }
         if (pathName[2] == 'chuyen-dung' && pathName[3] == 'thuy-loi') {
             StationTypeId = 10;
             TypeOfConstructionId = 5;
+            DamType = 'tl';
         }
         if (pathName[2] == 'chuyen-dung' && pathName[3] == 'khi-tuong') {
             StationTypeId = 6;
@@ -1582,15 +1585,16 @@ app.controller('myCtrl', function ($scope, myService, $window, toastr) {
 
         // Hiển thị DamTypes dưới dạng HTML sinh động
     $scope.renderDamTypeHtml = function (damType) {
-        switch (damType) {
-            case "tran":
-                return '<div title="Tràn tự do"><i class="fas fa-water"></i>&nbsp;Tràn</div>';
-            case "van":
-                return '<div title="Có van điều tiết"><i class="fas fa-sliders-h"></i>&nbsp;Van</div>';
-            case "van+tran":
-                return '<div title="Tràn + Van"><i class="fas fa-exchange-alt"></i></div>';
-            default:
-                return '<div style="color:#757575;font-style:italic;" title="Không xác định">-</div>';
+        var type = damType.substring(2); // lấy từ ký tự thứ 3 trở đi
+        if (type == "tran") {
+            return '<div title="Tràn tự do"><i class="fas fa-water"></i>&nbsp;Tràn</div>';
         }
+        if (type == "van") {
+            return '<div title="Có van điều tiết"><i class="fas fa-sliders-h"></i>&nbsp;Van</div>';
+        }
+        if  (damType == "van+tran") {
+            return '<div title="Có van + tràn">Van + Tràn</div>';
+        }
+        
     };
 });
