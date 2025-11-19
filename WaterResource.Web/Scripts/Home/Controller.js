@@ -11,6 +11,7 @@
     $scope.countStableConnection = 0;
     $scope.countFalseOperation = 0;
     $scope.countLostConnection = 0;
+    $scope.DamType = "";
 
     //use for get preData
     var yesterday = fromDateToString(new Date(new Date().getTime() - 24 * 60 * 60 * 1000));
@@ -220,7 +221,7 @@
     function GetDataConstruction() {
         var datas = [];
         $scope.$watch('currentPage + numPerPage', function () {
-            constructionService.getAllConstructions(4, -1, 0, 0, 0, -1, -1, true, -1, '', 1, 0).then(function (items) {
+            constructionService.getAllConstructions(4, -1, 0, 0, 0, -1, -1, true, -1, '', 1, 0, $scope.DamType).then(function (items) {
                 $scope.DataConstruction = items.data.ListData;
                 $scope.TotalConstruction = items.data.TotalCount;
                 $scope.DataConstruction.forEach(function (e) {
