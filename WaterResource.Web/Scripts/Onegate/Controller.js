@@ -23,6 +23,7 @@
     $scope.DataYear = [];
     $scope.ShowConsType = true;
     $scope.TypeOfConstructionFilter = 'Chọn loại CT';
+    $scope.DamType = "";
 
     //use for get preData
     var yesterday = fromDateToString(new Date(new Date().getTime() - 24 * 60 * 60 * 1000));
@@ -319,7 +320,7 @@
     GetDataConstruction();
     function GetDataConstruction() {
         $scope.$watch('currentPage + numPerPage', function () {
-            constructionService.getAllConstructions(TypeOfConstructionId, -1, 0, 0, 0, -1, -1, true, -1, '', 1, 0).then(function (items) {
+            constructionService.getAllConstructions(TypeOfConstructionId, -1, 0, 0, 0, -1, -1, true, -1, '', 1, 0, $scope.DamType).then(function (items) {
                 $scope.DataConstruction = items.data.ListData;
                 $scope.TotalConstruction = items.data.TotalCount;
                 $scope.DataConstruction.forEach(function (e) {
