@@ -481,7 +481,7 @@
               $scope.DamType
             )
             .then(function (items) {
-              $scope.DataConstruction = items.data.ListData;
+                $scope.DataConstruction = items.data.ListData;
               $scope.TotalItems = items.data.TotalCount;
               if ($scope.isHome) {
                 $scope.countHydroelectric = 0;
@@ -806,7 +806,7 @@
     }
 
     $scope.checkValuePreData = function (value) {
-      if (value == -1 || value === null) {
+      if (value == -1 || value === null || value === undefined || isNaN(value)) {
         return '<span class="font-weight-bold" title="Không có dữ liệu"> - </span>';
       } else {
         return "<span>" + round(value) + "</span>";
@@ -892,7 +892,7 @@
         WastewaterFlowAfterTreatment: [],
         WastewaterFlowAtTheReceivingSource: [],
       };
-      const chartHeight = chartId.startsWith("chartPreData_") ? 300 : 500;
+        const chartHeight = chartId.startsWith("chartPreData_") ? 300 : 500;
 
       monitoringSystemService
         .getStorePreData(
@@ -904,7 +904,7 @@
         )
         .then(function (items) {
           $scope.DataPre = [];
-          $scope.TotalItem = items.data.TotalCount;
+            $scope.TotalItem = items.data.TotalCount;
 
           const result = Object.values(
             items.data.ListData.reduce((item, e) => {
@@ -971,14 +971,14 @@
                     case "QUATRAN":
                       setValue("qquatran", e.Value);
                       break;
-                    case "KHAITHAC":
+                    case "LUULUONG":
                       setValue("khaithac", e.Value);
                       break;
                     case "DCTT":
                       setValue("qxatt", e.Value);
                       break;
-                    case "THUONGLUU":
-                      setValue("mucnuocthuongluu", e.Value);
+                    case "MUCNUOC":
+                      setValue("mucnuoc", e.Value);
                       break;
                   }
                   break;
@@ -1038,9 +1038,15 @@
                     case "GIENGKHAITHAC":
                       setValue("giengkhaithac", e.Value);
                       break;
-                    case "KHAITHAC":
+                    case "LUULUONG":
                       setValue("khaithac", e.Value);
-                      break;
+                          break;
+                    case "MUCNUOC":
+                        setValue("mucnuoc", e.Value);
+                        break;
+                    case "TONGLUULUONG":
+                        setValue("tongluuluong", e.Value);
+                        break;
                   }
                   break;
                 case 3:
@@ -1074,7 +1080,7 @@
             }, {})
           );
 
-          $scope.DataPre = result;
+            $scope.DataPre = result;
 
           $scope.DataPre.forEach(function (e) {
             chartXaxisCategories.push(formatDateTime(e.Time));
@@ -1107,7 +1113,7 @@
             } else if (typeOfCons == 8) {
               chartData.MinningFlow.push(checkNegative(e.khaithac));
               chartData.MiningWellWaterLevel.push(
-                checkNegative(e.giengkhaithac)
+                checkNegative(e.mucnuoc)
               );
               chartData.MonitoringWellWaterLevel.push(
                 checkNegative(e.giengquantrac)
@@ -1339,18 +1345,31 @@
     $scope.openAside = function (
       asideId,
       typeID,
-      totalCapacity,
       construction,
-      chartId
+        chartId, constructionItem
     ) {
       $scope.Keyword = "";
       $scope.currentPage = 1;
       if (construction !== undefined) {
         $scope.storePreData.ConstructionCode = construction.ConstructionCode;
-        $scope.ConsName = construction.ConstructionName;
+          $scope.ConsName = construction.ConstructionName;
         $scope.ConsID = construction.Id;
-        $scope.con = construction;
-          getPreData(construction, yesterday, today, chartId);
+          $scope.con = construction; 
+
+          if (construction.ConstructionCode === 'NDDCTTAKIIVN') {
+              // Clone object construction để tránh ghi đè
+              let consClone = angular.copy(construction);
+
+              // Set ConstructionCode cho từng bản riêng biệt
+              consClone.ConstructionCode = `${construction.ConstructionCode}_${constructionItem.Name}`;
+
+              // Gọi API cho từng clone (không ảnh hưởng nhau)
+              getPreData(consClone, yesterday, today, chartId);
+          } else {
+              getPreData(construction, yesterday, today, chartId);
+          }
+
+          
         }
 
         

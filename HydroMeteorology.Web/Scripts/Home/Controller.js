@@ -14,6 +14,7 @@ app.controller("HomeCntrl", function ($scope, myService, $interval) {
         Status = true,
         LicensingAuthorities = -1;
     $scope.Keyword = '',
+        $scope.DamType = "";
         $scope.currentPage = 1,
         $scope.numPerPage = 20,
         $scope.maxSize = 5;
@@ -84,10 +85,6 @@ app.controller("HomeCntrl", function ($scope, myService, $interval) {
                 const track = new L.KML(kml);
                 mymap.addLayer(track);
             });
-
-        var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-        var bing = new L.BingLayer(BING_KEY);
-        mymap.addLayer(bing);
     }
 
     GetDataConstruction();
@@ -367,7 +364,7 @@ app.controller("HomeCntrl", function ($scope, myService, $interval) {
                 });
                 $scope.CountStations = CountStations;
             });
-            myService.getAllConstructions(TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, 0).then(function (items) {
+            myService.getAllConstructions(TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, 0, $scope.DamType).then(function (items) {
                 $scope.DataConstruction = items.data.ListData;
                 items.data.ListData.forEach(function (row) {
                     if (idCons.includes(row.TypeOfConstructionId)) {

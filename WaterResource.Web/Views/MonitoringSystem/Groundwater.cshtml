@@ -89,7 +89,12 @@
 
                                     <td class="sticky-col end-col">
                                         <div class="d-flex">
-                                            <a href="javascript:void(0)" class="px-2 text-nowrap" title="Xem chi tiết" ng-click="openAside('Groundwater_Operate_Monitoring', 8, 0, item, 'operate_Groundwater')"> <i> </i> Chi tiết</a>
+                                            <div ng-if="item.ConstructionCode === 'NDDCTTAKIIVN'">
+                                                <a href="javascript:void(0)" class="px-2 text-nowrap" ng-repeat="constructionItem in item.ConstructionItems" ng-click="openAside('Groundwater_Operate_Monitoring', 8, item, 'operate_Groundwater',constructionItem)">{{constructionItem.Name}}</a>
+                                            </div>
+                                            <div ng-if="item.ConstructionCode !== 'NDDCTTAKIIVN'">
+                                                <a href="javascript:void(0)" class="px-2 text-nowrap" title="Xem chi tiết" ng-click="openAside('Groundwater_Operate_Monitoring', 8, 0, item, 'operate_Groundwater')"> Chi tiết</a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -170,37 +175,33 @@
                                                         <tr>
                                                             <th rowspan="2" class="text-center align-middle text-nowrap">STT</th>
                                                             <th rowspan="2" class="text-center align-middle text-nowrap">Thời gian</th>
-                                                            <th colspan="3" class="text-center align-middle">Lưu lượng khai thác của từng giếng khoan</th>
-                                                            <th colspan="3" class="text-center align-middle">Mực nước trong giếng khai thác </th>
-                                                            <th colspan="3" class="text-center align-middle">Mực nước trong giếng quan trắc </th>
+                                                            <th colspan="2" class="text-center align-middle">Lưu lượng khai thác của từng giếng khoan</th>
+                                                            <th colspan="2" class="text-center align-middle">Mực nước trong giếng khai thác </th>
+                                                            <th colspan="2" class="text-center align-middle">Mực nước trong giếng quan trắc </th>
                                                             <th rowspan="2" class="text-center align-middle text-nowrap">Trạng thái vận hành </th>
                                                         </tr>
                                                         <tr>
                                                             <th>Yêu cầu</th>
                                                             <th>Thực tế</th>
-                                                            <th>Chênh lệch(+/-)</th>
                                                             <th>Yêu cầu</th>
                                                             <th>Thực tế</th>
-                                                            <th>Chênh lệch(+/-)</th>
                                                             <th>Yêu cầu</th>
                                                             <th>Thực tế</th>
-                                                            <th>Chênh lệch(+/-)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="custom-table-tbody">
                                                         <tr ng-repeat="item in DataPre">
-                                                            <td ng-bind-html="item.id"></td>
-                                                            <td class="text-nowrap">{{item.time}}</td>
-
-                                                            <td ng-bind-html="checkValuePreData(item.qkhaithacyeucau)"></td>
-                                                            <td ng-bind-html="checkValuePreData(item.khaithac)"></td>
-                                                            <td class="text-center font-weight-bold {{item.qkhaithacyeucau > item.khaithac ? 'text-success' : 'text-danger'}}">{{item.khaithac - item.qkhaithacyeucau | number: 2}}</td>
-                                                            <td ng-bind-html="checkValuePreData(item.mucnuocgieng)"></td>
-                                                            <td ng-bind-html="checkValuePreData(item.giengkhaithac)"></td>
-                                                            <td class="text-center font-weight-bold {{item.mucnuocgieng > item.giengkhaithac ? 'text-success' : 'text-danger'}}">{{item.giengkhaithac - item.mucnuocgieng | number: 2}}</td>
-                                                            <td ng-bind-html="checkValuePreData(item.mucnuocgieng)"></td>
-                                                            <td ng-bind-html="checkValuePreData(item.giengquantrac)"></td>
-                                                            <td class="text-center font-weight-bold {{item.mucnuocgieng > item.giengquantrac ? 'text-success' : 'text-danger'}}">{{item.giengquantrac - item.mucnuocgieng | number: 2}}</td>
+                                                            <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
+                                                            <td class="text-nowrap"><span ng-bind="item.Time | date:'dd/MM/yyyy HH:mm'"></span> <span ng-bind="item.StationCode"></span></td>
+                                                            <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.qkhaithacyeucau)"></td>
+                                                            <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.khaithac)"></td>
+                                                            
+                                                            <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.mucnuocyeucau)"></td>
+                                                            <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.mucnuoc)"></td>
+                                                            
+                                                            <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.mucnuocgieng)"></td>
+                                                            <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.giengquantrac) ? checkValuePreData(item.giengquantrac) : '-' "></td>
+                                                            
 
                                                             <td ng-bind-html="checkDeviceStatus(item.trangthaithietbi)"></td>
                                                         </tr>
