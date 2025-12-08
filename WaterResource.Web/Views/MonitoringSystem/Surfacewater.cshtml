@@ -185,7 +185,7 @@
                                 <td ng-if="ShowColumns(TypeOfConstructionId,[1,4])" class="text-center" ng-bind-html="item.DukienmucnuochoPre"></td>*@
                                 <td class="sticky-col end-col bg-white">
                                     <div class="d-flex">
-                                        <a href="javascript:void(0)" class="px-2 text-nowrap" title="Xem chi tiết" ng-click="openAside('Hydroelectric_Online_Operate_Monitoring', 0, 0, item, 'operateHydroelectric')"> <i> </i> Chi tiết</a>
+                                        <a href="javascript:void(0)" class="px-2 text-nowrap" title="Xem chi tiết" ng-click="openAside('Hydroelectric_Online_Operate_Monitoring', 0, item, 'operateHydroelectric')"> <i> </i> Chi tiết</a>
                                     </div>
                                 </td>
                             </tr>
@@ -269,6 +269,7 @@
                                                 <tr>
                                                     <th rowspan="2" class="text-center align-middle">STT</th>
                                                     <th rowspan="2" class="text-center align-middle">Thời gian </th>
+                                                    <th rowspan="2" class="text-center align-middle">Lưu lượng khai thác</th>
                                                     <th rowspan="2" class="text-center align-middle">Lượng mưa (mm)</th>
                                                     <th rowspan="2" class="text-center align-middle">Mực nước hạ lưu (m)</th>
                                                     <th rowspan="2" class="text-center align-middle">Dung tích hồ (triệu m<sup>3</sup>)</th>
@@ -304,6 +305,7 @@
                                                 <tr ng-repeat="item in DataPre">
                                                     <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
                                                     <td class="text-nowrap" ng-bind="item.Time | date:'dd/MM/yyyy HH:mm'"></td>
+                                                    <td ng-bind-html="item.khaithac"></td>
                                                     <td ng-bind-html="item.muathuongluu"></td>
                                                     <td ng-bind-html="item.mucnuochaluu"></td>
                                                     <td class="text-center" ng-bind-html="item.dungtich"></td>

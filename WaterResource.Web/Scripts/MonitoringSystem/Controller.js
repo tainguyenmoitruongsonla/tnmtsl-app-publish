@@ -128,7 +128,7 @@
       GetDataConstruction();
     };
 
-    $scope.ShowColumns = function (TypeOfConsId, arr) {
+      $scope.ShowColumns = function (TypeOfConsId, arr) {
       if (arr.includes(TypeOfConsId || TypeOfConsId == undefined)) {
         return true;
       }
@@ -985,6 +985,7 @@
                 case 6:
                 case 11:
                 case 13:
+                case 14:
                   switch (e.StationCode) {
                     case "NH4":
                       setValue("NH4", e.Value);
@@ -1108,7 +1109,7 @@
               chartData.DischargeFlowThroughOverflow.push(
                 checkNegative(e.qquatran)
               );
-            } else if ([6, 11, 13].includes(typeOfCons)) {
+            } else if ([6, 11, 13, 14].includes(typeOfCons)) {
               chartData.MinningFlow.push(checkNegative(e.khaithac));
             } else if (typeOfCons == 8) {
               chartData.MinningFlow.push(checkNegative(e.khaithac));
@@ -1249,6 +1250,7 @@
         case 6:
         case 11:
         case 13:
+        case 14:
           return [
             {
               name: "Lưu lượng khai thác (m3/s)",
