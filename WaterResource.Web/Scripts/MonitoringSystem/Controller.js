@@ -891,6 +891,7 @@
         MonitoringWellWaterLevel: [],
         WastewaterFlowAfterTreatment: [],
         WastewaterFlowAtTheReceivingSource: [],
+        Unit: ""
       };
         const chartHeight = chartId.startsWith("chartPreData_") ? 300 : 500;
 
@@ -921,6 +922,7 @@
                   ).toFixed(2),
                   khaithacyeucau: (construction.MiningMaxlow ?? 0).toFixed(2),
                   mucnuocgieng: (construction.WellWL ?? 0).toFixed(2),
+                  Unit: e.Unit
                 };
               }
 
@@ -1108,9 +1110,11 @@
               chartData.MinningFlow.push(checkNegative(e.khaithac));
               chartData.DischargeFlowThroughOverflow.push(
                 checkNegative(e.qquatran)
-              );
+                );
+                chartData.Unit = e.Unit
             } else if ([6, 11, 13, 14].includes(typeOfCons)) {
-              chartData.MinningFlow.push(checkNegative(e.khaithac));
+                chartData.MinningFlow.push(checkNegative(e.khaithac));
+                chartData.Unit = e.Unit
             } else if (typeOfCons == 8) {
               chartData.MinningFlow.push(checkNegative(e.khaithac));
               chartData.MiningWellWaterLevel.push(
@@ -1157,7 +1161,7 @@
               },
               {
                 title: {
-                  text: "Lưu lượng (m3/s)",
+                  text: "Lưu lượng",
                 },
                 min: 0,
                 opposite: true,
@@ -1237,7 +1241,7 @@
               yAxisIndex: 1,
             },
             {
-              name: "Lưu lượng khai thác (m3/s)",
+              name: "Lưu lượng khai thác (" + chartData.Unit + ")",
               data: chartData.MinningFlow.reverse(),
               yAxisIndex: 1,
             },
@@ -1252,8 +1256,8 @@
         case 13:
         case 14:
           return [
-            {
-              name: "Lưu lượng khai thác (m3/s)",
+              {
+              name: "Lưu lượng khai thác (" + chartData.Unit + ")",
               data: chartData.MinningFlow.reverse(),
               yAxisIndex: 1,
             },
