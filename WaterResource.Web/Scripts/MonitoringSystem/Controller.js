@@ -875,6 +875,10 @@
       date.setTime(date.getTime() - date.getTimezoneOffset() * 60000);
       let dateAsString = date.toISOString().substr(0, 19);
       return dateAsString;
+     }
+
+    function formatUnit(value) {
+        return (value == 'm3/s') ? 'm3/s' : 'm3/ngày đêm';
     }
 
     function getPreData(construction, startTime, endTime, chartId) {
@@ -922,7 +926,7 @@
                   ).toFixed(2),
                   khaithacyeucau: (construction.MiningMaxlow ?? 0).toFixed(2),
                   mucnuocgieng: (construction.WellWL ?? 0).toFixed(2),
-                  Unit: e.Unit
+                  Unit: formatUnit(e.Unit) 
                 };
               }
 
@@ -1111,10 +1115,10 @@
               chartData.DischargeFlowThroughOverflow.push(
                 checkNegative(e.qquatran)
                 );
-                chartData.Unit = e.Unit
+                chartData.Unit = formatUnit(e.Unit)
             } else if ([6, 11, 13, 14].includes(typeOfCons)) {
                 chartData.MinningFlow.push(checkNegative(e.khaithac));
-                chartData.Unit = e.Unit
+                chartData.Unit = formatUnit(e.Unit)
             } else if (typeOfCons == 8) {
               chartData.MinningFlow.push(checkNegative(e.khaithac));
               chartData.MiningWellWaterLevel.push(
