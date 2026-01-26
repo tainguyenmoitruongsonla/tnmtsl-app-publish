@@ -19,6 +19,7 @@
     $scope.maxSize = 5;
 
     $scope.disabledButton = true;
+    $scope.DamType = "";
 
     // Initial map
     mapService.initMap('Map_RequestConnection');
@@ -78,9 +79,8 @@
     GetDataConstruction()
     function GetDataConstruction() {
         //TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, StartDate, TotalCapacity, isDetail, isPreData, Status, Keyword, PageIndex,PageSize
-        constructionService.getAllConstructions(TypeOfConstructionId, -1, -1, -1, -1, -1, -1, true, -1, '', 1, 0).then(function (items) {
+        constructionService.getAllConstructions(TypeOfConstructionId, -1, -1, -1, -1, -1, -1, true, -1, '', 1, 0, $scope.DamType).then(function (items) {
             $scope.DataConstruction = items.data.ListData;
-            console.log(items.data.ListData);
         });
     }
 
