@@ -20,16 +20,24 @@
                                 <input class="floating-input w-100 text-left" type="text" placeholder="Tên công trình" ng-model="license.Construction.ConstructionName" />
                             </div>
                             <div class="col-md-4">
-                                <label class="font-13">Tỉnh</label>
-                                <select ng-options="opt.Id as opt.CityName for opt in Provinces" ng-model="license.Construction.ProvinceId" ng-change="ProvinceChange(license.Construction.ProvinceId)" class="floating-select" style="width:100%"><option value="" class="" selected="selected">[--Chọn Tỉnh/TP--]</option><option label="Tỉnh Sơn La" value="number:1">Tỉnh Sơn La</option></select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="font-13">Quận/Huyện</label>
-                                <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="license.Construction.DistrictId" ng-change="DistrictChange(license.Construction.DistrictId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option></select>
-                            </div>
-                            <div class="col-md-4">
                                 <label class="font-13">Xã/Phường</label>
-                                <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="license.Construction.CommuneId" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option></select>
+                                <div class="floating-label w-100">
+                                    <input class="floating-input w-100" type="text" data-toggle="dropdown"
+                                           placeholder="Nhập tên xã/phường" ng-model="ConstructionCommuneFilter">
+                                    <ul class="dropdown-menu w-100" role="menu">
+                                        <li class="border-bottom border-secondary m-0 p-1">
+                                            <a href="javascript:void(0)" class="m-0" ng-click="selectConstructionCommune(null)">
+                                                <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn xã</p>
+                                            </a>
+                                        </li>
+                                        <li class="border-bottom border-secondary m-0 p-1" ng-repeat="i in Communes | filter:ConstructionCommuneFilter">
+                                            <a href="javascript:void(0)" class="m-0" ng-click="selectConstructionCommune(i)">
+                                                <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
+                                                <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.OldCommuneName}}</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col-md-9">
                                 <label class="font-13"> Địa điểm công trình </label>

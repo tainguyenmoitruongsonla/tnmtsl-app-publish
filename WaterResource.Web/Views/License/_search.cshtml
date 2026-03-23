@@ -74,16 +74,19 @@
                 {
                     <div class="col-12 col-md-2 p-0">
                         <div class="floating-label w-100 p-1">
-                            <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="DistrictFilter">
+                            <input class="floating-input w-100" type="text" id="CommuneFilter" data-toggle="dropdown"
+                                   placeholder="Nhập tên xã" ng-model="CommuneFilter"
+                                   ng-init="filterLicenseByCommune(0, 'Chọn xã')">
                             <ul class="dropdown-menu w-100" role="menu">
-                                <li role="option" class="border-bottom border-secondary m-0 p-1">
-                                    <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByDistrict(0, 'Chọn huyện')">
-                                        <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn huyện</p>
+                                <li class="border-bottom border-secondary m-0 p-1">
+                                    <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByCommune(0, 'Chọn Xã')">
+                                        <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
                                     </a>
                                 </li>
-                                <li role="option" class="border-bottom border-secondary m-0 p-1" ng-repeat="e in Districts">
-                                    <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByDistrict(e.Id, e.DistrictName)">
-                                        <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.DistrictName"></p>
+                                <li class="border-bottom border-secondary m-0 p-1" ng-repeat='i in Communes'>
+                                    <a href="javascript:void(0)" class="m-0" ng-click="filterLicenseByCommune(i.Id, i.Name)">
+                                        <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
+                                        <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.OldCommuneName}}</p>
                                     </a>
                                 </li>
                             </ul>

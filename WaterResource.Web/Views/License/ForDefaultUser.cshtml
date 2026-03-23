@@ -111,9 +111,9 @@
                                             <td class="align-middle" ng-bind="item.LicenseTypeName"></td>
                                             <td class="align-middle"><span ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.OldLicense.LicenseFile)" class="text-primary text-nowrap" ng-bind="item.OldLicense.LicenseNumber"></span></td>
                                             <td class="align-middle" ng-bind="item.OldLicense.SignDate | date:'dd/MM/yyyy'"></td>
-                                            <td class="align-middle" ng-bind="item.Location.CityId"></td>
-                                            <td class="align-middle" ng-bind="item.Location.DistrictId"></td>
-                                            <td class="align-middle" ng-bind="item.Location.CommuneId"></td>
+                                            <td class="align-middle" ng-bind="item.Location.CityName"></td>
+                                            <td class="align-middle" ng-bind="item.Location.DistrictName"></td>
+                                            <td class="align-middle" ng-bind="item.Location.CommuneName"></td>
                                             <td class="align-middle text-center" style="padding: 0 !important;">
                                                 <button ng-disabled="item.Construction.ConstructionItems.length < 1" data-toggle="modal" class="btn-addnew" data-target="#construction-item-{{item.Construction.ConstructionCode}}">
                                                     <span ng-bind="item.Construction.ConstructionItems.length"></span>&nbsp;
@@ -263,9 +263,9 @@
                 <td ng-bind="item.LicenseTypeName"></td>
                 <td ng-bind="item.OldLicense.LicenseNumber"></td>
                 <td ng-bind="item.OldLicense.SignDate | date:'dd/MM/yyyy'"></td>
-                <td ng-bind="item.Construction.ProvinceId"></td>
-                <td ng-bind="item.Construction.DistrictId"></td>
-                <td ng-bind="item.Construction.CommuneId"></td>
+                <td ng-bind="item.Construction.ProvinceName"></td>
+                <td ng-bind="item.Construction.DistrictName"></td>
+                <td ng-bind="item.Construction.CommuneName"></td>
                 <td colspan="3">
                     <table>
                         <tbody>

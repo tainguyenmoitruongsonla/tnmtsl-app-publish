@@ -47,8 +47,12 @@
                     <div class="col-md-12 p-0">
                         <div class="row m-0 justify-content-between align-items-center px-2 py-1">
                             <div class="col-lg-3 p-0 row m-0 align-items-center">
-                                <div class="col-12 p-0">Tổng số công trình KTSDN dưới đất: <span class="font-weight-bold text-success" ng-bind-html="TotalConstruction"></span> </div>
-                                <div class="col-12 p-0">Số công trình đã cấp phép: <span class="font-weight-bold text-success" ng-bind-html="TotalConstruction - TotalConsNoLicense"></span> </div>
+                                <div class="col-12 p-0">Tổng số công trình KTSDN dưới đất: <span
+                                        class="font-weight-bold text-success" ng-bind-html="TotalConstruction"></span>
+                                </div>
+                                <div class="col-12 p-0">Số công trình đã cấp phép: <span
+                                        class="font-weight-bold text-success"
+                                        ng-bind-html="TotalConstruction - TotalConsNoLicense"></span> </div>
                             </div>
                             <div class="col-lg-9 row m-0 align-items-center justify-content-end pt-3 px-0 pt-md-0">
                                 @Html.Partial("_search")
@@ -59,34 +63,47 @@
                                 <thead class="custom-table-thead">
                                     <tr>
                                         <th rowspan="2" class="text-center align-middle sticky-col start-col">STT</th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap sticky-col start-col">Tên công trình</th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap sticky-col start-col">
+                                            Tên công trình</th>
                                         <th rowspan="2" class="text-center align-middle text-nowrap">Vị trí công trình</th>
 
-                                        <th rowspan="2" class="text-center align-middle text-nowrap">Mục đích khai thác, sử dụng nước</th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap">Số giếng <br /> khai thác </th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap">Năm <br /> xây dựng </th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap">Năm <br /> vận hành	 </th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap" title="Lưu lượng nước khai thác">Q <sub>KT</sub> (m<sup>3</sup>/ngày đêm) </th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap">Mục đích khai thác, sử
+                                            dụng nước</th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap">Số giếng <br /> khai
+                                            thác </th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap">Năm <br /> xây dựng
+                                        </th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap">Năm <br /> vận hành
+                                        </th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap"
+                                            title="Lưu lượng nước khai thác">Q <sub>KT</sub> (m<sup>3</sup>/ngày đêm) </th>
                                         <th rowspan="2" class="text-center align-middle text-nowrap">Số hiệu</th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap">Thời gian <br /> hành nghề khoan</th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap">Thời gian <br /> hành
+                                            nghề khoan</th>
                                         <th colspan="2" class="text-center align-middle text-nowrap">Tọa độ</th>
-                                        <th colspan="2" class="text-center align-middle text-nowrap">Chiều sâu đoạn thu nước (m)</th>
-                                        <th colspan="8" class="text-center align-middle text-nowrap">Thông số của công trình khai thác </th>
+                                        <th colspan="2" class="text-center align-middle text-nowrap">Chiều sâu đoạn thu nước
+                                            (m)</th>
+                                        <th colspan="8" class="text-center align-middle text-nowrap">Thông số của công trình
+                                            khai thác </th>
                                         <th colspan="3" class="text-center align-middle text-nowrap">Thông tin cấp phép</th>
-                                        <th colspan="2" class="text-center align-middle text-nowrap">Quyết định tiền cấp quyền</th>
-                                        <th rowspan="3" class="text-center align-middle text-nowrap sticky-col end-col">Thao tác</th>
+                                        <th colspan="2" class="text-center align-middle text-nowrap">Quyết định tiền cấp
+                                            quyền</th>
+                                        <th rowspan="3" class="text-center align-middle text-nowrap sticky-col end-col">Thao
+                                            tác</th>
                                     </tr>
                                     <tr>
                                         <th class="text-center align-middle">X</th>
                                         <th class="text-center align-middle">Y</th>
                                         <th class="text-center align-middle">Từ</th>
                                         <th class="text-center align-middle">Đến</th>
-                                        <th class="text-center align-middle text-nowrap">Q<sub>khai thác</sub> <br /> (m<sup>3</sup>/ng.đêm)</th>
+                                        <th class="text-center align-middle text-nowrap">Q<sub>khai thác</sub> <br />
+                                            (m<sup>3</sup>/ng.đêm)</th>
                                         <th class="text-center align-middle text-nowrap"> H<sub>giếng khai thác</sub> </th>
                                         <th class="text-center align-middle text-nowrap"> H<sub>giếng quan trắc</sub> </th>
                                         <th class="text-center align-middle text-nowrap">Chế độ KT <br /> (giờ/ng.đêm)</th>
                                         <th class="text-center align-middle text-nowrap">Chiều sâu <br /> MN tĩnh (m)</th>
-                                        <th class="text-center align-middle text-nowrap">Chiều sâu <br /> MN động max (m)</th>
+                                        <th class="text-center align-middle text-nowrap">Chiều sâu <br /> MN động max (m)
+                                        </th>
                                         <th class="text-center align-middle text-nowrap">Tầng chứa<br /> nước KT </th>
                                         <th class="text-center align-middle text-nowrap">Mực nước <br /> hạ thấp</th>
                                         <!--license-->
@@ -95,15 +112,19 @@
                                         <th rowspan="2" class="text-center align-middle text-nowrap">Thời hạn CP</th>
                                         <!--license fee-->
                                         <th rowspan="2" class="text-center align-middle text-nowrap">Số QĐ</th>
-                                        <th rowspan="2" class="text-center align-middle text-nowrap">Tổng tiền <br /> (đồng) </th>
+                                        <th rowspan="2" class="text-center align-middle text-nowrap">Tổng tiền <br /> (đồng)
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="custom-table-tbody">
                                     <tr ng-repeat="item in DataConstruction">
-                                        <td class="text-center align-middle sticky-col start-col"> {{(currentPage -1)*numPerPage+$index+1}} </td>
+                                        <td class="text-center align-middle sticky-col start-col"> {{(currentPage
+                                            -1)*numPerPage+$index+1}} </td>
                                         <td class="text-nowrap sticky-col start-col">
-                                            <span ng-bind-html="item.ConstructionName" class="text-primary" ng-click="zoomConstruction(item.Lng, item.Lat, item.Id)"></span>
-                                            <img class="grid-item-image" style="width: 15px;" src="~/LocalFiles/images/earth.png" alt="altImg">
+                                            <span ng-bind-html="item.ConstructionName" class="text-primary"
+                                                ng-click="zoomConstruction(item.Lng, item.Lat, item.Id)"></span>
+                                            <img class="grid-item-image" style="width: 15px;"
+                                                src="~/LocalFiles/images/earth.png" alt="altImg">
                                         </td>
                                         <td style="min-width:200px" ng-bind-html="item.ConstructionLocation"></td>
 
@@ -130,7 +151,8 @@
                                         <!--license-->
                                         <td>
                                             <div ng-repeat="license in item.Licenses">
-                                                <span ng-click="openAsideFile(license)" class="text-primary text-nowrap" ng-bind-html="license.LicenseNumber"></span>
+                                                <span ng-click="openAsideFile(license)" class="text-primary text-nowrap"
+                                                    ng-bind-html="license.LicenseNumber"></span>
                                             </div>
                                         </td>
                                         <td>
@@ -146,7 +168,8 @@
                                         <!--license fee-->
                                         <td>
                                             <div ng-repeat="licFee in item.LicenseFees">
-                                                <span ng-click="openLicenseFeeFile(licFee)" class="text-primary text-nowrap" ng-bind-html="licFee.LicenseFeeNumber"></span>
+                                                <span ng-click="openLicenseFeeFile(licFee)" class="text-primary text-nowrap"
+                                                    ng-bind-html="licFee.LicenseFeeNumber"></span>
                                             </div>
                                         </td>
                                         <td>
@@ -159,11 +182,14 @@
                                             <div class="d-flex">
                                                 @if (_service.IsViewAction("/cong-trinh", User.Identity.Name, "EDIT"))
                                                 {
-                                                    <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa công trình" ng-click="EditDataCons('formCreateCons' ,item)"><i class="fa fa-edit"></i></a>
+                                                    <a href="javascript:void(0)" class="px-2" title="Chỉnh sửa công trình"
+                                                        ng-click="EditDataCons('formCreateCons' ,item)"><i
+                                                            class="fa fa-edit"></i></a>
                                                 }
                                                 @if (_service.IsViewAction("/cong-trinh", User.Identity.Name, "DELETE"))
                                                 {
-                                                    <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá công trình" ng-click="DeleteItem(item)"><i class="fa-solid fa-trash-can"></i></a>
+                                                    <a href="javascript:void(0)" class="px-2 text-danger" title="Xoá công trình"
+                                                        ng-click="DeleteItem(item)"><i class="fa-solid fa-trash-can"></i></a>
                                                 }
                                             </div>
                                         </td>
@@ -176,60 +202,66 @@
                                     <tr>
                                         <th rowspan="2">STT</th>
                                         <th rowspan="2">Tên công trình</th>
-                                        <th rowspan="2">Địa điểm</th>
-                                        <th colspan="2">Tọa độ đập chính </th>
-                                        <th rowspan="2">Nguồn nước KT</th>
-                                        <th rowspan="2">Năm bắt đầu VH</th>
-                                        <th colspan="10">Thông số của công trình</th>
-                                        <th colspan="3">Thông tin giấy phép</th>
-                                        <th colspan="2">Tiền cấp quyền</th>
+                                        <th rowspan="2">Vị trí công trình</th>
+                                        <th rowspan="2">Mục đích khai thác, sử dụng nước</th>
+                                        <th rowspan="2">Số giếng khai thác</th>
+                                        <th rowspan="2">Năm xây dựng</th>
+                                        <th rowspan="2">Năm vận hành</th>
+                                        <th rowspan="2">Q KT (m³/ngày đêm)</th>
+                                        <th rowspan="2">Số hiệu</th>
+                                        <th rowspan="2">Thời gian hành nghề khoan</th>
+                                        <th colspan="2">Tọa độ</th>
+                                        <th colspan="2">Chiều sâu đoạn thu nước (m)</th>
+                                        <th colspan="8">Thông số của công trình khai thác</th>
+                                        <th colspan="3">Thông tin cấp phép</th>
+                                        <th colspan="2">Quyết định tiền cấp quyền</th>
                                     </tr>
                                     <tr>
-                                        <!-- lat,long -->
-                                        <th>X (m) </th>
-                                        <th>Y (m) </th>
-                                        <!-- construction specifications -->
-                                        <th>Công suất (MW)</th>
-                                        <th>Chiều cao đập (m)</th>
-                                        <th>Qmax qua NM(m3/s)</th>
-                                        <th>Qtt(m3/s)</th>
-                                        <th>MNC(m)</th>
-                                        <th>MNDBT(m)</th>
-                                        <th>MNLTK(m)</th>
-                                        <th>MNLKT(m)</th>
-                                        <th>W toàn bộ (triệu m3)</th>
-                                        <th>W hữu ích (triệu m3)</th>
+                                        <th>X</th>
+                                        <th>Y</th>
+                                        <th>Từ</th>
+                                        <th>Đến</th>
+                                        <th>Q khai thác (m³/ng.đêm)</th>
+                                        <th>H giếng khai thác</th>
+                                        <th>H giếng quan trắc</th>
+                                        <th>Chế độ KT (giờ/ng.đêm)</th>
+                                        <th>Chiều sâu MN tĩnh (m)</th>
+                                        <th>Chiều sâu MN động max (m)</th>
+                                        <th>Tầng chứa nước KT</th>
+                                        <th>Mực nước hạ thấp</th>
                                         <!--license-->
                                         <th>Số GP</th>
                                         <th>Ngày cấp</th>
-                                        <th>Thời hạn</th>
+                                        <th>Thời hạn CP</th>
                                         <!--license fee-->
-                                        <th rowspan="2">QĐ cấp quyền</th>
-                                        <th rowspan="2">Tổng tiền cấp quyền (đồng) </th>
+                                        <th>Số QĐ</th>
+                                        <th>Tổng tiền (đồng)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="item in DataConsForExportExcel">
-                                        <!-- lấy DataBieuMauSo1 từ file scrip/controler.js-->
-                                        <!-- đưa (currentPage -1)*numPerPage+$index+1 để đếm hàng-->
-                                        <td> {{(currentPage -1)*numPerPage+$index+1}} </td>
+                                        <td>{{$index+1}}</td>
                                         <td ng-bind-html="item.ConstructionName"></td>
                                         <td ng-bind-html="item.ConstructionLocation"></td>
+                                        <td ng-bind-html="item.MiningPurpose"></td>
+                                        <td ng-bind-html="item.NumberMiningWells"></td>
+                                        <td ng-bind-html="item.ConstructionTime"></td>
+                                        <td ng-bind-html="item.StartDate"></td>
+                                        <td ng-bind-html="item.AmountWaterExploited"></td>
+                                        <td ng-bind-html="item.WellNumber"></td>
+                                        <td ng-bind-html="item.DrillingDuration"></td>
                                         <td ng-bind-html="item.X"></td>
                                         <td ng-bind-html="item.Y"></td>
-                                        <td ng-bind-html="item.ExploitedWS"></td>
-                                        <td ng-bind-html="item.StartDate"></td>
-                                        <!-- construction specifications -->
-                                        <td ng-bind-html="item.Power"></td>
-                                        <td ng-bind-html="item.DamHeight"></td>
-                                        <td ng-bind-html="item.MaximumFlow"></td>
-                                        <td ng-bind-html="item.MinimumFlow"></td>
-                                        <td ng-bind-html="item.DeadWL"></td>
-                                        <td ng-bind-html="item.RiseWL"></td>
-                                        <td ng-bind-html="item.DesignFloodLevel"></td>
-                                        <td ng-bind-html="item.CheckFloodWL"></td>
-                                        <td ng-bind-html="item.TotalCapacity"></td>
-                                        <td ng-bind-html="item.UsefulCapacity"></td>
+                                        <td ng-bind-html="item.WaterDepthFrom"></td>
+                                        <td ng-bind-html="item.WaterDepthTo"></td>
+                                        <td ng-bind-html="item.WaterSupplyFlow"></td>
+                                        <td ng-bind-html="item.WellWL"></td>
+                                        <td ng-bind-html="item.MonitoringWellWL"></td>
+                                        <td ng-bind-html="item.MiningMethod"></td>
+                                        <td ng-bind-html="item.StaticWL"></td>
+                                        <td ng-bind-html="item.DynamicWL"></td>
+                                        <td ng-bind-html="item.MiningAquifer"></td>
+                                        <td ng-bind-html="item.LowWL"></td>
                                         <!--license-->
                                         <td>
                                             <div ng-repeat="license in item.Licenses">
@@ -257,7 +289,6 @@
                                                 <span ng-bind-html="licFee.TotalMoney | number : fractionSize"></span>
                                             </div>
                                         </td>
-                                        <!--Action-->
                                     </tr>
                                 </tbody>
                             </table>
@@ -265,18 +296,10 @@
                         </div>
                         <div class="box-footer ">
                             <div class="box-tools pull-right">
-                                <ul uib-pagination
-                                    total-items="TotalConstruction"
-                                    ng-model="currentPage"
-                                    items-per-page="numPerPage"
-                                    boundary-links="true"
-                                    previous-text=" &#xf104;"
-                                    next-text=" &#xf105;"
-                                    first-text=" &#xf100;"
-                                    last-text=" &#xf101;"
-                                    max-size="maxSize"
-                                    ng-change="pageChanged()"
-                                    class="pagination pagination-sm inline fa d-flex m-0"></ul>
+                                <ul uib-pagination total-items="TotalConstruction" ng-model="currentPage"
+                                    items-per-page="numPerPage" boundary-links="true" previous-text=" &#xf104;"
+                                    next-text=" &#xf105;" first-text=" &#xf100;" last-text=" &#xf101;" max-size="maxSize"
+                                    ng-change="pageChanged()" class="pagination pagination-sm inline fa d-flex m-0"></ul>
                             </div>
                         </div>
                     </div>
@@ -284,14 +307,17 @@
             </div>
             <div id="formCreateCons" class="sidenav p-0 font-13">
                 <div>
-                    <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
+                    <div class="doc-title py-2 px-0 col-12 d-flex align-items-center"
+                        style="background:#15538f; color: #fff; height: 50px">
                         <div class="d-flex col-12 p-0 align-items-center">
                             <div class="col-10">
                                 <div class="admission-title d-flex center-center">
-                                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16">THÔNG TIN CÔNG TRÌNH KHAI THÁC, SỬ DỤNG NƯỚC MẶT</p>
+                                    <p class="m-0 col-12 p-0 text-left text-uppercase font-16">THÔNG TIN CÔNG TRÌNH KHAI
+                                        THÁC, SỬ DỤNG NƯỚC MẶT</p>
                                 </div>
                             </div>
-                            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('formCreateCons')">&times;</a>
+                            <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white"
+                                ng-click="closeAside('formCreateCons')">&times;</a>
                         </div>
                     </div>
                 </div>
@@ -300,12 +326,15 @@
                         <div class="form-horizontal">
                             <input type="hidden" ng-model="construction.TypeOfConstructionId" />
                             <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
-                                <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN CÔNG TRÌNH</legend>
+                                <legend class="font-18 font-weight-bold text-primary" style="width: auto">THÔNG TIN CÔNG
+                                    TRÌNH</legend>
                                 <div class="row col-12 pt-3 m-0">
                                     <div class="col-md-3 py-1">
                                         <label>Loại công trình <sup class="text-danger font-13">*</sup></label>
                                         <div class="floating-label w-100">
-                                            <select ng-options="opt.Id as opt.TypeName for opt in TypeOfConstructions" ng-model="Id" ng-change="changeTypeOfCons(Id)" class="floating-select w-100">
+                                            <select ng-options="opt.Id as opt.TypeName for opt in TypeOfConstructions"
+                                                ng-model="Id" ng-change="changeTypeOfCons(Id)"
+                                                class="floating-select w-100">
                                                 <option value="" hidden>-- Chọn loại công trình --</option>
                                             </select>
                                         </div>
@@ -313,7 +342,8 @@
                                     <div class="col-md-5 py-1">
                                         <label> Tên công trình </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionName">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ConstructionName">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
@@ -321,77 +351,92 @@
                                         <div class="floating-label">
                                             <input type="hidden" ng-model="construction.LicenseId" />
                                             <div class="dropdown dropdown-scroll">
-                                                <input class="floating-input w-100 text-left" type="text" data-toggle="dropdown" placeholder=" " ng-model="license_number" />
+                                                <input class="floating-input w-100 text-left" type="text"
+                                                    data-toggle="dropdown" placeholder=" " ng-model="license_number" />
                                                 <ul class="dropdown-menu w-100" role="menu">
                                                     <li class="border-bottom border-secondary p-0">
-                                                        <a href="javascript:void(0)" class="text-primary nav-link py-2 px-1" ng-click="GetLicenseId(0, 'Chưa có giấy phép')"> Chưa có giấy phép </a>
+                                                        <a href="javascript:void(0)" class="text-primary nav-link py-2 px-1"
+                                                            ng-click="GetLicenseId(0, 'Chưa có giấy phép')"> Chưa có giấy
+                                                            phép </a>
                                                     </li>
-                                                    <li class="border-bottom border-secondary p-0" ng-repeat='license in Licenses | filter:license_number'>
-                                                        <a href="javascript:void(0)" class="text-primary nav-link py-0 px-1" ng-click="GetLicenseId(license.Id, license.LicenseNumber)"> {{license.LicenseNumber}} - {{license.LicenseName}} </a>
+                                                    <li class="border-bottom border-secondary p-0"
+                                                        ng-repeat='license in Licenses | filter:license_number'>
+                                                        <a href="javascript:void(0)" class="text-primary nav-link py-0 px-1"
+                                                            ng-click="GetLicenseId(license.Id, license.LicenseNumber)">
+                                                            {{license.LicenseNumber}} - {{license.LicenseName}} </a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 py-1">
-                                        <label>Tỉnh :</label>
-                                        <div class="floating-label">
-                                            <select ng-options="opt.Id as opt.CityName for opt in Provinces" ng-model="construction.ProvinceId" ng-change="ProvinceChange(construction.ProvinceId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Tỉnh/TP--]</option><option label="Tỉnh Sơn La" value="number:1">Tỉnh Sơn La</option></select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 py-1">
-                                        <label>Quận/Huyện :</label>
-                                        <div class="floating-label">
-                                            <select ng-options="opt.Id as opt.DistrictName for opt in Districts" ng-model="construction.DistrictId" ng-change="DistrictChange(construction.DistrictId)" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Quận/Huyện--]</option></select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 py-1">
+                                    <div class="col-md-12 py-1">
                                         <label>Xã/Phường :</label>
                                         <div class="floating-label">
-                                            <select ng-options="opt.Id as opt.CommuneName for opt in Communes" ng-model="construction.CommuneId" class="floating-select" style="width:100%"><option value="" hidden class="" selected="selected">[--Chọn Xã/Phường--]</option></select>
+                                            <input class="floating-input w-100" type="text" data-toggle="dropdown"
+                                                placeholder="Nhập tên xã/phường" ng-model="ConstructionCommuneFilter">
+                                            <ul class="dropdown-menu w-100" role="menu">
+                                                <li class="border-bottom border-secondary m-0 p-1">
+                                                    <a href="javascript:void(0)" class="m-0" ng-click="selectConstructionCommune(null)">
+                                                        <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
+                                                    </a>
+                                                </li>
+                                                <li class="border-bottom border-secondary m-0 p-1" ng-repeat="i in Communes | filter:ConstructionCommuneFilter">
+                                                    <a href="javascript:void(0)" class="m-0" ng-click="selectConstructionCommune(i)">
+                                                        <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
+                                                        <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.OldCommuneName}}</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                     <div class="col-md-9 py-1">
                                         <label> Địa điểm công trình </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionLocation">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ConstructionLocation">
                                         </div>
                                     </div>
                                     <div class="col-md-3 py-1">
                                         <label> Năm bắt đầu vận hành </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.StartDate">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.StartDate">
                                         </div>
                                     </div>
                                     <div class="col-md-3 py-1">
                                         <label> Năm xây dựng </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionTime">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ConstructionTime">
                                         </div>
                                     </div>
                                     <div class="col-md-9 row m-0 p-0">
                                         <div class="col-md-3 py-1">
                                             <label> X (VN2000) </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.X">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.X">
                                             </div>
                                         </div>
                                         <div class="col-md-3 py-1">
                                             <label> Y (VN2000) </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.Y">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.Y">
                                             </div>
                                         </div>
                                         <div class="col-md-3 py-1">
                                             <label> X (WGS84) </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.Lat">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.Lat">
                                             </div>
                                         </div>
                                         <div class="col-md-3 py-1">
                                             <label> Y (WGS84) </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.Lng">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.Lng">
                                             </div>
                                         </div>
                                     </div>
@@ -399,135 +444,158 @@
                                         <div ng-if="Id == 8">
                                             <label> Mục đích khai thác, sử dụng nước </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.MiningPurpose">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.MiningPurpose">
                                             </div>
                                         </div>
                                         <div ng-if="Id == 9">
                                             <label> Mục đích thăm dò </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ExplorationPurposes">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.ExplorationPurposes">
                                             </div>
                                         </div>
                                         <div ng-if="Id == 10">
                                             <label> Mục đích khoan KT </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ExplorationPurposes">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.ExplorationPurposes">
                                             </div>
                                         </div>
                                         <div ng-if="!(Id == 8|| Id == 9 || Id == 10)">
                                             <label> Mục đích </label>
                                             <div class="floating-label">
-                                                <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ExplorationPurposes">
+                                                <input type="text" class="floating-input w-100" placeholder=" "
+                                                    ng-model="construction.ExplorationPurposes">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3 py-1">
                                         <label> Thời gian hành nghề khoan </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.DrillingDuration">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.DrillingDuration">
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
-                            <fieldset ng-if="Id == 8|| Id == 9 || Id == 10" class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
-                                <legend class="font-18 font-weight-bold text-primary text-uppercase" style="width: auto">Số hiệu, vị trí và thông số của công trình khai thác </legend>
+                            <fieldset ng-if="Id == 8|| Id == 9 || Id == 10"
+                                class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
+                                <legend class="font-18 font-weight-bold text-primary text-uppercase" style="width: auto">Số
+                                    hiệu, vị trí và thông số của công trình khai thác </legend>
                                 <div ng-if="Id == 8" class="row col-12 m-0">
                                     <div class="col-md-4 py-1">
-                                        <label> Số giếng khai thác  </label>
+                                        <label> Số giếng khai thác </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.NumberMiningWells">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.NumberMiningWells">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
-                                        <label> Tổng lượng nước khai thác (m3/ngày đêm)  </label>
+                                        <label> Tổng lượng nước khai thác (m3/ngày đêm) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.AmountWaterExploited">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.AmountWaterExploited">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
-                                        <label> Số hiệu  </label>
+                                        <label> Số hiệu </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.WellNumber">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.WellNumber">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Tầng chứa nước khai thác </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.MiningAquifer">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.MiningAquifer">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Chiều sâu đoạn thu nước từ (m) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.WaterDepthFrom">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.WaterDepthFrom">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Chiều sâu đoạn thu nước đến (m) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.WaterDepthTo">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.WaterDepthTo">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Lưu lượng khai thác NDD (m3/ngày đêm) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.WaterSupplyFlow">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.WaterSupplyFlow">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Chiều sâu mực nước tĩnh (m) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.StaticWL">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.StaticWL">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Chiều sâu mực nước động lớn nhất (m) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.DynamicWL">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.DynamicWL">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Mực nước hạ thấp </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.LowWL">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.LowWL">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
-                                        <label> Mực nước trong giếng khai thác  </label>
+                                        <label> Mực nước trong giếng khai thác </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.WellWL">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.WellWL">
                                         </div>
                                     </div>
                                 </div>
                                 <div ng-if="Id == 9" class="row col-12 m-0">
                                     <div class="col-md-4 py-1">
-                                        <label>Lưu lượng khai thác (m3/ngày đêm)	</label>
+                                        <label>Lưu lượng khai thác (m3/ngày đêm) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.WaterSupplyFlow">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.WaterSupplyFlow">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
-                                        <label> Chế độ khai thác (giờ/ngày đêm)	 </label>
+                                        <label> Chế độ khai thác (giờ/ngày đêm) </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.MiningMode">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.MiningMode">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Thời gian thi công </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionTime">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ConstructionTime">
                                         </div>
                                     </div>
                                     <div class="col-md-6 py-1">
                                         <label> Tầng chứa nước thăm dò </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ProbeAquifer">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ProbeAquifer">
                                         </div>
                                     </div>
                                     <div class="col-md-6 py-1">
                                         <label> Khối lượng các hạng mục thăm dò </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.VolumeOfExplorationItems">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.VolumeOfExplorationItems">
                                         </div>
                                     </div>
                                 </div>
@@ -535,25 +603,29 @@
                                     <div class="col-md-4 py-1">
                                         <label>Quy mô khoan thăm dò </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.DrillingScale">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.DrillingScale">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
                                         <label> Tầng chứa nước thăm dò </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ProbeAquifer">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ProbeAquifer">
                                         </div>
                                     </div>
                                     <div class="col-md-4 py-1">
-                                        <label> Thời gian thi công  </label>
+                                        <label> Thời gian thi công </label>
                                         <div class="floating-label">
-                                            <input type="text" class="floating-input w-100" placeholder=" " ng-model="construction.ConstructionTime">
+                                            <input type="text" class="floating-input w-100" placeholder=" "
+                                                ng-model="construction.ConstructionTime">
                                         </div>
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset class="col-12 border border-secondary px-2 mb-2 background-color bg-lightgray">
-                                <legend class="font-18 font-weight-bold text-primary" style="width: auto">VỊ TRÍ CÁC HẠNG MỤC CHÍNH CỦA CÔNG TRÌNH KHAI THÁC SỬ DỤNG NƯỚC</legend>
+                                <legend class="font-18 font-weight-bold text-primary" style="width: auto">VỊ TRÍ CÁC HẠNG
+                                    MỤC CHÍNH CỦA CÔNG TRÌNH KHAI THÁC SỬ DỤNG NƯỚC</legend>
                                 <div class="mb-2 mt-5 mt-md-0">
                                     <div class="col-12 p-1 table-responsive">
                                         <table class="table table-sm table-bordered">
@@ -561,10 +633,14 @@
                                                 <tr>
                                                     <th class="text-center align-middle font-13" rowspan="2">TT</th>
                                                     <th class="text-center align-middle font-13" rowspan="2">Hạng mục</th>
-                                                    <th colspan="2" class="text-center align-middle font-13">Tọa độ (VN2000)</th>
-                                                    <th colspan="2" class="text-center align-middle font-13">Tọa độ (WGS84)</th>
+                                                    <th colspan="2" class="text-center align-middle font-13">Tọa độ (VN2000)
+                                                    </th>
+                                                    <th colspan="2" class="text-center align-middle font-13">Tọa độ (WGS84)
+                                                    </th>
                                                     <th class="text-center align-middle font-13" style="width:50px">
-                                                        <button title="Tạo mới hạng mục" type="button" ng-click="AddConstructionItem()" class="w-100 d-flex center-center btn btn-link btn-sm">
+                                                        <button title="Tạo mới hạng mục" type="button"
+                                                            ng-click="AddConstructionItem()"
+                                                            class="w-100 d-flex center-center btn btn-link btn-sm">
                                                             Thêm
                                                         </button>
                                                     </th>
@@ -579,13 +655,20 @@
                                             <tbody>
                                                 <tr ng-repeat="item in construction.ConstructionItems">
                                                     <th class="text-center align-middle font-13" ng-bind-html="$index"></th>
-                                                    <td><input type="text" name="tenhangmuc" class="floating-input w-100" ng-model="item.Name"></td>
-                                                    <td><input type="number" name="x" class="floating-input w-100" ng-model="item.X"></td>
-                                                    <td><input type="number" name="y" class="floating-input w-100" ng-model="item.Y"></td>
-                                                    <td><input type="number" name="lat" class="floating-input w-100" ng-model="item.Lng"></td>
-                                                    <td><input type="number" name="long" class="floating-input w-100" ng-model="item.Lat"></td>
+                                                    <td><input type="text" name="tenhangmuc" class="floating-input w-100"
+                                                            ng-model="item.Name"></td>
+                                                    <td><input type="number" name="x" class="floating-input w-100"
+                                                            ng-model="item.X"></td>
+                                                    <td><input type="number" name="y" class="floating-input w-100"
+                                                            ng-model="item.Y"></td>
+                                                    <td><input type="number" name="lat" class="floating-input w-100"
+                                                            ng-model="item.Lng"></td>
+                                                    <td><input type="number" name="long" class="floating-input w-100"
+                                                            ng-model="item.Lat"></td>
                                                     <td class="text-center align-middle">
-                                                        <button type="button" ng-click="RemoveConstructionItem($index, item)" class="center-center text-danger btn btn-link btn-sm">
+                                                        <button type="button"
+                                                            ng-click="RemoveConstructionItem($index, item)"
+                                                            class="center-center text-danger btn btn-link btn-sm">
                                                             <i class="fa fa-trash text-danger"></i>
                                                         </button>
                                                     </td>
@@ -598,10 +681,12 @@
                         </div>
                     </div>
                     <div class="d-flex col-12 justify-content-end">
-                        <button type="button" class="btn btn-addnew mx-2 fw-bold font-14 d-flex align-items-center" ng-click="Save('formCreateCons')">
+                        <button type="button" class="btn btn-addnew mx-2 fw-bold font-14 d-flex align-items-center"
+                            ng-click="Save('formCreateCons')">
                             XÁC NHẬN &nbsp; <i class="fa fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-cancel mx-2 fw-bold font-14 d-flex align-items-center" href="javascript:void(0)" ng-click="closeAside('formCreateCons')">
+                        <button type="button" class="btn btn-cancel mx-2 fw-bold font-14 d-flex align-items-center"
+                            href="javascript:void(0)" ng-click="closeAside('formCreateCons')">
                             ĐÓNG &nbsp; <i class="fa fa-times-circle"></i>
                         </button>
                     </div>

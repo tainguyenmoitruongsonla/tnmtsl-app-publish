@@ -2,7 +2,7 @@
     'use strict';
     ///-----Begin License-----///
     //License
-    this.getAllLicenses = function (ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, StartYear, EndYear, DistrictId, BasinId, AquiferId, Effect, LicensingAuthorities, isDetail, Status, Keyword, PageIndex, PageSize) {
+    this.getAllLicenses = function (ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, StartYear, EndYear, CommuneId, CommuneCode, BasinId, AquiferId, Effect, LicensingAuthorities, isDetail, Status, Keyword, PageIndex, PageSize) {
         var response = $http({
             method: "get",
             url: "/api/License/list",
@@ -14,7 +14,8 @@
                 TypeOfConstructionId: TypeOfConstructionId,
                 StartYear: StartYear,
                 EndYear: EndYear,
-                DistrictId: DistrictId,
+                CommuneId: CommuneId,
+                CommuneCode: CommuneCode,
                 BasinId: BasinId,
                 AquiferId: AquiferId,
                 Effect: Effect,
@@ -29,7 +30,7 @@
         return response;
     }
 
-    this.countLicenseForChart = function (ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, StartYear, EndYear, DistrictId, BasinId, AquiferId, Effect, LicensingAuthorities) {
+    this.countLicenseForChart = function (ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, StartYear, EndYear, BasinId, AquiferId, Effect, LicensingAuthorities) {
         var response = $http({
             method: "get",
             url: "/api/License/count-for-chart",
@@ -40,7 +41,6 @@
                 TypeOfConstructionId: TypeOfConstructionId,
                 StartYear: StartYear,
                 EndYear: EndYear,
-                DistrictId: DistrictId,
                 BasinId: BasinId,
                 AquiferId: AquiferId,
                 Effect: Effect,
@@ -195,57 +195,40 @@
         });
         return response;
     }
-
-
-
-    this.getAllProvince = function (Keyword, PageIndex, PageSize) {
-        var response = $http({
+    this.getCommunes = function () {
+        return $http({
             method: "get",
-            url: "/api/Province/list",
-            params: {
-                Keyword: Keyword,
-                PageIndex: PageIndex,
-                PageSize: PageSize
-            }
-        });
-        return response;
-    }
+            url: "/api/AdministrativeUnit/list"
+        }).then(function (response) {
+            var list = [];
 
-    this.getDistrict = function (CityId, CityCode, Keyword, PageIndex, PageSize) {
-        var response = $http({
-            method: "get",
-            url: "/api/District/list",
-            params: {
-                CityId: CityId,
-                CityCode: CityCode,
-                Keyword: Keyword,
-                PageIndex: PageIndex,
-                PageSize: PageSize
+            if (response && response.data) {
+                if (Array.isArray(response.data.ListData)) {
+                    list = response.data.ListData;
+                } else if (Array.isArray(response.data)) {
+                    list = response.data;
+                }
             }
-        });
-        return response;
-    }
 
-    this.getCommunes = function (DistrictId, CityCode, DistrictCode, Keyword, PageIndex, PageSize) {
-        var response = $http({
-            method: "get",
-            url: "/api/Commune/list",
-            params: {
-                DistrictId: DistrictId,
-                CityCode: CityCode,
-                DistrictCode: DistrictCode,
-                Keyword: Keyword,
-                PageIndex: PageIndex,
-                PageSize: PageSize
-            }
+            list = list
+                .filter(function (item) {
+                    return item && item.Level === "Commune";
+                })
+                .map(function (item) {
+                    item.displayText = (item.Name || "") + (item.OldCommuneName || "");
+                    return item;
+                });
+
+            response.data.ListData = list;
+            return response;
         });
-        return response;
     }
 
     this.getSingleCommune = function (id) {
+        // AdministrativeUnit getbyid returns the admin unit (commune)
         var response = $http({
             method: "get",
-            url: "/api/Commune/getbyid",
+            url: "/api/AdministrativeUnit/getbyid",
             params: {
                 id: id
             }

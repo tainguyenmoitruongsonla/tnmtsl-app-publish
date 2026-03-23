@@ -1,145 +1,244 @@
-﻿app.controller("myCntrl", function ($scope, $filter, $window, constructionService, basinService, businessService, typeOfConstructionService, toastr, Excel, $timeout) {
-    'use strict'
+﻿app.controller(
+  "myCntrl",
+  function (
+    $scope,
+    $filter,
+    $window,
+    constructionService,
+    basinService,
+    businessService,
+    typeOfConstructionService,
+    toastr,
+    Excel,
+    $timeout,
+  ) {
+    "use strict";
 
     $scope.TotalConstruction = 0;
     $scope.licenseNumber = undefined;
-    $scope.license_number = '';
-    $scope.licenseTitle = '';
-    $scope.IssueDateFilter = '';
+    $scope.license_number = "";
+    $scope.licenseTitle = "";
+    $scope.IssueDateFilter = "";
     $scope.construction = {
-        LicenseId: null,
-        TypeOfConstructionId: null,
+      LicenseId: null,
+      TypeOfConstructionId: null,
     };
     $scope.showAnnotateLayer = true;
     $scope.isDetail = true;
 
     var Status = true,
-        ProvinceId = 0,
-        DistrictId = 0,
-        BasinId = 0,
-        BusinessId = 0,
-        CommuneId = 0,
-        AquiferId = 0,
-        CityCode = '',
-        DistrictCode = '',
-        LicenseId = -1,
-        LicensingAuthorities = -1;
+      BasinId = 0,
+      BusinessId = 0,
+      CommuneId = 0,
+      CommuneCode = "",
+      AquiferId = 0,
+      LicenseId = -1,
+      LicensingAuthorities = -1,
+      pageWatchHandle = null;
 
-    $scope.Keyword = '',
-        $scope.DamType = "";
-        $scope.currentPage = 1,
-        $scope.numPerPage = 10,
-        $scope.maxSize = 5,
-        $scope.TypeOfConstructionId = 0;
+    (($scope.Keyword = ""), ($scope.DamType = ""));
+    (($scope.currentPage = 1),
+      ($scope.numPerPage = 10),
+      ($scope.maxSize = 5),
+      ($scope.TypeOfConstructionId = 0));
 
     $scope.ParentTypes = [];
+    $scope.Communes = [];
 
-
-    $scope.LicenseHolderFilter = '';
-    $scope.LicenseFilter = '';
-    $scope.LicensingAuthoritiesFilter = 'Chọn Cơ quan CP';
-    $scope.TypeOfConstructionFilter = 'Chọn loại CT';
-    $scope.DistrictFilter = 'Chọn huyện';
-    $scope.AquiferFilter = 'Chọn tầng chứa nước';
-    $scope.BasinFilter = 'Chọn tiểu vùng quy hoạch';
-
+    $scope.LicenseHolderFilter = "";
+    $scope.LicenseFilter = "";
+    $scope.ConstructionCommuneFilter = "";
+    $scope.LicensingAuthoritiesFilter = "Chọn Cơ quan CP";
+    $scope.TypeOfConstructionFilter = "Chọn loại CT";
+    $scope.AquiferFilter = "Chọn tầng chứa nước";
+    $scope.BasinFilter = "Chọn tiểu vùng quy hoạch";
 
     $scope.ListLicensingAuthorities = [
-        { Id: -1, Name: "Chọn Cơ quan CP" },
-        { Id: 0, Name: "BTNMT" },
-        { Id: 1, Name: "UBND Tỉnh" }
+      { Id: -1, Name: "Chọn Cơ quan CP" },
+      { Id: 0, Name: "BTNMT" },
+      { Id: 1, Name: "UBND Tỉnh" },
     ];
 
     $scope.ShowAdvanceSearch = function () {
-        if ($scope.AdvanceSearch == true) {
-            $scope.AdvanceSearch = false;
-        } else {
-            $scope.AdvanceSearch = true;
-        }
-    }
+      if ($scope.AdvanceSearch == true) {
+        $scope.AdvanceSearch = false;
+      } else {
+        $scope.AdvanceSearch = true;
+      }
+    };
+    // Set the TypeOfConstruction on the construction model when the select changes
+    $scope.changeTypeOfCons = function (Id) {
+      $scope.Id = Id;
+      $scope.construction.TypeOfConstructionId = Id;
+    };
     //filter license on page show list license
     $scope.filterConsByType = function (Id, Name) {
-        if (Id > 3) {
-            $scope.TypeOfConstructionId = Id;
-            $scope.TypeOfConstructionFilter = Name;
-            $scope.selectedTypeOfConstruction = Id;
-        } else {
-            let pathName = location.pathname.split('/')[2];
-            switch (pathName) {
-                case "nuoc-mat":
-                    $scope.TypeOfConstructionId = 1;
-                    GetTypeOfConstruction($scope.TypeOfConstructionId);
-                    break;
-                case "nuoc-duoi-dat":
-                    $scope.TypeOfConstructionId = 2;
-                    GetTypeOfConstruction($scope.TypeOfConstructionId);
-                    break;
-                case "xa-thai":
-                    $scope.TypeOfConstructionId = 3;
-                    GetTypeOfConstruction($scope.TypeOfConstructionId);
-                    break;
-            }
-            $scope.TypeOfConstructionFilter = Name;
+      if (Id > 3) {
+        $scope.TypeOfConstructionId = Id;
+        $scope.TypeOfConstructionFilter = Name;
+        $scope.selectedTypeOfConstruction = Id;
+      } else {
+        let pathName = location.pathname.split("/")[2];
+        switch (pathName) {
+          case "nuoc-mat":
+            $scope.TypeOfConstructionId = 1;
+            GetTypeOfConstruction($scope.TypeOfConstructionId);
+            break;
+          case "nuoc-duoi-dat":
+            $scope.TypeOfConstructionId = 2;
+            GetTypeOfConstruction($scope.TypeOfConstructionId);
+            break;
+          case "xa-thai":
+            $scope.TypeOfConstructionId = 3;
+            GetTypeOfConstruction($scope.TypeOfConstructionId);
+            break;
         }
-        GetDataConstruction();
-        AllCons();
-    }
+        $scope.TypeOfConstructionFilter = Name;
+      }
+      GetDataConstruction();
+      AllCons();
+    };
 
     $scope.filterConsByLicensingAuthorities = function (Id, Name) {
-        LicensingAuthorities = Id;
-        $scope.LicensingAuthoritiesFilter = Name;
-        GetDataConstruction();
-        AllCons();
+      LicensingAuthorities = Id;
+      $scope.LicensingAuthoritiesFilter = Name;
+      GetDataConstruction();
+      AllCons();
     };
-    $scope.filterConsByDistrict = function (Id, Name) {
-        DistrictId = Id;
-        $scope.DistrictFilter = Name;
+    $scope.filterConsByCommune = function (Id, Name) {
+      CommuneId = Id;
+      CommuneCode = "";
+      if (Id > 0 && $scope.Communes && $scope.Communes.length > 0) {
+        var selected = $scope.Communes.find(function (c) {
+          return c.Id === Id;
+        });
+
+        if (selected) {
+          CommuneCode = selected.Code || "";
+        }
+      }
+      $scope.CommuneFilter = Name;
     };
+
+    function getCommuneDisplayText(item) {
+      if (!item) {
+        return "";
+      }
+
+      return (item.Name || item.CommuneName || "") + (item.OldCommuneName || "");
+    }
+
+    $scope.OnCommuneChange = function () {
+      if (!$scope.construction || !$scope.Communes || $scope.Communes.length < 1) {
+        return;
+      }
+
+      var selectedCommune = null;
+      if ($scope.construction.CommuneId) {
+        selectedCommune = $scope.Communes.find(function (c) {
+          return c.Id === $scope.construction.CommuneId;
+        });
+      }
+
+      if (!selectedCommune && $scope.construction.AdministrativeUnitID) {
+        selectedCommune = $scope.Communes.find(function (c) {
+          return c.Code === $scope.construction.AdministrativeUnitID;
+        });
+      }
+
+      if (selectedCommune) {
+        $scope.construction.CommuneId = selectedCommune.Id;
+        CommuneCode = selectedCommune.Code || "";
+        $scope.ConstructionCommuneFilter = getCommuneDisplayText(selectedCommune);
+        $scope.construction.AdministrativeUnitID = selectedCommune.Code;
+      }
+    };
+
+    $scope.selectConstructionCommune = function (item) {
+      if (!$scope.construction) {
+        $scope.construction = {};
+      }
+
+      if (!item) {
+        $scope.construction.CommuneId = null;
+        $scope.construction.AdministrativeUnitID = null;
+        $scope.ConstructionCommuneFilter = "";
+        CommuneCode = "";
+        return;
+      }
+
+      $scope.construction.CommuneId = item.Id;
+      $scope.OnCommuneChange();
+    };
+
+    function SyncSelectedCommuneToAdminUnit() {
+      if ($scope.construction && $scope.Communes && $scope.construction.CommuneId) {
+        var selectedCommune = $scope.Communes.find(function (c) {
+          return c.Id === $scope.construction.CommuneId;
+        });
+
+        if (selectedCommune) {
+          CommuneCode = selectedCommune.Code || "";
+          $scope.construction.AdministrativeUnitID = selectedCommune.Code;
+          $scope.ConstructionCommuneFilter = getCommuneDisplayText(selectedCommune);
+        }
+      }
+    }
+
     $scope.filterConsByAquifer = function (Id, Name) {
-        AquiferId = Id;
-        $scope.AquiferFilter = Name;
+      AquiferId = Id;
+      $scope.AquiferFilter = Name;
     };
     $scope.filterConsByBasin = function (Id, Name) {
-        BasinId = Id;
-        $scope.BasinFilter = Name;
+      BasinId = Id;
+      $scope.BasinFilter = Name;
     };
 
     $scope.filterConsByBusiness = function (item) {
-        if (item != 0) { BusinessId = item.Id; $scope.LicenseHolderFilter = item.Name }
-        else { BusinessId = 0; $scope.LicenseHolderFilter = '' }
-    }
+      if (item != 0) {
+        BusinessId = item.Id;
+        $scope.LicenseHolderFilter = item.Name;
+      } else {
+        BusinessId = 0;
+        $scope.LicenseHolderFilter = "";
+      }
+    };
 
     $scope.filterConsByLicense = function (item, InputId) {
-        if (item != 0) { LicenseId = item.Id; $scope.LicenseFilter = item.LicenseNumber; }
-        else { LicenseId = -1; $scope.ConstructionFilter = '' }
-        SetInputVal(InputId, item)
-    }
+      if (item != 0) {
+        LicenseId = item.Id;
+        $scope.LicenseFilter = item.LicenseNumber;
+      } else {
+        LicenseId = -1;
+        $scope.ConstructionFilter = "";
+      }
+      SetInputVal(InputId, item);
+    };
 
     function SetInputVal(Id, Data) {
-        document.getElementById(Id).value = Data.LicenseNumber;
+      document.getElementById(Id).value = Data.LicenseNumber;
     }
 
     $scope.SetKeyword = function (k) {
-        $scope.Keyword = k;
-    }
+      $scope.Keyword = k;
+    };
 
     //search data license
     $scope.Search = function () {
-        mymap.eachLayer((layer) => {
-            if (layer['feature'] != undefined)
-                layer.remove();
-        });
-        GetDataConstruction();
-        AllCons();
-    }
+      mymap.eachLayer((layer) => {
+        if (layer["feature"] != undefined) layer.remove();
+      });
+      GetDataConstruction();
+      AllCons();
+    };
 
     // Map popup content
     function popupContent(cons) {
-        let consItem = ``;
-        let licenseItems = ``;
-        // Neu cong trinh co hang muc se hien thi, nguoc lai thi khong hien thi
-        if (cons.ConstructionItems.length > 0) {
-            consItem += `<tr>
+      let consItem = ``;
+      let licenseItems = ``;
+      // Neu cong trinh co hang muc se hien thi, nguoc lai thi khong hien thi
+      if (cons.ConstructionItems.length > 0) {
+        consItem += `<tr>
                     <td colspan="2" class="p-0 pt-2">
                         <table class="table table-bordered">
                             <tr>
@@ -148,22 +247,22 @@
                                 <td>Y(VN2000)</td>
                             </tr>`;
 
-            cons.ConstructionItems.map(value => {
-                consItem += `<tr>
+        cons.ConstructionItems.map((value) => {
+          consItem += `<tr>
                                     <td class="py-1">${checkData(value.Name)}</td>
                                     <td class="py-1">${checkData(value.X)}</td>
                                     <td class="py-1">${checkData(value.Y)}</td>
                                 </tr>
                             `;
-            });
+        });
 
-            consItem += `</table>
+        consItem += `</table>
                         </td>
                     </tr>`;
-        }
+      }
 
-        if (cons.Licenses != null) {
-            licenseItems += `<tr>
+      if (cons.Licenses != null) {
+        licenseItems += `<tr>
                     <td colspan="2" class="p-0 pt-2">
                         <table class="table table-bordered">
                             <tr>
@@ -171,469 +270,724 @@
                                 <td>Có hiệu lực đến</td>
                             </tr>`;
 
-            cons.Licenses.map(value => {
-                licenseItems += `<tr>
+        cons.Licenses.map((value) => {
+          licenseItems += `<tr>
                                     <td class="py-1"><span class="license-num text-primary text-nowrap" data-cons-type="${cons.TypeOfConstructionId}" data-license-file="${value.LicenseFile}">${checkData(value.LicenseNumber)}</span></td>
                                     <td class="py-1">${checkData(formatDate(value.ExpireDate))}</td>
                                 </tr>`;
-            });
+        });
 
-            licenseItems += `</table>
+        licenseItems += `</table>
                         </td>
                     </tr>`;
-        }
+      }
 
-        let contentPopup = ``;
-        var idDischargeCons = [17, 18, 19, 20, 21, 22, 23, 24];
-        if (idDischargeCons.includes(cons.TypeOfConstructionId)) {
-            contentPopup = `<tr><td>Vị trí xả thải</td><td>` + checkData(cons.ConstructionDetailLocation) + `</td></tr>
-                <tr><td>Nguồn nước tiếp nhận nước thải</td><td>` + checkData(cons.DischargeWS) + `</td></tr>
-                <tr><td>Phương thức xả thải</td><td>`+ checkData(cons.DischargeMethod) + `</td></tr>
-                <tr><td>Chế độ xả thải</td><td>`+ checkData(cons.DischargeMode) + `</td></tr>
-                <tr><td>Lưu lượng xả thải lớn nhất</td><td>` + checkData(cons.MaximumWasteWaterFlow) + `</td></tr>
-                <tr><td>Lưu lượng xả trung bình m3/ngày đêm</td><td>` + checkData(cons.AverageDischargeFlow) + `</td></tr>
-                <tr><td>Chất lượng nước thải hệ số Kq và Kf</td><td>` + checkData(cons.KqKf) + `</td></tr>
-                <tr><td>Loại hình nước thải</td><td>` + checkData(cons.TypeOfWastewater) + `</td></tr>`;
-        }
-        else if (cons.TypeOfConstructionId == 4 || cons.TypeOfConstructionId == 5) {
-            contentPopup = `<tr><td>Chế độ khai thác (giờ/ngày đêm)</td><td> ` + checkData(cons.MiningMode) + `</td></tr>
-                <tr><td>Q<sub>max khai thác</sub>:</td><td>` + checkData(cons.MiningMaxFlow) + `</td></tr>
-                <tr><td>Q<sub>tối thiểu</sub>:</td><td>` + checkData(cons.MinimumFlow) + `</td></tr>
-                <tr><td>Q<sub>max qua thuỷ điện</sub>:</td><td>` + checkData(cons.MaximumFlow) + `</td></tr>
-                <tr><td>Nguồn nước khai thác:</td><td>` + checkData(cons.ExploitedWS) + `</td></tr>
-                <tr><td>Phương thức khai thác:</td><td>` + checkData(cons.MiningMethod) + `</td></tr>
-                <tr><td>Công suất lắp máy(MW):</td><td>` + checkData(cons.Power) + `</td></tr>
-                <tr><td>Chiều cao đập</sub>:</td><td>` + checkData(cons.DamHeight) + `</td></tr>
-                <tr><td>Chiều dài đập:</td><td>` + checkData(cons.DamWidth) + `</td></tr>
-                <tr><td>Mực nước dâng bình thường:</td><td>` + checkData(cons.RiseWL) + `</td></tr>
-                <tr><td>Mực nước chết:</td><td>` + checkData(cons.DeadWL) + `</td></tr>
-                <tr><td>Mực nước lớn nhất trước lũ:</td><td>` + checkData(cons.PreFlootMaxWL) + `</td></tr>
-                <tr><td>Mực nước đón lũ:</td><td>` + checkData(cons.FlootWL) + `</td></tr>
-                <tr><td>Mực nước thượng lưu</td><td>` + checkData(cons.UpstreamWL) + `</td></tr>
-                <tr><td>Mực nước hạ lưu:</td><td>` + checkData(cons.DownstreamWL) + `</td></tr>
-                <tr><td>Mực nước lũ thiết kế:</td><td>` + checkData(cons.DesignFloodLevel) + `</td></tr>
-                <tr><td>Mực nước lũ kiểm tra:</td><td>` + checkData(cons.CheckFloodWL) + `</td></tr>
-                <tr><td>Dung tích hữu ích:</td><td>` + checkData(cons.UsefulCapacity) + `</td></tr>
-                <tr><td>Dung tích toàn bộ:</td><td>` + checkData(cons.TotalCapacity) + `</td></tr>`;
-        } else if (cons.TypeOfConstructionId == 6) {
-            contentPopup = `<tr><td>Nguồn nước khai thác:</td><td>` + checkData(cons.ExploitedWS) + `</td></tr>
-                <tr><td>Số máy bơm</td><td> ` + checkData(cons.PumpNumber) + `</td></tr>
-                <tr><td>Q thiết kế(m3/s)</td><td> ` + checkData(cons.PumpDesignFlow) + `</td></tr>
-                <tr><td>Qmax (m3/s)</td><td> ` + checkData(cons.PumpMaxFlow) + `</td></tr>
-                <tr><td>Mực nước bể hút</td><td> ` + checkData(cons.SuctionTankWL) + `</td></tr>`;
-        } else if (cons.TypeOfConstructionId == 8) {
-            contentPopup = `<tr><td>Thời hạn khai thác</td><td> ` + checkData(cons.MiningDuration) + `</td></tr>
-                <tr><td>Mục đích khai thác</td><td> ` + checkData(cons.MiningMethod) + `</td></tr>
-                <tr><td>Mực nước trong giếng khai thác</td><td> ` + checkData(cons.WellWL) + `</td></tr>
-                <tr><td>Tầng chứa nước khai thác</td><td> ` + checkData(cons.MiningAquifer) + `</td></tr>
-                <tr><td>Số giếng khai thác</td><td> ` + checkData(cons.NumberMiningWells) + `</td></tr>
-                <tr><td>Tổng lượng nước khai thác (m3/ngày đêm)</td><td> ` + checkData(cons.AmountWaterExploited) + `</td></tr>
-                <tr><td>Chiều sâu đoạn thu nước (m)</td><td> ` + checkData(cons.WaterDepthFrom) + `</td></tr>
-                <tr><td>Chiều sâu đoạn thu nước (m)</td><td> ` + checkData(cons.WaterDepthTo) + `</td></tr>
-                <tr><td>Lưu lượng khai thác thiết kế (m3/ngày đêm)</td><td> ` + checkData(cons.WaterExtractionFlowDesign) + `</td></tr>
-                <tr><td>Lưu lượng khai thác thực tế (m3/ngày đêm)</td><td> ` + checkData(cons.WaterExtractionFlowReality) + `</td></tr>
-                <tr><td>Chiều sâu mực nước tĩnh </td><td> ` + checkData(cons.StaticWL) + `</td></tr>
-                <tr><td>Chiều sâu mực nước động lớn nhất (m)</td><td> ` + checkData(cons.DynamicWL) + `</td></tr>`;
-        } else if (cons.TypeOfConstructionId == 9) {
-            contentPopup = `<tr><td>Quy mô khoan thăm dò</td><td> ` + checkData(cons.DrillingScale) + `</td></tr>
-                <tr><td>Tầng chứa nước thăm dò</td><td> ` + checkData(cons.ProbeAquifer) + `</td></tr>
-                <tr><td>Thời gian thi công khoan thăm dò</td><td> ` + checkData(cons.ConstructionTime) + `</td></tr>
-                <tr><td>Mục đích thăm dò</td><td> ` + checkData(cons.ExplorationPurposes) + `</td></tr>
-                <tr><td>Khối lượng các hạng mục thăm dò</td><td> ` + checkData(cons.VolumeOfExplorationItems) + `</td></tr>`;
-        } else if (cons.TypeOfConstructionId == 10) {
-            contentPopup = `<tr><td>Thời gian hành nghề khoan</td><td> ` + checkData(cons.DrillingDuration) + `</td></tr>
-                <tr><td>Mục đích khoan KT</td><td> ` + checkData(cons.DrillingPurpose) + `</td></tr>`;
-        } else if (cons.TypeOfConstructionId == 11 || cons.TypeOfConstructionId == 14) {
-            contentPopup = `<tr><td>Lưu lượng khai thác CNSH</td><td> ` + checkData(cons.WaterSupplyFlow) + `</td></tr>
-                <tr><td>Nguồn nước khai thác:</td><td>` + checkData(cons.ExploitedWS) + `</td></tr>
-                <tr><td>Phương thức khai thác:</td><td>` + checkData(cons.MiningMethod) + `</td></tr>
-                <tr><td>Lưu lượng khai thác (m3/ngày đêm)</td><td> ` + checkData(cons.WaterSupplyFlow) + `</td></tr>
-                <tr><td>Thời hạn khai thác</td><td> ` + checkData(cons.MiningDuration) + `</td></tr>`;
-        } else if (cons.TypeOfConstructionId == 13) {
-            contentPopup = `<tr><td>Cao trình cống</td><td> ` + checkData(cons.DrainElevation) + `</td></tr>
-                <tr><td>Chiều dài cống</td><td> ` + checkData(cons.DrainLength) + `</td></tr>
-                <tr><td>Đường kính cống</td><td> ` + checkData(cons.DrainDiameter) + `</td></tr>
-                <tr><td>Kích thước miệng cống (chiều rộng - chiều cao)</td><td> ` + checkData(cons.DrainSize) + `</td></tr>`;
-        }
+      let contentPopup = ``;
+      var idDischargeCons = [17, 18, 19, 20, 21, 22, 23, 24];
+      if (idDischargeCons.includes(cons.TypeOfConstructionId)) {
+        contentPopup =
+          `<tr><td>Vị trí xả thải</td><td>` +
+          checkData(cons.ConstructionDetailLocation) +
+          `</td></tr>
+                <tr><td>Nguồn nước tiếp nhận nước thải</td><td>` +
+          checkData(cons.DischargeWS) +
+          `</td></tr>
+                <tr><td>Phương thức xả thải</td><td>` +
+          checkData(cons.DischargeMethod) +
+          `</td></tr>
+                <tr><td>Chế độ xả thải</td><td>` +
+          checkData(cons.DischargeMode) +
+          `</td></tr>
+                <tr><td>Lưu lượng xả thải lớn nhất</td><td>` +
+          checkData(cons.MaximumWasteWaterFlow) +
+          `</td></tr>
+                <tr><td>Lưu lượng xả trung bình m3/ngày đêm</td><td>` +
+          checkData(cons.AverageDischargeFlow) +
+          `</td></tr>
+                <tr><td>Chất lượng nước thải hệ số Kq và Kf</td><td>` +
+          checkData(cons.KqKf) +
+          `</td></tr>
+                <tr><td>Loại hình nước thải</td><td>` +
+          checkData(cons.TypeOfWastewater) +
+          `</td></tr>`;
+      } else if (
+        cons.TypeOfConstructionId == 4 ||
+        cons.TypeOfConstructionId == 5
+      ) {
+        contentPopup =
+          `<tr><td>Chế độ khai thác (giờ/ngày đêm)</td><td> ` +
+          checkData(cons.MiningMode) +
+          `</td></tr>
+                <tr><td>Q<sub>max khai thác</sub>:</td><td>` +
+          checkData(cons.MiningMaxFlow) +
+          `</td></tr>
+                <tr><td>Q<sub>tối thiểu</sub>:</td><td>` +
+          checkData(cons.MinimumFlow) +
+          `</td></tr>
+                <tr><td>Q<sub>max qua thuỷ điện</sub>:</td><td>` +
+          checkData(cons.MaximumFlow) +
+          `</td></tr>
+                <tr><td>Nguồn nước khai thác:</td><td>` +
+          checkData(cons.ExploitedWS) +
+          `</td></tr>
+                <tr><td>Phương thức khai thác:</td><td>` +
+          checkData(cons.MiningMethod) +
+          `</td></tr>
+                <tr><td>Công suất lắp máy(MW):</td><td>` +
+          checkData(cons.Power) +
+          `</td></tr>
+                <tr><td>Chiều cao đập</sub>:</td><td>` +
+          checkData(cons.DamHeight) +
+          `</td></tr>
+                <tr><td>Chiều dài đập:</td><td>` +
+          checkData(cons.DamWidth) +
+          `</td></tr>
+                <tr><td>Mực nước dâng bình thường:</td><td>` +
+          checkData(cons.RiseWL) +
+          `</td></tr>
+                <tr><td>Mực nước chết:</td><td>` +
+          checkData(cons.DeadWL) +
+          `</td></tr>
+                <tr><td>Mực nước lớn nhất trước lũ:</td><td>` +
+          checkData(cons.PreFlootMaxWL) +
+          `</td></tr>
+                <tr><td>Mực nước đón lũ:</td><td>` +
+          checkData(cons.FlootWL) +
+          `</td></tr>
+                <tr><td>Mực nước thượng lưu</td><td>` +
+          checkData(cons.UpstreamWL) +
+          `</td></tr>
+                <tr><td>Mực nước hạ lưu:</td><td>` +
+          checkData(cons.DownstreamWL) +
+          `</td></tr>
+                <tr><td>Mực nước lũ thiết kế:</td><td>` +
+          checkData(cons.DesignFloodLevel) +
+          `</td></tr>
+                <tr><td>Mực nước lũ kiểm tra:</td><td>` +
+          checkData(cons.CheckFloodWL) +
+          `</td></tr>
+                <tr><td>Dung tích hữu ích:</td><td>` +
+          checkData(cons.UsefulCapacity) +
+          `</td></tr>
+                <tr><td>Dung tích toàn bộ:</td><td>` +
+          checkData(cons.TotalCapacity) +
+          `</td></tr>`;
+      } else if (cons.TypeOfConstructionId == 6) {
+        contentPopup =
+          `<tr><td>Nguồn nước khai thác:</td><td>` +
+          checkData(cons.ExploitedWS) +
+          `</td></tr>
+                <tr><td>Số máy bơm</td><td> ` +
+          checkData(cons.PumpNumber) +
+          `</td></tr>
+                <tr><td>Q thiết kế(m3/s)</td><td> ` +
+          checkData(cons.PumpDesignFlow) +
+          `</td></tr>
+                <tr><td>Qmax (m3/s)</td><td> ` +
+          checkData(cons.PumpMaxFlow) +
+          `</td></tr>
+                <tr><td>Mực nước bể hút</td><td> ` +
+          checkData(cons.SuctionTankWL) +
+          `</td></tr>`;
+      } else if (cons.TypeOfConstructionId == 8) {
+        contentPopup =
+          `<tr><td>Thời hạn khai thác</td><td> ` +
+          checkData(cons.MiningDuration) +
+          `</td></tr>
+                <tr><td>Mục đích khai thác</td><td> ` +
+          checkData(cons.MiningMethod) +
+          `</td></tr>
+                <tr><td>Mực nước trong giếng khai thác</td><td> ` +
+          checkData(cons.WellWL) +
+          `</td></tr>
+                <tr><td>Tầng chứa nước khai thác</td><td> ` +
+          checkData(cons.MiningAquifer) +
+          `</td></tr>
+                <tr><td>Số giếng khai thác</td><td> ` +
+          checkData(cons.NumberMiningWells) +
+          `</td></tr>
+                <tr><td>Tổng lượng nước khai thác (m3/ngày đêm)</td><td> ` +
+          checkData(cons.AmountWaterExploited) +
+          `</td></tr>
+                <tr><td>Chiều sâu đoạn thu nước (m)</td><td> ` +
+          checkData(cons.WaterDepthFrom) +
+          `</td></tr>
+                <tr><td>Chiều sâu đoạn thu nước (m)</td><td> ` +
+          checkData(cons.WaterDepthTo) +
+          `</td></tr>
+                <tr><td>Lưu lượng khai thác thiết kế (m3/ngày đêm)</td><td> ` +
+          checkData(cons.WaterExtractionFlowDesign) +
+          `</td></tr>
+                <tr><td>Lưu lượng khai thác thực tế (m3/ngày đêm)</td><td> ` +
+          checkData(cons.WaterExtractionFlowReality) +
+          `</td></tr>
+                <tr><td>Chiều sâu mực nước tĩnh </td><td> ` +
+          checkData(cons.StaticWL) +
+          `</td></tr>
+                <tr><td>Chiều sâu mực nước động lớn nhất (m)</td><td> ` +
+          checkData(cons.DynamicWL) +
+          `</td></tr>`;
+      } else if (cons.TypeOfConstructionId == 9) {
+        contentPopup =
+          `<tr><td>Quy mô khoan thăm dò</td><td> ` +
+          checkData(cons.DrillingScale) +
+          `</td></tr>
+                <tr><td>Tầng chứa nước thăm dò</td><td> ` +
+          checkData(cons.ProbeAquifer) +
+          `</td></tr>
+                <tr><td>Thời gian thi công khoan thăm dò</td><td> ` +
+          checkData(cons.ConstructionTime) +
+          `</td></tr>
+                <tr><td>Mục đích thăm dò</td><td> ` +
+          checkData(cons.ExplorationPurposes) +
+          `</td></tr>
+                <tr><td>Khối lượng các hạng mục thăm dò</td><td> ` +
+          checkData(cons.VolumeOfExplorationItems) +
+          `</td></tr>`;
+      } else if (cons.TypeOfConstructionId == 10) {
+        contentPopup =
+          `<tr><td>Thời gian hành nghề khoan</td><td> ` +
+          checkData(cons.DrillingDuration) +
+          `</td></tr>
+                <tr><td>Mục đích khoan KT</td><td> ` +
+          checkData(cons.DrillingPurpose) +
+          `</td></tr>`;
+      } else if (
+        cons.TypeOfConstructionId == 11 ||
+        cons.TypeOfConstructionId == 14
+      ) {
+        contentPopup =
+          `<tr><td>Lưu lượng khai thác CNSH</td><td> ` +
+          checkData(cons.WaterSupplyFlow) +
+          `</td></tr>
+                <tr><td>Nguồn nước khai thác:</td><td>` +
+          checkData(cons.ExploitedWS) +
+          `</td></tr>
+                <tr><td>Phương thức khai thác:</td><td>` +
+          checkData(cons.MiningMethod) +
+          `</td></tr>
+                <tr><td>Lưu lượng khai thác (m3/ngày đêm)</td><td> ` +
+          checkData(cons.WaterSupplyFlow) +
+          `</td></tr>
+                <tr><td>Thời hạn khai thác</td><td> ` +
+          checkData(cons.MiningDuration) +
+          `</td></tr>`;
+      } else if (cons.TypeOfConstructionId == 13) {
+        contentPopup =
+          `<tr><td>Cao trình cống</td><td> ` +
+          checkData(cons.DrainElevation) +
+          `</td></tr>
+                <tr><td>Chiều dài cống</td><td> ` +
+          checkData(cons.DrainLength) +
+          `</td></tr>
+                <tr><td>Đường kính cống</td><td> ` +
+          checkData(cons.DrainDiameter) +
+          `</td></tr>
+                <tr><td>Kích thước miệng cống (chiều rộng - chiều cao)</td><td> ` +
+          checkData(cons.DrainSize) +
+          `</td></tr>`;
+      }
 
-        return `<div class="card-primary card-outline card-outline-tabs map-info-card w-100 border-0">
-            <h5 class="card-title text-center col-12 mb-2 font-weight-bold text-deepblue">`+ cons.ConstructionName + `</h5>
+      return (
+        `<div class="card-primary card-outline card-outline-tabs map-info-card w-100 border-0">
+            <h5 class="card-title text-center col-12 mb-2 font-weight-bold text-deepblue">` +
+        cons.ConstructionName +
+        `</h5>
             <div id="license-info"></div>
             <table class="table-contruction-info w-100 table-striped">
                 <tbody>
                     <tr>
                         <td>
-                            <span class="text-black font-weight-bold">Vĩ độ</span>: <span>` + checkData(cons.X) + `</span>
+                            <span class="text-black font-weight-bold">Vĩ độ</span>: <span>` +
+        checkData(cons.X) +
+        `</span>
                         </td>
                         <td>
-                            <span class="text-black font-weight-bold">Kinh độ</span>: <span> ` + checkData(cons.Y) + `</span>
+                            <span class="text-black font-weight-bold">Kinh độ</span>: <span> ` +
+        checkData(cons.Y) +
+        `</span>
                         </td>
                     </tr>
                     ${licenseItems}
-                    <tr><td style="width: 180px;">Năm bắt đầu vận hành:</td><td>` + checkData(cons.StartDate) + `</td></tr>
+                    <tr><td style="width: 180px;">Năm bắt đầu vận hành:</td><td>` +
+        checkData(cons.StartDate) +
+        `</td></tr>
                     ${contentPopup}
                     ${consItem}
                 </tbody>
             </table>
 
-        </div>`;
+        </div>`
+      );
     }
 
     // Hàm định dạng ngày tháng
     function formatDate(time) {
-        var t = new Date(time);
-        var year = t.getFullYear();
-        var month = t.getMonth() + 1;
-        var m = (month < 10) ? "0" + month : month;
-        var day = (t.getDate() < 10) ? "0" + t.getDate() : t.getDate();
-        return day + '/' + m + '/' + year;
+      var t = new Date(time);
+      var year = t.getFullYear();
+      var month = t.getMonth() + 1;
+      var m = month < 10 ? "0" + month : month;
+      var day = t.getDate() < 10 ? "0" + t.getDate() : t.getDate();
+      return day + "/" + m + "/" + year;
     }
 
     function GetFolderLicense(Id) {
-        switch (Id) {
-            case 1: return 'NuocMat';
-            case 4: return 'NuocMat';
-            case 5: return 'NuocMat';
-            case 6: return 'NuocMat';
-            case 11: return 'NuocMat';
-            case 12: return 'NuocMat';
-            case 13: return 'NuocMat';
-            case 14: return 'NuocMat';
-            case 15: return 'NuocMat';
-            case 2: return 'NuocDuoiDat';
-            case 8: return 'NuocDuoiDat';
-            case 9: return 'NuocDuoiDat';
-            case 10: return 'NuocDuoiDat';
-            case 3: return 'XaThai';
-            case 17: return 'XaThai';
-            case 18: return 'XaThai';
-            case 19: return 'XaThai';
-            case 20: return 'XaThai';
-            case 21: return 'XaThai';
-            case 22: return 'XaThai';
-            case 23: return 'XaThai';
-            default: return '';
-        }
+      switch (Id) {
+        case 1:
+          return "NuocMat";
+        case 4:
+          return "NuocMat";
+        case 5:
+          return "NuocMat";
+        case 6:
+          return "NuocMat";
+        case 11:
+          return "NuocMat";
+        case 12:
+          return "NuocMat";
+        case 13:
+          return "NuocMat";
+        case 14:
+          return "NuocMat";
+        case 15:
+          return "NuocMat";
+        case 2:
+          return "NuocDuoiDat";
+        case 8:
+          return "NuocDuoiDat";
+        case 9:
+          return "NuocDuoiDat";
+        case 10:
+          return "NuocDuoiDat";
+        case 3:
+          return "XaThai";
+        case 17:
+          return "XaThai";
+        case 18:
+          return "XaThai";
+        case 19:
+          return "XaThai";
+        case 20:
+          return "XaThai";
+        case 21:
+          return "XaThai";
+        case 22:
+          return "XaThai";
+        case 23:
+          return "XaThai";
+        default:
+          return "";
+      }
     }
 
     function checkData(data) {
-        if (data !== null && data !== '' && data !== undefined) {
-            return data;
-        } else {
-            return "-";
-        }
+      if (data !== null && data !== "" && data !== undefined) {
+        return data;
+      } else {
+        return "-";
+      }
     }
 
     var mymap = null;
     function initMap() {
-        mymap = L.map('Map', {
-            maxZoom: 15,
-            minZoom: 8,
-        },).setView([21.248632, 104.118988], 9);
+      mymap = L.map("Map", {
+        maxZoom: 15,
+        minZoom: 8,
+      }).setView([21.248632, 104.118988], 9);
 
-        var bounds = L.latLngBounds([[23.104700, 101.332302], [20.056898, 106.013564]]);
-        mymap.setMaxBounds(bounds);
-        mymap.on('drag', function () {
-            mymap.panInsideBounds(bounds, { animate: false });
-        });
+      var bounds = L.latLngBounds([
+        [23.1047, 101.332302],
+        [20.056898, 106.013564],
+      ]);
+      mymap.setMaxBounds(bounds);
+      mymap.on("drag", function () {
+        mymap.panInsideBounds(bounds, { animate: false });
+      });
 
-        var layer = L.esri.basemapLayer('Imagery').addTo(mymap);
-        var layerLabels = L.esri.basemapLayer('Imagery' + 'Labels');
-        mymap.addLayer(layerLabels);
+      var layer = L.esri.basemapLayer("Imagery").addTo(mymap);
+      var layerLabels = L.esri.basemapLayer("Imagery" + "Labels");
+      mymap.addLayer(layerLabels);
 
-        function setBasemap(basemap) {
-            if (layer) {
-                mymap.removeLayer(layer);
-            }
-
-            layer = L.esri.basemapLayer(basemap);
-
-            mymap.addLayer(layer);
-
-            if (layerLabels) {
-                mymap.removeLayer(layerLabels);
-            }
-
-            if (basemap === 'ShadedRelief'
-                || basemap === 'Oceans'
-                || basemap === 'Gray'
-                || basemap === 'Imagery'
-            ) {
-                layerLabels = L.esri.basemapLayer(basemap + 'Labels');
-                mymap.addLayer(layerLabels);
-            } else if (basemap.includes('Imagery')) {
-                layerLabels = L.esri.basemapLayer('ImageryLabels');
-                mymap.addLayer(layerLabels);
-            }
+      function setBasemap(basemap) {
+        if (layer) {
+          mymap.removeLayer(layer);
         }
 
-        var basemaps = document.getElementById('basemaps');
+        layer = L.esri.basemapLayer(basemap);
 
-        basemaps.addEventListener('change', function () {
-            setBasemap(basemaps.value);
-        });
+        mymap.addLayer(layer);
 
-        // Load kml file
-        fetch('/LocalFiles/kml/Province.kml')
-            .then(res => res.text())
-            .then(kmltext => {
-                // Create new kml overlay
-                const parser = new DOMParser();
-                const kml = parser.parseFromString(kmltext, 'text/xml');
-                const track = new L.KML(kml);
-                mymap.addLayer(track);
-            });
-
-        var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-        var bing = new L.BingLayer(BING_KEY);
-        mymap.addLayer(bing);
-
-        if(window.location.pathname == "/cong-trinh"){
-            // Initialize the FeatureGroup to store editable layers
-            var drawnItems = new L.FeatureGroup();
-            mymap.addLayer(drawnItems);
-
-            // Initialize the draw control and pass it the FeatureGroup of editable layers
-            var drawControl = new L.Control.Draw({
-                edit: {
-                    featureGroup: drawnItems
-                },
-                draw: {
-                    polygon: {
-                        allowIntersection: false,
-                        showArea: true
-                    },
-                    polyline: {
-                        shapeOptions: {
-                            color: 'red'
-                        }
-                    }
-                }
-            });
-            mymap.addControl(drawControl);
-
-            mymap.on(L.Draw.Event.CREATED, function (event) {
-                event.layer.options.color = 'red';
-                var layer = event.layer;
-
-                drawnItems.addLayer(layer);
-            });
+        if (layerLabels) {
+          mymap.removeLayer(layerLabels);
         }
 
-        mymap.on('popupopen', function () {
-            $('.license-num').click(function (e) {
-                openAsideFileLicense(parseInt(e.target.dataset.consType), e.target.dataset.licenseFile);
-            });
-        })
+        if (
+          basemap === "ShadedRelief" ||
+          basemap === "Oceans" ||
+          basemap === "Gray" ||
+          basemap === "Imagery"
+        ) {
+          layerLabels = L.esri.basemapLayer(basemap + "Labels");
+          mymap.addLayer(layerLabels);
+        } else if (basemap.includes("Imagery")) {
+          layerLabels = L.esri.basemapLayer("ImageryLabels");
+          mymap.addLayer(layerLabels);
+        }
+      }
+
+      var basemaps = document.getElementById("basemaps");
+
+      basemaps.addEventListener("change", function () {
+        setBasemap(basemaps.value);
+      });
+
+      // Load kml file
+      fetch("/LocalFiles/kml/Province.kml")
+        .then((res) => res.text())
+        .then((kmltext) => {
+          // Create new kml overlay
+          const parser = new DOMParser();
+          const kml = parser.parseFromString(kmltext, "text/xml");
+          const track = new L.KML(kml);
+          mymap.addLayer(track);
+        });
+
+      var BING_KEY =
+        "AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L";
+      var bing = new L.BingLayer(BING_KEY);
+      mymap.addLayer(bing);
+
+      if (window.location.pathname == "/cong-trinh") {
+        // Initialize the FeatureGroup to store editable layers
+        var drawnItems = new L.FeatureGroup();
+        mymap.addLayer(drawnItems);
+
+        // Initialize the draw control and pass it the FeatureGroup of editable layers
+        var drawControl = new L.Control.Draw({
+          edit: {
+            featureGroup: drawnItems,
+          },
+          draw: {
+            polygon: {
+              allowIntersection: false,
+              showArea: true,
+            },
+            polyline: {
+              shapeOptions: {
+                color: "red",
+              },
+            },
+          },
+        });
+        mymap.addControl(drawControl);
+
+        mymap.on(L.Draw.Event.CREATED, function (event) {
+          event.layer.options.color = "red";
+          var layer = event.layer;
+
+          drawnItems.addLayer(layer);
+        });
+      }
+
+      mymap.on("popupopen", function () {
+        $(".license-num").click(function (e) {
+          openAsideFileLicense(
+            parseInt(e.target.dataset.consType),
+            e.target.dataset.licenseFile,
+          );
+        });
+      });
     }
 
     function onEachFeature(feature, layer) {
-        var popupContent = feature.properties.Content;
+      var popupContent = feature.properties.Content;
 
-        if (feature.properties && feature.properties.popupContent) {
-            popupContent += feature.properties.popupContent;
-        }
+      if (feature.properties && feature.properties.popupContent) {
+        popupContent += feature.properties.popupContent;
+      }
 
-        layer.bindPopup(popupContent);
+      layer.bindPopup(popupContent);
     }
 
-    GetDataConstruction()
+    GetDataConstruction();
     function GetDataConstruction() {
-        var datas = [];
-        $scope.$watch('currentPage + numPerPage', function () {
-            constructionService.getAllConstructions($scope.TypeOfConstructionId, LicenseId, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, $scope.currentPage, $scope.numPerPage, $scope.DamType).then(function (items) {
-                $scope.DataConstruction = items.data.ListData;
-                $scope.TotalConstruction = items.data.TotalCount;
-                CountAssignCons(items.data.ListData)
-
-                showMarkerSubpage();
-            });
-        }, function () {
-            toastr.error('Error in getting records', 'Error');
+      if (!pageWatchHandle) {
+        pageWatchHandle = $scope.$watch("currentPage + numPerPage", function () {
+          loadConstructionData();
         });
-        ConsNoLicense();
+      } else {
+        loadConstructionData();
+      }
+
+      ConsNoLicense();
     }
 
-    //data basin
-    GetBasins();
-    function GetBasins() {
-        basinService.getAllBasins(Status, '', true, 0, 0).then(function (items) {
-            $scope.Basins = items.data.ListData;
+    function loadConstructionData() {
+      constructionService
+        .getAllConstructions(
+          $scope.TypeOfConstructionId,
+          LicenseId,
+          0,
+          0,
+          CommuneId,
+          BasinId,
+          -1,
+          Status,
+          LicensingAuthorities,
+          $scope.Keyword,
+          $scope.currentPage,
+          $scope.numPerPage,
+          $scope.DamType,
+          CommuneCode,
+        )
+        .then(function (items) {
+          $scope.DataConstruction = items.data.ListData;
+          $scope.TotalConstruction = items.data.TotalCount;
+          CountAssignCons(items.data.ListData);
+
+          showMarkerSubpage();
+        }, function () {
+          toastr.error("Error in getting records", "Error");
         });
     }
 
     //data Bussines
     GetDataBusiness();
     function GetDataBusiness() {
-        businessService.getAllBusinesses(Status, '', 0, 0).then(items => $scope.Business = items.data.ListData);
+      businessService
+        .getAllBusinesses(Status, "", 0, 0)
+        .then((items) => ($scope.Business = items.data.ListData));
     }
 
     function showMarkerSubpage() {
-        var markerGroups = {
-            "nuocmat": [],
-            "nuocduoidat": [],
-            "xathai": []
+      var markerGroups = {
+        nuocmat: [],
+        nuocduoidat: [],
+        xathai: [],
+      };
+      var pointLayer;
+
+      mymap.eachLayer((layer) => {
+        if (layer["feature"] != undefined) layer.remove();
+      });
+
+      // Loop through constructions, push data to show points on map push into array
+      $scope.DataConstruction.forEach(function (e) {
+        var marker = {
+          id: e.Id,
+          type: "Feature",
+          properties: {
+            Content: popupContent(e),
+            Name: e.Name,
+            Construction: e,
+            Num: e.Id,
+            ConstructionType: e.TypeOfConstructionId,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [e.Lng, e.Lat],
+          },
         };
-        var pointLayer;
+        markerGroups[e.ParentTypeSlug] != null &&
+          markerGroups[e.ParentTypeSlug].push(marker);
+      });
+      var arrayType = ["nuocmat", "nuocduoidat", "xathai"];
 
-        mymap.eachLayer((layer) => {
-            if (layer['feature'] != undefined)
-                layer.remove();
-        });
-
-        // Loop through constructions, push data to show points on map push into array
-        $scope.DataConstruction.forEach(function (e) {
-            var marker =
-            {
-                "id": e.Id,
-                "type": "Feature",
-                "properties": {
-                    "Content": popupContent(e),
-                    "Name": e.Name,
-                    "Construction": e,
-                    "Num": e.Id,
-                    "ConstructionType": e.TypeOfConstructionId
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [e.Lng, e.Lat]
-                }
-            };
-            (markerGroups[e.ParentTypeSlug] != null) && markerGroups[e.ParentTypeSlug].push(marker)
-        });
-        var arrayType = ['nuocmat', 'nuocduoidat', 'xathai'];
-
-        arrayType.forEach(function (e) {
-            pointLayer = L.geoJSON(markerGroups[e], {
-                pointToLayer: function (feature, latlng) {
-                    var lay = L.marker(latlng, {
-                        icon: L.divIcon({
-                            html: '<img width=18 src="' + window.location.origin + '/LocalFiles/images/ICON_GHICHUCONGTRINH/' + feature.properties.Construction.TypeSlug + '.png" /><div style="display: none;" class="btn btn-sm title-of-marker font-11 py-0 px-1">' + feature.properties.Name + '</div>',
-                            className: 'text-marker marker-' + feature.properties.Construction.ParentTypeSlug + ' marker-' + feature.properties.Construction.TypeSlug,
-                            id: feature.properties.Num
-                        })
-                    });
-                    return lay;
-                },
-                onEachFeature: onEachFeature
+      arrayType.forEach(function (e) {
+        pointLayer = L.geoJSON(markerGroups[e], {
+          pointToLayer: function (feature, latlng) {
+            var lay = L.marker(latlng, {
+              icon: L.divIcon({
+                html:
+                  '<img width=18 src="' +
+                  window.location.origin +
+                  "/LocalFiles/images/ICON_GHICHUCONGTRINH/" +
+                  feature.properties.Construction.TypeSlug +
+                  '.png" /><div style="display: none;" class="btn btn-sm title-of-marker font-11 py-0 px-1">' +
+                  feature.properties.Name +
+                  "</div>",
+                className:
+                  "text-marker marker-" +
+                  feature.properties.Construction.ParentTypeSlug +
+                  " marker-" +
+                  feature.properties.Construction.TypeSlug,
+                id: feature.properties.Num,
+              }),
             });
-            mymap.addLayer(pointLayer);
-        })
+            return lay;
+          },
+          onEachFeature: onEachFeature,
+        });
+        mymap.addLayer(pointLayer);
+      });
 
-        // Click on the project name to zoom in on the map
-        $scope.zoomConstruction = function (lng, lat, conId) {
-            $('.content-wrapper').animate({ scrollTop: 0 }, "slow");
-            mymap.closePopup();
-            mymap.setView({ lng, lat }, 11);
+      // Click on the project name to zoom in on the map
+      $scope.zoomConstruction = function (lng, lat, conId) {
+        $(".content-wrapper").animate({ scrollTop: 0 }, "slow");
+        mymap.closePopup();
+        mymap.setView({ lng, lat }, 11);
 
-            Object.keys(mymap._layers).forEach(function (e) {
-                if (mymap._layers[e].feature != undefined) {
-                    if (mymap._layers[e].feature.properties.Num == conId) {
-                        mymap._layers[e].openPopup();
-                    }
-                }
-            })
-        }
+        Object.keys(mymap._layers).forEach(function (e) {
+          if (mymap._layers[e].feature != undefined) {
+            if (mymap._layers[e].feature.properties.Num == conId) {
+              mymap._layers[e].openPopup();
+            }
+          }
+        });
+      };
     }
 
     //count & assign cons slug
     function CountAssignCons(dataConstruction) {
-        $scope.countHydroelectric = 0;
-        $scope.countIrrigation = 0;
-        $scope.countPumpStation = 0;
-        $scope.countWaterSupplyStation = 0;
-        $scope.countDrainStation = 0;
-        $scope.countExploitStation = 0;
-        $scope.countDischargeWater = 0;
-        $scope.countGroundExploration = 0;
-        $scope.countDrillingPractice = 0;
-        $scope.countIndustrialArea = 0;
-        $scope.countHandycraftProduction = 0;
-        $scope.countHospital = 0;
-        $scope.countOtherDischarge = 0;
+      $scope.countHydroelectric = 0;
+      $scope.countIrrigation = 0;
+      $scope.countPumpStation = 0;
+      $scope.countWaterSupplyStation = 0;
+      $scope.countDrainStation = 0;
+      $scope.countExploitStation = 0;
+      $scope.countDischargeWater = 0;
+      $scope.countGroundExploration = 0;
+      $scope.countDrillingPractice = 0;
+      $scope.countIndustrialArea = 0;
+      $scope.countHandycraftProduction = 0;
+      $scope.countHospital = 0;
+      $scope.countOtherDischarge = 0;
 
-        var idDischargeCons = [17, 18, 19, 20, 21, 22, 23, 24];
-        dataConstruction.forEach(function (e) {
-            if (e.TypeOfConstructionId == 4) {
-                e.typeSlug = 'thuydien';
-                $scope.countHydroelectric += 1;
-            } else if (e.TypeOfConstructionId == 5) {
-                e.typeSlug = 'hochua';
-                $scope.countIrrigation += 1;
-            } else if (e.TypeOfConstructionId == 6) {
-                e.typeSlug = 'trambom';
-                $scope.countPumpStation += 1;
-            } else if (e.TypeOfConstructionId == 11) {
-                e.typeSlug = 'tramcapnuoc';
-                $scope.countWaterSupplyStation += 1;
-            } else if (e.TypeOfConstructionId == 13) {
-                e.typeSlug = 'cong';
-                $scope.countDrainStation += 1;
-            } else if (e.TypeOfConstructionId == 14) {
-                e.typeSlug = 'nhamaynuoc';
-                $scope.countWaterFactory += 1;
-            } else if (e.TypeOfConstructionId == 8) {
-                e.typeSlug = 'khaithac';
-                $scope.countExploitStation += 1;
-            } else if (e.TypeOfConstructionId == 9) {
-                e.typeSlug = 'thamdo';
-                $scope.countGroundExploration += 1;
-            } else if (e.TypeOfConstructionId == 10) {
-                e.typeSlug = 'hanhnghekhoan';
-                $scope.countDrillingPractice += 1;
-            } else if (e.TypeOfConstructionId == 17) {
-                e.typeSlug = 'kh_cumcn_taptrung';
-                $scope.countIndustrialArea += 1;
-            } else if (e.TypeOfConstructionId == 18) {
-                e.typeSlug = 'sx_tieuthu_cn';
-                $scope.countHandycraftProduction += 1;
-            } else if (e.TypeOfConstructionId == 20) {
-                e.typeSlug = 'cs_benhvien';
-                $scope.countHospital += 1;
-            } else if (e.TypeOfConstructionId == 23) {
-                e.typeSlug = 'xathai_congtrinhkhac';
-                $scope.countOtherDischarge += 1;
-            }
-        })
+      var idDischargeCons = [17, 18, 19, 20, 21, 22, 23, 24];
+      dataConstruction.forEach(function (e) {
+        if (e.TypeOfConstructionId == 4) {
+          e.typeSlug = "thuydien";
+          $scope.countHydroelectric += 1;
+        } else if (e.TypeOfConstructionId == 5) {
+          e.typeSlug = "hochua";
+          $scope.countIrrigation += 1;
+        } else if (e.TypeOfConstructionId == 6) {
+          e.typeSlug = "trambom";
+          $scope.countPumpStation += 1;
+        } else if (e.TypeOfConstructionId == 11) {
+          e.typeSlug = "tramcapnuoc";
+          $scope.countWaterSupplyStation += 1;
+        } else if (e.TypeOfConstructionId == 13) {
+          e.typeSlug = "cong";
+          $scope.countDrainStation += 1;
+        } else if (e.TypeOfConstructionId == 14) {
+          e.typeSlug = "nhamaynuoc";
+          $scope.countWaterFactory += 1;
+        } else if (e.TypeOfConstructionId == 8) {
+          e.typeSlug = "khaithac";
+          $scope.countExploitStation += 1;
+        } else if (e.TypeOfConstructionId == 9) {
+          e.typeSlug = "thamdo";
+          $scope.countGroundExploration += 1;
+        } else if (e.TypeOfConstructionId == 10) {
+          e.typeSlug = "hanhnghekhoan";
+          $scope.countDrillingPractice += 1;
+        } else if (e.TypeOfConstructionId == 17) {
+          e.typeSlug = "kh_cumcn_taptrung";
+          $scope.countIndustrialArea += 1;
+        } else if (e.TypeOfConstructionId == 18) {
+          e.typeSlug = "sx_tieuthu_cn";
+          $scope.countHandycraftProduction += 1;
+        } else if (e.TypeOfConstructionId == 20) {
+          e.typeSlug = "cs_benhvien";
+          $scope.countHospital += 1;
+        } else if (e.TypeOfConstructionId == 23) {
+          e.typeSlug = "xathai_congtrinhkhac";
+          $scope.countOtherDischarge += 1;
+        }
+      });
     }
 
     $scope.toggleMarker = function (typeSlug) {
-        if ($('#checkbox-' + typeSlug).is(':checked')) {
-            $('#checkbox-' + typeSlug).parent().parent().children('ul').children('li').children('input').prop('checked', true);
-            $('.marker-' + typeSlug).addClass('d-flex').removeClass('d-none').fadeIn('normal');
-        }
-        else {
-            $('#checkbox-' + typeSlug).parent().parent().children('ul').children('li').children('input').prop('checked', false);
-            $('.marker-' + typeSlug).addClass('d-none').removeClass('d-flex').fadeOut('normal');
-        }
-    }
+      if ($("#checkbox-" + typeSlug).is(":checked")) {
+        $("#checkbox-" + typeSlug)
+          .parent()
+          .parent()
+          .children("ul")
+          .children("li")
+          .children("input")
+          .prop("checked", true);
+        $(".marker-" + typeSlug)
+          .addClass("d-flex")
+          .removeClass("d-none")
+          .fadeIn("normal");
+      } else {
+        $("#checkbox-" + typeSlug)
+          .parent()
+          .parent()
+          .children("ul")
+          .children("li")
+          .children("input")
+          .prop("checked", false);
+        $(".marker-" + typeSlug)
+          .addClass("d-none")
+          .removeClass("d-flex")
+          .fadeOut("normal");
+      }
+    };
 
     //count total construction no have license
     function ConsNoLicense() {
-        constructionService.getAllConstructions($scope.TypeOfConstructionId, 0, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, $scope.Keyword, 1, 0, $scope.DamType).then(function (items) {
-            $scope.TotalConsNoLicense = items.data.TotalCount;
+      constructionService
+        .getAllConstructions(
+          $scope.TypeOfConstructionId,
+          0,
+          0,
+          0,
+          CommuneId,
+          BasinId,
+          -1,
+          Status,
+          LicensingAuthorities,
+          $scope.Keyword,
+          1,
+          0,
+          $scope.DamType,
+          CommuneCode,
+        )
+        .then(function (items) {
+          $scope.TotalConsNoLicense = items.data.TotalCount;
         });
     }
 
     //get all construction
     function AllCons() {
-        constructionService.getAllConstructions($scope.TypeOfConstructionId, -1, ProvinceId, DistrictId, CommuneId, BasinId, -1, Status, LicensingAuthorities, '', 1, 0, $scope.DamType).then(function (items) {
-            $scope.DataConsForExportExcel = items.data.ListData;
+      constructionService
+        .getAllConstructions(
+          $scope.TypeOfConstructionId,
+          -1,
+          0,
+          0,
+          CommuneId,
+          BasinId,
+          -1,
+          Status,
+          LicensingAuthorities,
+          "",
+          1,
+          0,
+          $scope.DamType,
+          CommuneCode,
+        )
+        .then(function (items) {
+          $scope.DataConsForExportExcel = items.data.ListData;
         });
     }
 
     //data type of construction for create form
     function GetTypeOfConstruction(parrentId) {
-        $scope.TypeOfConstructions = [];
-        typeOfConstructionService.getTypeOfConstructions(parrentId, Status, '', 0, 0).then(function (items) {
-            items.data.ListData.forEach(function (row) {
-                var item = { Id: row.Id, TypeName: row.TypeName }
-                $scope.TypeOfConstructions.push(item);
-                row.Childrent.forEach(function (row1) {
-                    var item1 = { Id: row1.Id, TypeName: row1.TypeName }
-                    $scope.TypeOfConstructions.push(item1);
-                })
-            })
+      $scope.TypeOfConstructions = [];
+      typeOfConstructionService
+        .getTypeOfConstructions(parrentId, Status, "", 0, 0)
+        .then(function (items) {
+          items.data.ListData.forEach(function (row) {
+            var item = { Id: row.Id, TypeName: row.TypeName };
+            $scope.TypeOfConstructions.push(item);
+            row.Childrent.forEach(function (row1) {
+              var item1 = { Id: row1.Id, TypeName: row1.TypeName };
+              $scope.TypeOfConstructions.push(item1);
+            });
+          });
         });
     }
 
@@ -657,355 +1011,388 @@
     //}
 
     $scope.ShowColumns = function (TypeOfConsId, arr) {
-        if (arr.includes(TypeOfConsId || TypeOfConsId == undefined)) {
-            return true;
-        }
-        return false;
-    }
+      if (arr.includes(TypeOfConsId || TypeOfConsId == undefined)) {
+        return true;
+      }
+      return false;
+    };
 
     //data basin
     GetBasins();
     function GetBasins() {
-        basinService.getAllBasins(Status, $scope.Keyword, false, 0, 0).then(function (items) {
-            $scope.Basins = items.data.ListData;
+      basinService
+        .getAllBasins(Status, $scope.Keyword, false, 0, 0)
+        .then(function (items) {
+          $scope.Basins = items.data.ListData;
         });
     }
 
-    //data province
-    GetProvince();
-    function GetProvince() {
-        constructionService.getAllProvince($scope.Keyword, 0, 0).then(function (items) {
-            $scope.Provinces = items.data.ListData;
-        });
-    }
-
-    function GetDistricts(CityId) {
-        constructionService.getDistrict(CityId, CityCode, $scope.Keyword, 0, 0).then(function (items) {
-            $scope.Districts = items.data.ListData;
-        }, function () {
-            toastr.error('Error in getting records', 'Error');
-        });
-    }
-
-    function GetCommune(DistrictId) {
-        constructionService.getCommunes(DistrictId, CityCode, DistrictCode, $scope.Keyword, 0, 0).then(function (items) {
-            $scope.Communes = items.data.ListData;
-            $scope.FilterCommunes = items.data.ListData;
-        }, function () {
-            toastr.error('Error in getting records', 'Error');
-        });
+    GetCommune();
+    function GetCommune() {
+      constructionService.getCommunes().then(
+        function (communes) {
+          communes.forEach(function (c) {
+            c.displayText = getCommuneDisplayText(c);
+          });
+          $scope.Communes = communes;
+          $scope.FilterCommunes = communes;
+          if ($scope.construction && $scope.construction.CommuneId) {
+            $scope.OnCommuneChange();
+          }
+        },
+        function () {
+          console.log("Error in getting GetCommune");
+          toastr.error("Error in getting records", "Error");
+        },
+      );
     }
 
     $scope.displayOperatingStatus = function (item) {
-        if (item.Luuluongxatoithieu < item.MinimumFlow || item.Luuluongxaquanhamay > item.MaximumFlow || item.Luuluongxaquatran > item.MaximumDischargeFlow) {
-            return '<div class="license_status hsd-danger"> Vận hành chưa đúng </div>';
-        }
-        return '<div class="license_status hsd-success"> Vận hành đúng </div>';
-    }
+      if (
+        item.Luuluongxatoithieu < item.MinimumFlow ||
+        item.Luuluongxaquanhamay > item.MaximumFlow ||
+        item.Luuluongxaquatran > item.MaximumDischargeFlow
+      ) {
+        return '<div class="license_status hsd-danger"> Vận hành chưa đúng </div>';
+      }
+      return '<div class="license_status hsd-success"> Vận hành đúng </div>';
+    };
 
     //filter cons by license id in create form
     $scope.GetLicenseId = function (Id, licenseNumber) {
-        $scope.construction.LicenseId = Id;
-        $scope.license_number = licenseNumber;
-        $scope.construction.LicenseNumber = licenseNumber;
-    }
+      $scope.construction.LicenseId = Id;
+      $scope.license_number = licenseNumber;
+      $scope.construction.LicenseNumber = licenseNumber;
+    };
 
     //format data from input filter cons by isuedate
     $scope.formatDateFilter = function () {
-        $scope.myDate = new Date($scope.IssueDateFilter);
-        $scope.IssueDateFilter = $filter('date')($scope.myDate, 'yyyy-MM-dd');
-    }
-
-    $scope.ProvinceChange = function (CityId) {
-        if (CityId !== null) {
-            GetDistricts(CityId);
-        }
-        else {
-            $scope.Districts = [];
-            $scope.Communes = [];
-        }
-    }
-
-    $scope.DistrictChange = function (DistrictId) {
-        if (DistrictId !== null) {
-            GetCommune(DistrictId);
-        }
-        else {
-            $scope.Communes = [];
-        }
-    }
+      $scope.myDate = new Date($scope.IssueDateFilter);
+      $scope.IssueDateFilter = $filter("date")($scope.myDate, "yyyy-MM-dd");
+    };
 
     $scope.changeBasinAddNew = function (basinId) {
-        $scope.construction.BasinId = basinId;
-    }
+      $scope.construction.BasinId = basinId;
+    };
 
     init();
     function init() {
-        $scope.Keyword = '';
-        $scope.currentPage = 1;
-        let pathName = location.pathname.split('/')[2];
-        let param = location.search;
-        if (param == '') {
-            $scope.Keyword = '';
+      $scope.Keyword = "";
+      $scope.currentPage = 1;
+      let pathName = location.pathname.split("/")[2];
+      let param = location.search;
+      if (param == "") {
+        $scope.Keyword = "";
+      } else {
+        $scope.Keyword = param.split("?")[1].toString();
+      }
+      switch (pathName) {
+        case "nuoc-mat":
+          $scope.TypeOfConstructionId = 1;
+          $scope.ShowAquifer = false;
+          break;
+        case "nuoc-duoi-dat":
+          $scope.TypeOfConstructionId = 2;
+          $scope.ShowAquifer = true;
+          break;
+        case "xa-thai":
+          $scope.TypeOfConstructionId = 3;
+          $scope.ShowAquifer = false;
+          break;
+        default:
+          //asideId = 'Construction';
+          $scope.numPerPage = 0;
+          $scope.isDetail = false;
+          initMap();
+          GetDataConstruction();
+          break;
+      }
+      if (pathName != "" && pathName != undefined) {
+        // Is not index page
+        if (mymap) {
+          mymap.remove();
         }
-        else {
-            $scope.Keyword = param.split('?')[1].toString();
-        }
-        switch (pathName) {
-            case "nuoc-mat":
-                $scope.TypeOfConstructionId = 1;
-                $scope.ShowAquifer = false;
-                break;
-            case "nuoc-duoi-dat":
-                $scope.TypeOfConstructionId = 2;
-                $scope.ShowAquifer = true;
-                break;
-            case "xa-thai":
-                $scope.TypeOfConstructionId = 3;
-                $scope.ShowAquifer = false;
-                break;
-            default:
-                //asideId = 'Construction';
-                $scope.numPerPage = 0;
-                $scope.isDetail = false;
-                initMap();
-                GetDataConstruction();
-                break;
-        }
-        if (pathName != '' && pathName != undefined) { // Is not index page
-            if (mymap) { mymap.remove(); }
-            initMap();
-            GetTypeOfConstruction($scope.TypeOfConstructionId);
-            GetDataConstruction();
-            GetDistricts(1);
-            AllCons();
-        }
+        initMap();
+        GetTypeOfConstruction($scope.TypeOfConstructionId);
+        GetDataConstruction();
+        AllCons();
+      }
     }
 
     //Open addew form
     $scope.AddDataCons = function (asideId) {
-        $scope.license_number = '';
-        $scope.construction = {
-            LicenseId: null,
-            TypeOfConstructionId: 0,
-        };
-        $scope.construction.ConstructionItems = [];
-        $scope.Action = "Add";
-        $scope.addnewWindowsHeader = "THÊM MỚI";
+      $scope.license_number = "";
+      $scope.construction = {
+        LicenseId: null,
+        TypeOfConstructionId: 0,
+      };
+      $scope.construction.ConstructionItems = [];
+      $scope.ConstructionCommuneFilter = "";
+      CommuneCode = "";
+      $scope.Action = "Add";
+      $scope.addnewWindowsHeader = "THÊM MỚI";
 
-        openAside(asideId);
-    }
+      openAside(asideId);
+    };
 
     $scope.EditDataCons = function (asideId, item) {
-        $scope.construction.ConstructionItems = [];
-        $scope.Action = "Update";
-        $scope.addnewWindowsHeader = "CHỈNH SỬA";
-        $scope.license_number = item.licenseNumber;
-        constructionService.getSingleConstruction(item.Id).then(function (item) {
-            $scope.construction = item.data;
-            $scope.Id = $scope.construction.TypeOfConstructionId;
-            constructionService.getConsItems(item.data.Id, true, '', 1, 0).then(function (consItem) {
-                $scope.construction.ConstructionItems = consItem.data.ListData;
-            })
-            if ($scope.construction.ProvinceId > 0) {
-                GetDistricts($scope.construction.ProvinceId);
-                if ($scope.construction.DistrictId > 0) {
-                    GetCommune($scope.construction.DistrictId);
-                }
-            }
-        })
-        openAside(asideId);
-    }
+      $scope.construction.ConstructionItems = [];
+      $scope.Action = "Update";
+      $scope.addnewWindowsHeader = "CHỈNH SỬA";
+      $scope.license_number = item.licenseNumber;
+      constructionService.getSingleConstruction(item.Id).then(function (item) {
+        $scope.construction = item.data;
+        $scope.Id = $scope.construction.TypeOfConstructionId;
+        $scope.OnCommuneChange();
+        constructionService
+          .getConsItems(item.data.Id, true, "", 1, 0)
+          .then(function (consItem) {
+            $scope.construction.ConstructionItems = consItem.data.ListData;
+          });
+      });
+      openAside(asideId);
+    };
 
     //add construction item
     $scope.AddConstructionItem = function () {
-        if ($scope.construction.ConstructionItems === null) {
-            $scope.construction.ConstructionItems = [];
-        }
-        var item = { Name: '', LatX: 0, LngY: 0 }
-        $scope.construction.ConstructionItems.push(item);
-    }
+      if ($scope.construction.ConstructionItems === null) {
+        $scope.construction.ConstructionItems = [];
+      }
+      var item = { Name: "", LatX: 0, LngY: 0 };
+      $scope.construction.ConstructionItems.push(item);
+    };
 
     //remove construction item
     $scope.RemoveConstructionItem = function (index, item) {
-        $scope.construction.ConstructionItems.splice(index, 1);
-        if (item.Name != '') {
-            if (confirm('Xoá hạng mục ' + item.Name + '?')) {
-                constructionService.DeleteConsItem(item).then(function (msg) {
-                    toastr.success('Xóa thành công', 'Success');
-                }, function () {
-                    toastr.error('Có lỗi khi xóa', 'Error');
-                });
-            }
+      $scope.construction.ConstructionItems.splice(index, 1);
+      if (item.Name != "") {
+        if (confirm("Xoá hạng mục " + item.Name + "?")) {
+          constructionService.DeleteConsItem(item).then(
+            function (msg) {
+              toastr.success("Xóa thành công", "Success");
+            },
+            function () {
+              toastr.error("Có lỗi khi xóa", "Error");
+            },
+          );
         }
-    }
+      }
+    };
 
     $scope.Save = function (asideId) {
-        constructionService.SaveConstruction($scope.construction).then(function (msg) {
-            if ($scope.Action === "Update") {
-                toastr.success('Cập nhật thông tin công trình thành công', 'THÀNH CÔNG');
-            }
-            else {
-                toastr.success('Thêm mới thông tin công trình thành công', 'THÀNH CÔNG');
-            }
-            //Save ConstructionItems
-            if ($scope.construction.ConstructionItems !== null) {
-                $scope.construction.ConstructionItems.forEach(function (conItem) {
-                    conItem.ConstructionId = msg.data.Id;
-                    constructionService.SaveConstructionDetail(conItem).then(function (msg) {
-                        if ($scope.Action === "Update") {
-                            toastr.success('Cập nhật thông tin công trình thành công', 'THÀNH CÔNG');
-                        }
-                        else {
-                            toastr.success('Thêm mới thông tin công trình thành công', 'THÀNH CÔNG');
-                        }
-                    });
-                })
-            }
+      SyncSelectedCommuneToAdminUnit();
+      constructionService.SaveConstruction($scope.construction).then(
+        function (msg) {
+          if ($scope.Action === "Update") {
+            toastr.success(
+              "Cập nhật thông tin công trình thành công",
+              "THÀNH CÔNG",
+            );
+          } else {
+            toastr.success(
+              "Thêm mới thông tin công trình thành công",
+              "THÀNH CÔNG",
+            );
+          }
+          //Save ConstructionItems
+          if ($scope.construction.ConstructionItems !== null) {
+            $scope.construction.ConstructionItems.forEach(function (conItem) {
+              conItem.ConstructionId = msg.data.Id;
+              constructionService
+                .SaveConstructionDetail(conItem)
+                .then(function (msg) {
+                  if ($scope.Action === "Update") {
+                    toastr.success(
+                      "Cập nhật thông tin công trình thành công",
+                      "THÀNH CÔNG",
+                    );
+                  } else {
+                    toastr.success(
+                      "Thêm mới thông tin công trình thành công",
+                      "THÀNH CÔNG",
+                    );
+                  }
+                });
+            });
+          }
 
-            closeAside(asideId);
-            GetDataConstruction();
-            AllCons();
-        }, function () {
-            if ($scope.Action === "Update") {
-                toastr.error('Lỗi cập nhật thông tin công trình', 'LỖI');
-            }
-            else {
-                toastr.error('Lỗi thêm mới thông tin công trình', 'LỖI');
-            }
-        });
-    }
+          closeAside(asideId);
+          GetDataConstruction();
+          AllCons();
+        },
+        function () {
+          if ($scope.Action === "Update") {
+            toastr.error("Lỗi cập nhật thông tin công trình", "LỖI");
+          } else {
+            toastr.error("Lỗi thêm mới thông tin công trình", "LỖI");
+          }
+        },
+      );
+    };
 
     $scope.DeleteItem = function (item) {
-        if ($window.confirm("Công trình này sẽ bị xoá?")) {
-            constructionService.DeleteConstruction(item).then(function (msg) {
-                toastr.success('Xóa thành công', 'THÀNH CÔNG');
-                GetDataConstruction();
-                AllCons();
-            }, function () {
-                toastr.error('Có lỗi khi xóa', 'LỖI');
-            });
-        } else {
-            $scope.Message = "You clicked NO.";
-        }
-    }
+      if ($window.confirm("Công trình này sẽ bị xoá?")) {
+        constructionService.DeleteConstruction(item).then(
+          function (msg) {
+            toastr.success("Xóa thành công", "THÀNH CÔNG");
+            GetDataConstruction();
+            AllCons();
+          },
+          function () {
+            toastr.error("Có lỗi khi xóa", "LỖI");
+          },
+        );
+      } else {
+        $scope.Message = "You clicked NO.";
+      }
+    };
 
     $scope.closeAside = function (asideId) {
-        closeAside(asideId);
-        $scope.construction = {
-            LicenseId: null,
-            TypeOfConstructionId: null,
-        };
-    }
+      closeAside(asideId);
+      $scope.construction = {
+        LicenseId: null,
+        TypeOfConstructionId: null,
+      };
+    };
 
     // get folder file pdf
     function GetFolder(TypeOfConstructionId) {
-        switch (TypeOfConstructionId) {
-            case 1: return 'nuocmat';
-            case 2: return 'nuocduoidat';
-            case 3: return 'xathai';
-            case 4: return 'nuocmat';
-            case 5: return 'nuocmat';
-            case 6: return 'nuocmat';
-            case 8: return 'nuocduoidat';
-            case 9: return 'nuocduoidat';
-            case 11: return 'nuocmat';
-            case 14: return 'nuocmat';
-            case 17: return 'xathai';
-            case 18: return 'xathai';
-            case 20: return 'xathai';
-            case 23: return 'xathai';
-            default: return '';
-        }
+      switch (TypeOfConstructionId) {
+        case 1:
+          return "nuocmat";
+        case 2:
+          return "nuocduoidat";
+        case 3:
+          return "xathai";
+        case 4:
+          return "nuocmat";
+        case 5:
+          return "nuocmat";
+        case 6:
+          return "nuocmat";
+        case 8:
+          return "nuocduoidat";
+        case 9:
+          return "nuocduoidat";
+        case 11:
+          return "nuocmat";
+        case 14:
+          return "nuocmat";
+        case 17:
+          return "xathai";
+        case 18:
+          return "xathai";
+        case 20:
+          return "xathai";
+        case 23:
+          return "xathai";
+        default:
+          return "";
+      }
     }
 
     function openAside(asideId) {
-        document.getElementById(asideId).classList.add('sidenav-open-withmenu');
+      document.getElementById(asideId).classList.add("sidenav-open-withmenu");
     }
 
     function closeAside(asideId) {
-        document.getElementById(asideId).classList.remove('sidenav-open-withmenu');
+      document
+        .getElementById(asideId)
+        .classList.remove("sidenav-open-withmenu");
     }
 
     // Show/hide construction name on map
     $scope.toggleShow = function () {
-        $(".title-of-marker").fadeToggle("slow");
-    }
+      $(".title-of-marker").fadeToggle("slow");
+    };
 
-    $scope.exportToExcel = function (tableId) { // ex: '#my-table'
-        let pathName = location.pathname.split('/');
+    $scope.exportToExcel = function (tableId) {
+      // ex: '#my-table'
+      let pathName = location.pathname.split("/");
 
-        //date to file name
-        let d = new Date();
-        let day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
-        let month = parseInt(d.getMonth()) + 1 < 10 ? "0" + (parseInt(d.getMonth()) + 1) : parseInt(d.getMonth()) + 1;
+      //date to file name
+      let d = new Date();
+      let day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+      let month =
+        parseInt(d.getMonth()) + 1 < 10
+          ? "0" + (parseInt(d.getMonth()) + 1)
+          : parseInt(d.getMonth()) + 1;
 
-        $timeout(function () {
-            var a = document.createElement('a')
-            a.href = exportHref
-            a.download = pathName[1] + '_' + pathName[2] + '_' + day + month + d.getFullYear() + ".xls";
-            a.click()
-        }, 100);
-        var exportHref = Excel.tableToExcel(tableId, 'Sheet1');
-    }
-
-    // Filter construction by district
-    $scope.FilterDistrictChange = function (FilterDistrictId) {
-        if (FilterDistrictId !== null) {
-            GetCommune(FilterDistrictId);
-            DistrictId = FilterDistrictId;
-            GetDataConstruction();
-        }
-        else {
-            $scope.FilterCommunes = [];
-            DistrictId = 0;
-            GetDataConstruction();
-        }
-    }
+      $timeout(function () {
+        var a = document.createElement("a");
+        a.href = exportHref;
+        a.download =
+          pathName[1] +
+          "_" +
+          pathName[2] +
+          "_" +
+          day +
+          month +
+          d.getFullYear() +
+          ".xls";
+        a.click();
+      }, 100);
+      var exportHref = Excel.tableToExcel(tableId, "Sheet1");
+    };
 
     //Filter construction by basin
     $scope.FilterBasin = function (FilterBasinId) {
-        if (FilterBasinId != null) {
-            BasinId = FilterBasinId;
-            GetDataConstruction();
-        } else {
-            BasinId = 0;
-            GetDataConstruction();
-        }
-    }
+      if (FilterBasinId != null) {
+        BasinId = FilterBasinId;
+        GetDataConstruction();
+      } else {
+        BasinId = 0;
+        GetDataConstruction();
+      }
+    };
 
     // Get file pdf
     function openAsideFileLicense(TypeOfConsId, FilePDF) {
-        openAsideFile();
-        $scope.fileSource = '/LocalFiles/pdf/Licenses/' + GetFolderLicense(TypeOfConsId) + '/' + FilePDF;
-        document.getElementById('obj-license-file').data = $scope.fileSource;
+      openAsideFile();
+      $scope.fileSource =
+        "/LocalFiles/pdf/Licenses/" +
+        GetFolderLicense(TypeOfConsId) +
+        "/" +
+        FilePDF;
+      document.getElementById("obj-license-file").data = $scope.fileSource;
     }
 
     $scope.closeAsideFile = function () {
-        closeAsideFile();
-        document.getElementById('obj-license-file').data = '';
-    }
+      closeAsideFile();
+      document.getElementById("obj-license-file").data = "";
+    };
 
     function openAsideFile() {
-        document.getElementById("sideViewFile").classList.add('sideViewFile');
+      document.getElementById("sideViewFile").classList.add("sideViewFile");
     }
 
     function closeAsideFile() {
-        document.getElementById("sideViewFile").classList.remove('sideViewFile');
+      document.getElementById("sideViewFile").classList.remove("sideViewFile");
     }
-});
-app.factory('Excel', ['$window', function ($window) {
-    var uri = 'data:application/vnd.ms-excel;base64,',
-        template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>table { font-family: "Times New Roman", Times, serif; font-size: 12pt; border-collapse: collapse; } td, th { border: 1px solid black; }</style></head><body><table>{table}</table></body></html>',
-        base64 = function (s) { return $window.btoa(unescape(encodeURIComponent(s))); },
-        format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) };
+  },
+);
+app.factory("Excel", [
+  "$window",
+  function ($window) {
+    var uri = "data:application/vnd.ms-excel;base64,",
+      template =
+        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>table { font-family: "Times New Roman", Times, serif; font-size: 12pt; border-collapse: collapse; } td, th { border: 1px solid black; }</style></head><body><table>{table}</table></body></html>',
+      base64 = function (s) {
+        return $window.btoa(unescape(encodeURIComponent(s)));
+      },
+      format = function (s, c) {
+        return s.replace(/{(\w+)}/g, function (m, p) {
+          return c[p];
+        });
+      };
 
     return {
-        tableToExcel: function (tableId, worksheetName) {
-            var table = $(tableId),
-                ctx = { worksheet: worksheetName, table: table.html() },
-                href = uri + base64(format(template, ctx));
-            return href;
-        }
+      tableToExcel: function (tableId, worksheetName) {
+        var table = $(tableId),
+          ctx = { worksheet: worksheetName, table: table.html() },
+          href = uri + base64(format(template, ctx));
+        return href;
+      },
     };
-}]);
+  },
+]);
