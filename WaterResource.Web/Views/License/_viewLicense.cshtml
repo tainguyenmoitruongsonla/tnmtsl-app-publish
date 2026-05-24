@@ -169,7 +169,7 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="font-13">Ngày ký giấy phép cũ</label>
-                                <input readonly class="floating-input w-100" ng-model="license.OldLicense.SignDate" type="text" placeholder=" " />
+                                <input readonly class="floating-input w-100" ng-value="formatOldLicenseDate(license)" type="text" placeholder=" " />
                             </div>
                         </div>
                     </div>
@@ -278,7 +278,7 @@
                     <div class="col-12 col-md-4">
                         <label class="font-13">Hồ sơ cấp phép</label>
                         <div class="tools d-flex justify-content-center" ng-if="license.LicenseFile">
-                            <a href="javascript:void(0)" ng-click="openAsideFileLicense(license.TypeOfConstructionId, license.LicenseFile)">
+                            <a href="javascript:void(0)" ng-click="openAsideFileLicense(license.TypeOfConstructionId, license.LicenseFile, license.LicenseNumber, license.SignDate)">
                                 <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -286,7 +286,7 @@
                     <div class="col-12 col-md-4">
                         <label class="font-13">Đơn xin cấp phép</label>
                         <div class="tools d-flex justify-content-center" ng-if="license.LicenseRequestFile">
-                            <a href="javascript:void(0)" ng-click="openAsideFileLicense(license.TypeOfConstructionId, license.LicenseRequestFile)">
+                            <a href="javascript:void(0)" ng-click="openAsideFileLicense(license.TypeOfConstructionId, license.LicenseRequestFile, license.LicenseNumber, license.SignDate)">
                                 <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -294,7 +294,7 @@
                     <div class="col-12 col-md-4">
                         <label class="font-13">Hồ sơ pháp lý có liên quan</label>
                         <div class="tools d-flex justify-content-center" ng-if="license.RelatedDocumentFile">
-                            <a href="javascript:void(0)" ng-click="openAsideFileLicense(license.TypeOfConstructionId, license.RelatedDocumentFile)">
+                            <a href="javascript:void(0)" ng-click="openAsideFileLicense(license.TypeOfConstructionId, license.RelatedDocumentFile, license.LicenseNumber, license.SignDate)">
                                 <i class="fa-solid fa-file-pdf" title="Xem file PDF" aria-hidden="true"></i>
                             </a>
                         </div>

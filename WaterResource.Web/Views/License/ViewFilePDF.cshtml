@@ -1,11 +1,18 @@
 ﻿<div id="sideViewFile" class="sidenav pt-0">
     <div class="doc-title py-2 px-0 col-12 d-flex align-items-center" style="background:#15538f; color: #fff; height: 50px">
         <div class="d-flex col-12 p-0 align-items-center">
-            <div class="col-10">
+            <div class="col-9">
                 <div class="admission-title d-flex center-center">
                     <p class="m-0 col-12 p-0 text-left text-uppercase font-16 font-sm-13">XEM CHI TIẾT VĂN BẢN </p>
                 </div>
             </div>
+            <a class="col-2 text-white text-center p-0"
+               ng-if="fileSource"
+               ng-href="{{fileSource}}"
+               ng-attr-download="{{downloadFileName}}"
+               title="Tải file PDF">
+                <i class="fa-solid fa-download"></i>
+            </a>
             <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAsideFile()">&times;</a>
         </div>
     </div>

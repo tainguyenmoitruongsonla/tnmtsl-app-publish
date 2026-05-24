@@ -33,7 +33,7 @@
                             <li role="option" class="border-bottom border-secondary m-0 p-1"
                                 ng-repeat="e in ListLicensingAuthorities">
                                 <a href="javascript:void(0)" class="m-0"
-                                       ng-click="filterConsByLicensingAuthorities(e.Id, e.Name)">
+                                   ng-click="filterConsByLicensingAuthorities(e.Id, e.Name)">
                                     <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
                                 </a>
                             </li>
@@ -72,28 +72,28 @@
                     <div class="row m-0">
                         <div class="col-12 col-md-3 p-2">
                             <div class="floating-label w-100">
-                                <input readonly class="floating-input w-100" type="text" data-toggle="dropdown"
-                                       placeholder=" " ng-model="CommuneFilter"
-                                       ng-init="filterConsByCommune(0, 'Chọn xã')">
+                                <input class="floating-input w-100" type="text" data-toggle="dropdown"
+                                       placeholder="Nhập tên xã" ng-model="CommuneFilter">
                                 <ul class="dropdown-menu w-100" role="menu">
                                     <li role="option" class="border-bottom border-secondary m-0 p-1">
                                         <a href="javascript:void(0)" class="m-0"
-                                               ng-click="filterConsByCommune(0, 'Chọn xã')">
-                                            <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn xã</p>
+                                           ng-click="filterConsByCommune(0, 'Chọn xã')">
+                                            <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
                                         </a>
                                     </li>
                                     <li role="option" class="border-bottom border-secondary m-0 p-1"
-                                        ng-repeat="e in Communes">
+                                        ng-repeat="e in Communes | filter:CommuneFilter">
                                         <a href="javascript:void(0)" class="m-0"
-                                               ng-click="filterConsByCommune(e.Id, e.displayText || e.Name)">
+                                           ng-click="filterConsByCommune(e.Id, e.displayText || e.Name)">
                                             <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
-                                            <small class="text-muted" ng-if="e.OldCommuneName" ng-bind="e.OldCommuneName"></small>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                            <small class="text-muted" ng-if="e.OldCommuneName"
+                                                   ng-bind="e.OldCommuneName"></small>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                            <!--
+                        </div>
+                        <!--
                             <div ng-if="ShowAquifer" class="col-12 col-md-3 p-2">
                                 <div class="floating-label w-100">
                                     <input readonly class="floating-input w-100" type="text" data-toggle="dropdown" placeholder=" " ng-model="AquiferFilter">
@@ -112,61 +112,46 @@
                                 </div>
                             </div>
                         -->
-                            <div class="col-12 col-md-3 p-2">
-                                <div class="floating-label w-100">
-                                    <input readonly class="floating-input w-100" type="text" data-toggle="dropdown"
-                                           placeholder=" " ng-model="BasinFilter">
-                                    <ul class="dropdown-menu w-100" role="menu">
-                                        <li role="option" class="border-bottom border-secondary m-0 p-1">
+                        <div class="col-12 col-md-3 p-2">
+                            <div class="floating-label w-100">
+                                <input readonly class="floating-input w-100" type="text" data-toggle="dropdown"
+                                       placeholder=" " ng-model="BasinFilter">
+                                <ul class="dropdown-menu w-100" role="menu">
+                                    <li role="option" class="border-bottom border-secondary m-0 p-1">
+                                        <a href="javascript:void(0)" class="m-0"
+                                           ng-click="filterConsByBasin(0, 'Chọn tiểu vùng quy hoạch')">
+                                            <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tiểu vùng quy
+                                                hoạch</p>
+                                            </a>
+                                        </li>
+                                        <li role="option" class="border-bottom border-secondary m-0 p-1"
+                                            ng-repeat="e in Basins">
                                             <a href="javascript:void(0)" class="m-0"
-                                                   ng-click="filterConsByBasin(0, 'Chọn tiểu vùng quy hoạch')">
-                                                <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tiểu vùng quy
-                                                    hoạch</p>
-                                                </a>
-                                            </li>
-                                            <li role="option" class="border-bottom border-secondary m-0 p-1"
-                                                ng-repeat="e in Basins">
-                                                <a href="javascript:void(0)" class="m-0"
-                                                       ng-click="filterConsByBasin(e.Id, e.Name)">
-                                                    <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                               ng-click="filterConsByBasin(e.Id, e.Name)">
+                                                <p class="m-0 text-primary" style="font-size: 0.85rem" ng-bind="e.Name"></p>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div class="col-12 col-md-3 p-2">
-                                    <div class="floating-label w-100">
-                                        <input class="floating-input w-100" type="text" id="LicenseFilter"
-                                               data-toggle="dropdown" placeholder="Nhập số GP" ng-model="LicenseFilter">
-                                        <ul class="dropdown-menu w-100" role="menu">
-                                            <li role="option" class="border-bottom border-secondary m-0 p-1">
-                                                <a href="javascript:void(0)" class="m-0"
-                                                       ng-click="filterConsByLicense(0,'LicenseFilter')">
-                                                    <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
-                                                </a>
-                                            </li>
-                                            <li role="option" class="border-bottom border-secondary m-0 p-1"
-                                                ng-repeat='i in Licenses | filter:LicenseFilter'>
-                                                <a href="javascript:void(0)" class="m-0"
-                                                       ng-click="filterConsByLicense(i,'LicenseFilter')">
-                                                    <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.LicenseNumber}}
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                            </div>
+                            <!-- <div class="col-12 col-md-3 p-2">
+                                <div class="floating-label w-100">
+                                    <input class="floating-input w-100" type="text" id="LicenseFilter"
+                                           data-toggle="dropdown" placeholder="Nhập số GP" ng-model="LicenseFilter">
                                 </div>
-                                <!--
+                            </div>  -->
                             <div class="col-12 col-md-3 p-2">
                                 <div class="floating-label w-100">
-                                    <input class="floating-input w-100" type="text" data-toggle="dropdown" placeholder="Nhập tên chủ CT" ng-model="LicenseHolderFilter">
+                                    <input class="floating-input w-100" type="text" data-toggle="dropdown"
+                                           placeholder="Nhập tổ chức/cá nhân quản lý" ng-model="LicenseHolderFilter">
                                     <ul class="dropdown-menu w-100" role="menu">
                                         <li class="border-bottom border-secondary m-0 p-1">
                                             <a href="javascript:void(0)" class="m-0" ng-click="filterConsByBusiness(0)">
                                                 <p class="m-0 text-primary" style="font-size: 0.85rem">Chọn tất cả</p>
                                             </a>
                                         </li>
-                                        <li class="border-bottom border-secondary m-0 p-1" ng-repeat='i in Business | filter:LicenseHolderFilter'>
+                                        <li class="border-bottom border-secondary m-0 p-1"
+                                            ng-repeat='i in Business | filter:LicenseHolderFilter'>
                                             <a href="javascript:void(0)" class="m-0" ng-click="filterConsByBusiness(i)">
                                                 <p class="m-0 text-primary" style="font-size: 0.85rem">{{i.Name}}</p>
                                                 <p class="m-0 text-muted" style="font-size: 0.75rem">{{i.Address}}</p>
@@ -175,16 +160,15 @@
                                     </ul>
                                 </div>
                             </div>
-                        -->
-                                <div class="col-12 col-md-3 p-2">
-                                    <div class="floating-label w-100">
-                                        <input class="floating-input w-100" type="text" placeholder="Nhập tên công trình"
-                                               ng-change="SetKeyword(Keyword)" ng-model="Keyword">
-                                    </div>
+                            <div class="col-12 col-md-3 p-2">
+                                <div class="floating-label w-100">
+                                    <input class="floating-input w-100" type="text" placeholder="Nhập tên công trình"
+                                           ng-change="SetKeyword(Keyword)" ng-model="Keyword">
                                 </div>
                             </div>
-                        </fieldset>
-                    </div>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </div>
+    </div>

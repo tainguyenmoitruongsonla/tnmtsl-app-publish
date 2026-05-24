@@ -16,6 +16,7 @@
     PageSize,
     DamType,
     CommuneCode,
+    BusinessId,
   ) {
     var response = $http({
       method: "get",
@@ -35,6 +36,7 @@
         PageIndex: PageIndex,
         PageSize: PageSize,
         DamType: DamType,
+        BusinessId: BusinessId,
       },
     });
     return response;

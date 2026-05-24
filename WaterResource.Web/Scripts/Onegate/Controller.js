@@ -177,7 +177,7 @@
     function countLicense() {
         var LicenseFrom = [0, 0];
 
-        licenseService.getAllLicenses(0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, false, true, '', 1, 0).then(function (items) {
+        licenseService.getAllLicenses(0, 0, 0, 0, 0, 0, 0, 0, "", 0, -1, 0, -1, false, true, '', 1, 0).then(function (items) {
             $scope.TotalLicenses = items.data.TotalCount;
             items.data.ListData.forEach(function (e) {
                 if (e.LicensingAuthorities == 0 || e.LicensingAuthorities == 1) {
@@ -1049,7 +1049,7 @@
         if (BasinId == undefined || BasinId == '') { BasinId = 0; }
         if (AquiferId == undefined || AquiferId == '') { AquiferId = -1; }
 
-        licenseService.getAllLicenses(0, 0, 0, LicensingTypeId, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, DistrictId, BasinId, AquiferId, Effect, LicensingAuthorities, false, true, '', 1, 0).then(function (items) {
+        licenseService.getAllLicenses(0, 0, 0, LicensingTypeId, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, DistrictId, "", BasinId, AquiferId, Effect, LicensingAuthorities, false, true, '', 1, 0).then(function (items) {
             //data for chart
             var dataForChart = {};
             items.data.ListData.forEach(function (e) {
@@ -1369,7 +1369,7 @@
     function GetDataLicenses() {
         AllLicense();
         $scope.$watch('currentPage + numPerPage', function () {
-            licenseService.getAllLicenses(ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, DistrictId, BasinId, AquiferId, Effect, LicensingAuthorities, true, Status, $scope.Keyword, $scope.currentPage, $scope.numPerPage).then(function (items) {
+            licenseService.getAllLicenses(ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, DistrictId, "", BasinId, AquiferId, Effect, LicensingAuthorities, true, Status, $scope.Keyword, $scope.currentPage, $scope.numPerPage).then(function (items) {
                 $scope.Licenses = items.data.ListData;
                 $scope.TotalItem = items.data.TotalCount;
             });
@@ -1379,10 +1379,10 @@
     }
 
     function AllLicense() {
-        licenseService.getAllLicenses(0, 0, 0, 0, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, 0, 0, -1, 0, -1, false, true, '', 1, 0).then(function (items) {
+        licenseService.getAllLicenses(0, 0, 0, 0, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, 0, "", 0, -1, 0, -1, false, true, '', 1, 0).then(function (items) {
             $scope.AllLicenses = items.data.ListData;
         })
-        licenseService.getAllLicenses(ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, DistrictId, BasinId, AquiferId, Effect, LicensingAuthorities, true, true, $scope.Keyword, 0, 0).then(function (items) {
+        licenseService.getAllLicenses(ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, $scope.StartYear, $scope.EndYear, DistrictId, "", BasinId, AquiferId, Effect, LicensingAuthorities, true, true, $scope.Keyword, 0, 0).then(function (items) {
             $scope.ExcelLicense = items.data.ListData;
         });
     }

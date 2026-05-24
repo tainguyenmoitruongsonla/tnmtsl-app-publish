@@ -118,6 +118,8 @@
         }
       }
       $scope.CommuneFilter = Name;
+      GetDataConstruction();
+      AllCons();
     };
 
     function getCommuneDisplayText(item) {
@@ -188,10 +190,14 @@
     $scope.filterConsByAquifer = function (Id, Name) {
       AquiferId = Id;
       $scope.AquiferFilter = Name;
+      GetDataConstruction();
+      AllCons();
     };
     $scope.filterConsByBasin = function (Id, Name) {
       BasinId = Id;
       $scope.BasinFilter = Name;
+      GetDataConstruction();
+      AllCons();
     };
 
     $scope.filterConsByBusiness = function (item) {
@@ -202,6 +208,8 @@
         BusinessId = 0;
         $scope.LicenseHolderFilter = "";
       }
+      GetDataConstruction();
+      AllCons();
     };
 
     $scope.filterConsByLicense = function (item, InputId) {
@@ -739,6 +747,7 @@
           $scope.numPerPage,
           $scope.DamType,
           CommuneCode,
+          BusinessId,
         )
         .then(function (items) {
           $scope.DataConstruction = items.data.ListData;
@@ -944,6 +953,7 @@
           0,
           $scope.DamType,
           CommuneCode,
+          BusinessId,
         )
         .then(function (items) {
           $scope.TotalConsNoLicense = items.data.TotalCount;
@@ -968,6 +978,7 @@
           0,
           $scope.DamType,
           CommuneCode,
+          BusinessId,
         )
         .then(function (items) {
           $scope.DataConsForExportExcel = items.data.ListData;

@@ -328,7 +328,7 @@
                 LocalPreviousPeriod: 0,
                 LocalThisPeriod: 0
             };
-            licenseService.getAllLicenses(-1, 0, 0, 0, e.typeId, -1, -1, 0, 0, -1, -1, -1, false, true, '', 1, 0).then(function (items)
+            licenseService.getAllLicenses(-1, 0, 0, 0, e.typeId, -1, -1, 0, "", 0, -1, -1, -1, false, true, '', 1, 0).then(function (items)
             {
                 items.data.ListData.forEach(function (license) {
                     const isWithinLastYear = new Date(license.IssueDate).getFullYear() <= (new Date().getFullYear() - 1);

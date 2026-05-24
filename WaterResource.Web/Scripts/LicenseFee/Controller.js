@@ -561,7 +561,7 @@
     }
 
     function getDataLicense() {
-        licenseService.getAllLicenses(0, 0, 0, 0, 0, $scope.StartYear, $scope.EndYear, 0, 0, -1, 0, -1, false, true, '', 1, 0).then(function (items) {
+        licenseService.getAllLicenses(0, 0, 0, 0, 0, $scope.StartYear, $scope.EndYear, 0, "", 0, -1, 0, -1, false, true, '', 1, 0).then(function (items) {
             $scope.License = items.data.ListData;
         });
     }

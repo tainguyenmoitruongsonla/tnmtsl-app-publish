@@ -99,7 +99,7 @@
 
     function GetAllLicense(ConstructionId) {
         //ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, StartYear, EndYear, DistrictId, BasinId, AquiferId, Effect, LicensingAuthorities, isDetail, Status, Keyword, PageIndex, PageSize
-        licenseService.getAllLicenses(-1, ConstructionId, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, false, true, '', 1, 0).then(function (items) {
+        licenseService.getAllLicenses(-1, ConstructionId, -1, -1, -1, -1, -1, -1, "", -1, -1, -1, -1, false, true, '', 1, 0).then(function (items) {
             $scope.Licenses = items.data.ListData;
         });
     }

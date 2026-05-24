@@ -20,19 +20,10 @@
     //Count License
     countLicense()
     function countLicense() {
-        var LicenseFrom = [0, 0];
-
         licenseService.countLicense().then(function (items) {
-            $scope.TotalLicenses = items.data.TotalCount;
-            items.data.ListData.forEach(function (e) {
-                if (e.LicensingAuthorities == 0 || e.LicensingAuthorities == 1) {
-                    if (e.LicensingAuthorities == 0) {
-                        LicenseFrom[0]++;
-                    } else if (e.LicensingAuthorities == 1) {
-                        LicenseFrom[1]++;
-                    }
-                }
-            })
+            var data = items && items.data ? items.data : {};
+            $scope.TotalLicenses = data.TotalCount || data.totalCount || 0;
+            var LicenseFrom = data.LicenseFrom || data.licenseFrom || [0, 0];
             $scope.LicenseFrom = LicenseFrom;
             //draw chart
             var options = {

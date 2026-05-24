@@ -3,28 +3,42 @@
     ///-----Begin License-----///
     //License
     this.getAllLicenses = function (ParentId, ConstructionId, BusinessId, LicensingTypeId, TypeOfConstructionId, StartYear, EndYear, CommuneId, CommuneCode, BasinId, AquiferId, Effect, LicensingAuthorities, isDetail, Status, Keyword, PageIndex, PageSize) {
+        function numberOrDefault(value, defaultValue) {
+            if (value === undefined || value === null || value === "") return defaultValue;
+            var numberValue = Number(value);
+            return isNaN(numberValue) ? defaultValue : numberValue;
+        }
+
+        function stringOrDefault(value, defaultValue) {
+            return value === undefined || value === null ? defaultValue : value;
+        }
+
+        function boolOrDefault(value, defaultValue) {
+            return value === undefined || value === null || value === "" ? defaultValue : value;
+        }
+
         var response = $http({
             method: "get",
             url: "/api/License/list",
             params: {
-                ParentId: ParentId,
-                ConstructionId: ConstructionId,
-                BusinessId: BusinessId,
-                LicensingTypeId: LicensingTypeId,
-                TypeOfConstructionId: TypeOfConstructionId,
-                StartYear: StartYear,
-                EndYear: EndYear,
-                CommuneId: CommuneId,
-                CommuneCode: CommuneCode,
-                BasinId: BasinId,
-                AquiferId: AquiferId,
-                Effect: Effect,
-                LicensingAuthorities: LicensingAuthorities,
-                isDetail: isDetail,
-                Status: Status,
-                Keyword: Keyword,
-                PageIndex: PageIndex,
-                PageSize: PageSize
+                ParentId: numberOrDefault(ParentId, 0),
+                ConstructionId: numberOrDefault(ConstructionId, 0),
+                BusinessId: numberOrDefault(BusinessId, 0),
+                LicensingTypeId: numberOrDefault(LicensingTypeId, 0),
+                TypeOfConstructionId: numberOrDefault(TypeOfConstructionId, 0),
+                StartYear: numberOrDefault(StartYear, 0),
+                EndYear: numberOrDefault(EndYear, 0),
+                CommuneId: numberOrDefault(CommuneId, 0),
+                CommuneCode: stringOrDefault(CommuneCode, ""),
+                BasinId: numberOrDefault(BasinId, 0),
+                AquiferId: numberOrDefault(AquiferId, -1),
+                Effect: numberOrDefault(Effect, 0),
+                LicensingAuthorities: numberOrDefault(LicensingAuthorities, -1),
+                isDetail: boolOrDefault(isDetail, true),
+                Status: boolOrDefault(Status, true),
+                Keyword: stringOrDefault(Keyword, ""),
+                PageIndex: numberOrDefault(PageIndex, 1),
+                PageSize: numberOrDefault(PageSize, 0)
             }
         });
         return response;

@@ -142,7 +142,7 @@
                                         <tbody class="custom-table-tbody">
                                             <tr ng-repeat="item in Licenses | orderBy:'SignDate'">
                                                 <td class="sticky-col start-col align-middle"><span
-                                                        ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.LicenseFile)"
+                                                        ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.LicenseFile, item.LicenseNumber, item.SignDate)"
                                                         class="text-primary text-nowrap"
                                                         ng-bind="item.LicenseNumber"></span></td>
                                                 <!--GP-->
@@ -156,7 +156,7 @@
                                                 <td class="align-middle" ng-bind="item.Business.Address"></td>
                                                 <!--GPOld-->
                                                 <td class="align-middle"><span
-                                                        ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.OldLicense && item.OldLicense.LicenseFile)"
+                                                        ng-click="openAsideFileLicense(item.TypeOfConstructionId, item.OldLicense && item.OldLicense.LicenseFile, item.OldLicense && item.OldLicense.LicenseNumber, item.OldLicense && item.OldLicense.SignDate)"
                                                         class="text-primary text-nowrap"
                                                         ng-bind="item.OldLicense && item.OldLicense.LicenseNumber ? item.OldLicense.LicenseNumber : ''"></span></td>
                                                 <td class="align-middle"
