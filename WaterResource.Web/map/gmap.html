@@ -268,29 +268,41 @@
         coordinateFormat: ol.coordinate.createStringXY(5),
         undefinedHTML: '&nbsp;'
       });
-      var untiled = new ol.layer.Image({
-        source: new ol.source.ImageWMS({
-          ratio: 1,
-          url: 'http://sv324.tlu.edu.vn:8080/geoserver/vigmr/wms',
-          params: {'FORMAT': format,
-                   'VERSION': '1.1.1',  
-                STYLES: '',
-                LAYERS: 'vigmr:VN_district_boundary_polygon',
-          }
+      var adminBoundarySource = new ol.source.Vector({
+        url: '/LocalFiles/kml/xa-phuong-son-la.geojson',
+        format: new ol.format.GeoJSON({
+          defaultDataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:4326'
         })
       });
-      var tiled = new ol.layer.Tile({
+      function getAdminName(feature) {
+        return feature.get('ten_hien_thi') || feature.get('ten_xa') || feature.get('Name') || feature.get('name') || '';
+      }
+      function adminBoundaryStyle(feature) {
+        return new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'rgba(34, 34, 34, 1)',
+            width: 1
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.01)'
+          }),
+          text: new ol.style.Text({
+            text: getAdminName(feature),
+            font: '400 13px Arial, sans-serif',
+            fill: new ol.style.Fill({ color: '#d40000' }),
+            overflow: true
+          })
+        });
+      }
+      var untiled = new ol.layer.Vector({
+        source: adminBoundarySource,
+        style: adminBoundaryStyle
+      });
+      var tiled = new ol.layer.Vector({
         visible: false,
-        source: new ol.source.TileWMS({
-          url: 'http://sv324.tlu.edu.vn:8080/geoserver/vigmr/wms',
-          params: {'FORMAT': format, 
-                   'VERSION': '1.1.1',
-                   tiled: true,
-                STYLES: '',
-                LAYERS: 'vigmr:VN_district_boundary_polygon',
-             tilesOrigin: 102.14458466000008 + "," + 8.381355290000045
-          }
-        })
+        source: adminBoundarySource,
+        style: adminBoundaryStyle
       });
       var projection = new ol.proj.Projection({
           code: 'EPSG:4326',
@@ -330,26 +342,38 @@
         document.getElementById('nodelist').innerHTML = "Loading... please wait...";
         var view = map.getView();
         var viewResolution = view.getResolution();
-        var source = untiled.get('visible') ? untiled.getSource() : tiled.getSource();
-        var url = source.getGetFeatureInfoUrl(
-          evt.coordinate, viewResolution, view.getProjection(),
-          {'INFO_FORMAT': 'text/html', 'FEATURE_COUNT': 50});
-        if (url) {
-          document.getElementById('nodelist').innerHTML = '<iframe seamless src="' + url + '"></iframe>';
+        var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+          return feature;
+        });
+        if (feature) {
+          var props = feature.getProperties();
+          delete props.geometry;
+          var html = '<table>';
+          Object.keys(props).forEach(function(key) {
+            html += '<tr><th>' + key + '</th><td>' + props[key] + '</td></tr>';
+          });
+          html += '</table>';
+          document.getElementById('nodelist').innerHTML = html;
+        } else {
+          document.getElementById('nodelist').innerHTML = '';
         }
       });
 
       // sets the chosen WMS version
       function setWMSVersion(wmsVersion) {
         map.getLayers().forEach(function(lyr) {
-          lyr.getSource().updateParams({'VERSION': wmsVersion});
+          if (lyr.getSource().updateParams) {
+            lyr.getSource().updateParams({'VERSION': wmsVersion});
+          }
         });
         if(wmsVersion == "1.3.0") {
             origin = bounds[1] + ',' + bounds[0];
         } else {
             origin = bounds[0] + ',' + bounds[1];
         }
-        tiled.getSource().updateParams({'tilesOrigin': origin});
+        if (tiled.getSource().updateParams) {
+          tiled.getSource().updateParams({'tilesOrigin': origin});
+        }
       }
 
       // Tiling mode, can be 'tiled' or 'untiled'
@@ -365,20 +389,26 @@
 
       function setAntialiasMode(mode) {
         map.getLayers().forEach(function(lyr) {
-          lyr.getSource().updateParams({'FORMAT_OPTIONS': 'antialias:' + mode});
+          if (lyr.getSource().updateParams) {
+            lyr.getSource().updateParams({'FORMAT_OPTIONS': 'antialias:' + mode});
+          }
         });
       }
 
       // changes the current tile format
       function setImageFormat(mime) {
         map.getLayers().forEach(function(lyr) {
-          lyr.getSource().updateParams({'FORMAT': mime});
+          if (lyr.getSource().updateParams) {
+            lyr.getSource().updateParams({'FORMAT': mime});
+          }
         });
       }
 
       function setStyle(style){
         map.getLayers().forEach(function(lyr) {
-          lyr.getSource().updateParams({'STYLES': style});
+          if (lyr.getSource().updateParams) {
+            lyr.getSource().updateParams({'STYLES': style});
+          }
         });
       }
 
@@ -436,7 +466,9 @@
           }
           // merge the new filter definitions
           map.getLayers().forEach(function(lyr) {
-            lyr.getSource().updateParams(filterParams);
+            if (lyr.getSource().updateParams) {
+              lyr.getSource().updateParams(filterParams);
+            }
           });
         }
 

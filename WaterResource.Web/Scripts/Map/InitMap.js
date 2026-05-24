@@ -1,63 +1,52 @@
 ﻿app.service("mapService", function ($http) {
-    'use strict';
+  "use strict";
 
-    // Initial map
-    var mymap = null; 
-    this.initMap = function(mapId) {
-        mymap = L.map(mapId, {
-            maxZoom: 15
-        }).setView([21.248632, 104.118988], 8);
+  // Initial map
+  var mymap = null;
+  this.initMap = function (mapId) {
+    mymap = L.map(mapId, {
+      maxZoom: 15,
+    }).setView([21.248632, 104.118988], 8);
 
-        var layer = L.esri.basemapLayer('Imagery').addTo(mymap);
-        var layerLabels = L.esri.basemapLayer('Imagery' + 'Labels');
-        mymap.addLayer(layerLabels);
+    var layer = L.esri.basemapLayer("Imagery").addTo(mymap);
+    var layerLabels = null;
 
-        function setBasemap(basemap) {
-            if (layer) {
-                mymap.removeLayer(layer);
-            }
+    var zoomInfo = L.control({ position: "bottomleft" });
+    zoomInfo.onAdd = function () {
+      this._div = L.DomUtil.create("div", "map-zoom-info");
+      this.update();
+      return this._div;
+    };
+    zoomInfo.update = function () {
+      this._div.innerHTML = "Zoom: " + mymap.getZoom();
+    };
+    zoomInfo.addTo(mymap);
+    mymap.on("zoomend", function () {
+      zoomInfo.update();
+    });
 
-            layer = L.esri.basemapLayer(basemap);
+    function setBasemap(basemap) {
+      if (layer) {
+        mymap.removeLayer(layer);
+      }
 
-            mymap.addLayer(layer);
+      layer = L.esri.basemapLayer(basemap);
 
-            if (layerLabels) {
-                mymap.removeLayer(layerLabels);
-            }
+      mymap.addLayer(layer);
 
-            if (basemap === 'ShadedRelief'
-                || basemap === 'Oceans'
-                || basemap === 'Gray'
-                || basemap === 'Imagery'
-            ) {
-                layerLabels = L.esri.basemapLayer(basemap + 'Labels');
-                mymap.addLayer(layerLabels);
-            } else if (basemap.includes('Imagery')) {
-                layerLabels = L.esri.basemapLayer('ImageryLabels');
-                mymap.addLayer(layerLabels);
-            }
-        }
+      if (layerLabels) {
+        mymap.removeLayer(layerLabels);
+      }
 
-        var basemaps = document.getElementById('basemaps');
-
-        basemaps.addEventListener('change', function () {
-            setBasemap(basemaps.value);
-        });
-
-        // Load kml file
-        fetch('/LocalFiles/kml/Province.kml')
-            .then(res => res.text())
-            .then(kmltext => {
-                // Create new kml overlay
-                const parser = new DOMParser();
-                const kml = parser.parseFromString(kmltext, 'text/xml');
-                const track = new L.KML(kml);
-                mymap.addLayer(track);
-            });
-
-        var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-        var bing = new L.BingLayer(BING_KEY);
-        mymap.addLayer(bing);
+      layerLabels = null;
     }
-});
 
+    var basemaps = document.getElementById("basemaps");
+
+    basemaps.addEventListener("change", function () {
+      setBasemap(basemaps.value);
+    });
+
+    MapAdminBoundary.addAdminBoundaryLayer(mymap);
+  };
+});

@@ -134,7 +134,7 @@
             return;
         }
         mymap.eachLayer((layer) => {
-            if (layer['feature'] != undefined)
+            if (layer['feature'] != undefined && !layer.options.isAdministrativeBoundary)
                 layer.remove();
         });
         let pathName = location.pathname.split('/')[2];
@@ -298,19 +298,9 @@
         }).setView([21.248632, 104.118988], 9);
 
         var layer = L.esri.basemapLayer('Imagery').addTo(mymap);
-        var layerLabels = L.esri.basemapLayer('Imagery' + 'Labels');
-        mymap.addLayer(layerLabels);
+        var layerLabels = null;
 
-        // Load kml file
-        fetch('/LocalFiles/kml/Province.kml')
-            .then(res => res.text())
-            .then(kmltext => {
-                // Create new kml overlay
-                const parser = new DOMParser();
-                const kml = parser.parseFromString(kmltext, 'text/xml');
-                const track = new L.KML(kml);
-                mymap.addLayer(track);
-            });
+        MapAdminBoundary.addAdminBoundaryLayer(mymap);
     }
 
     var consTypes = ["thuydien", "hochua", "trambom", "tramcapnuoc", "cong", "nhamaynuoc", "khaithac", "thamdo", "xathai"];
@@ -357,7 +347,7 @@
         var pointLayer;
 
         mymap.eachLayer((layer) => {
-            if (layer['feature'] != undefined)
+            if (layer['feature'] != undefined && !layer.options.isAdministrativeBoundary)
                 layer.remove();
         });
 
@@ -998,19 +988,9 @@
         }).setView([21.248632, 104.118988], 9);
 
         var layer = L.esri.basemapLayer('Imagery').addTo(constructionMap);
-        var layerLabels = L.esri.basemapLayer('Imagery' + 'Labels');
-        constructionMap.addLayer(layerLabels);
+        var layerLabels = null;
 
-        // Load kml file
-        fetch('/LocalFiles/kml/Province.kml')
-            .then(res => res.text())
-            .then(kmltext => {
-                // Create new kml overlay
-                const parser = new DOMParser();
-                const kml = parser.parseFromString(kmltext, 'text/xml');
-                const track = new L.KML(kml);
-                constructionMap.addLayer(track);
-            });
+        MapAdminBoundary.addAdminBoundaryLayer(constructionMap);
     }
 
     // Get data for lincese chart

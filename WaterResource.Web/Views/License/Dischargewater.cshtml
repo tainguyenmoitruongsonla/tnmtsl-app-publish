@@ -240,7 +240,7 @@
                         <td ng-bind="item.Business.Address"></td>
                         <td ng-bind="item.LicenseTypeName"></td>
                         <td ng-bind="item.OldLicense.LicenseNumber"></td>
-                        <td ng-bind="item.OldLicense.SignDate | date:'dd/MM/yyyy'"></td>
+                        <td ng-bind="formatOldLicenseDate(item)"></td>
                         <td ng-bind="item.Construction.ConstructionName"></td>
                         <td ng-bind="item.Construction.ConstructionLocation"></td>
                         <td ng-bind="item.Construction.ProvinceName"></td>

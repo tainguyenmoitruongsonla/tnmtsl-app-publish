@@ -494,8 +494,7 @@
         });
 
         var layer = L.esri.basemapLayer('Imagery').addTo(mymap);
-        var layerLabels = L.esri.basemapLayer('Imagery' + 'Labels');
-        mymap.addLayer(layerLabels);
+        var layerLabels = null;
 
         function setBasemap(basemap) {
             if (layer) {
@@ -510,17 +509,7 @@
                 mymap.removeLayer(layerLabels);
             }
 
-            if (basemap === 'ShadedRelief'
-                || basemap === 'Oceans'
-                || basemap === 'Gray'
-                || basemap === 'Imagery'
-            ) {
-                layerLabels = L.esri.basemapLayer(basemap + 'Labels');
-                mymap.addLayer(layerLabels);
-            } else if (basemap.includes('Imagery')) {
-                layerLabels = L.esri.basemapLayer('ImageryLabels');
-                mymap.addLayer(layerLabels);
-            }
+            layerLabels = null;
         }
 
         var basemaps = document.getElementById('basemaps');
@@ -529,20 +518,7 @@
             setBasemap(basemaps.value);
         });
 
-        // Load kml file
-        fetch('/LocalFiles/kml/Province.kml')
-            .then(res => res.text())
-            .then(kmltext => {
-                // Create new kml overlay
-                const parser = new DOMParser();
-                const kml = parser.parseFromString(kmltext, 'text/xml');
-                const track = new L.KML(kml);
-                mymap.addLayer(track);
-            });
-
-        var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-        var bing = new L.BingLayer(BING_KEY);
-        mymap.addLayer(bing);
+        MapAdminBoundary.addAdminBoundaryLayer(mymap);
     }
 
     init();
