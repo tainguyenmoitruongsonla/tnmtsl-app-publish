@@ -124,8 +124,7 @@
                                                                                 <!--license-->
                                                                                 <td>
                                                                                     <div ng-repeat="license in item.Licenses">
-                                                                                        <span ng-click="openAsideFile(license)" class="text-primary text-nowrap"
-                                                                                              ng-bind-html="license.LicenseNumber"></span>
+                                                                                        <span ng-click="openAsideFileLicense(item.TypeOfConstructionId, license.LicenseFile)" class="text-primary text-nowrap" ng-bind-html="license.LicenseNumber"></span>
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>

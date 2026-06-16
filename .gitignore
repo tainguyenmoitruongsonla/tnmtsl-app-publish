@@ -1,0 +1,2 @@
+# Ignore all web.config files in the repository
+**/[Ww]eb.config

@@ -1332,13 +1332,9 @@
     };
 
     // Get file pdf
-    function openAsideFileLicense(TypeOfConsId, FilePDF) {
+    $scope.openAsideFileLicense = function(TypeOfConsId, FilePDF) {
       openAsideFile();
-      $scope.fileSource =
-        "/LocalFiles/pdf/Licenses/" +
-        GetFolderLicense(TypeOfConsId) +
-        "/" +
-        FilePDF;
+      $scope.fileSource = "/LocalFiles/pdf/Licenses/" + GetFolderLicense(TypeOfConsId) + "/" + FilePD
       document.getElementById("obj-license-file").data = $scope.fileSource;
     }
 

@@ -89,7 +89,7 @@
 
                                     <td class="sticky-col end-col">
                                         <div class="d-flex">
-                                            <div ng-if="item.ConstructionItems && item.ConstructionItems.length > 0">
+                                            <div ng-if="item.ConstructionItems && item.ConstructionItems.length > 0 && item.TypeOfConstructionId !== 9">
                                                 <a href="javascript:void(0)" class="px-2 text-nowrap cons-item-button"
                                                    ng-repeat="constructionItem in item.ConstructionItems"
                                                    ng-click="openAside('Groundwater_Operate_Monitoring', 8, item, 'operate_Groundwater', constructionItem)">
@@ -133,7 +133,7 @@
                             <div class="d-flex col-12 p-0 align-items-center">
                                 <div class="col-10 p-0">
                                     <div class="admission-title d-flex center-center">
-                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> SỐ LIỆU VẬN HÀNH CỦA CÔNG TRÌNH - {{ConsName}} </p>
+                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> SỐ LIỆU VẬN HÀNH CỦA CÔNG TRÌNH - {{ConsName}} ({{storePreDataNDD.ConsItemName}}) </p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('Groundwater_Operate_Monitoring')"><i class="fa fa-arrow-right font-20"></i></a>
@@ -205,7 +205,7 @@
                                                             <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.khaithac)"></td>
                                                             
                                                             <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.mucnuocyeucau)"></td>
-                                                            <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.mucnuoc)"></td>
+                                                            <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.giengkhaithac)"></td>
                                                             
                                                             <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.mucnuocgieng)"></td>
                                                             <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.giengquantrac) ? checkValuePreData(item.giengquantrac) : '-' "></td>
@@ -245,13 +245,13 @@
                             <div class="mb-3">
                                 <label for="tenCongTrinh" class="form-label">Tên công trình</label>
                                 <input type="text" class="form-control" id="tenCongTrinh" value="{{ConsName}}" readonly>
-                                <input type="hidden" class="form-control" id="maCongTrinh" ng-model="storePreData.ConstructionCode">
+                                <input type="hidden" class="form-control" id="maCongTrinh" ng-model="storePreDataNDD.ConstructionCode">
                             </div>
 
                             <!-- Thời gian nhập dữ liệu -->
                             <div class="mb-4">
                                 <label for="thoiGian" class="form-label">Thời gian nhập dữ liệu</label>
-                                <input type="datetime-local" class="form-control" id="thoiGian" ng-model="storePreData.Time">
+                                <input type="datetime-local" class="form-control" id="thoiGian" ng-model="storePreDataNDD.Time">
                             </div>
 
                             <!-- 11 hàng dữ liệu -->
@@ -274,10 +274,10 @@
                                         <input type="text" class="form-control" value="LUULUONG" readonly>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.KHAITHAC" required>
+                                        <input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.KHAITHAC" required>
                                     </div>
                                     <div class="col-md-2 d-flex align-items-center">
-                                        <span>(m<sup>3</sup>)</span>
+                                        <span>(m<sup>3</sup>)/s</span>
                                     </div>
                                 </div>
 
@@ -285,7 +285,14 @@
                                 <div class="row mb-2">
                                     <div class="col-md-4"><input type="text" class="form-control" value="GIENGKHAITHAC" readonly></div>
                                     <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.GIENGKHAITHAC" required></div>
+                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.GIENGKHAITHAC" required></div>
+                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-md-4"><input type="text" class="form-control" value="GIENGQUANTRAC" readonly></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
+                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.GIENGQUANTRAC" required></div>
                                     <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
                                 </div>
                             </div>
@@ -293,7 +300,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
-                        <button type="button" class="btn btn-primary" ng-click="saveStorePreData()"><i class="fa-solid fa-floppy-disk"></i>&nbsp;LƯU</button>
+                        <button type="button" class="btn btn-primary" ng-click="saveStorePreDataNDD()"><i class="fa-solid fa-floppy-disk"></i>&nbsp;LƯU</button>
                     </div>
                 </div>
             </div>

@@ -65,7 +65,9 @@
         ConstructionCode: '',
         Time: '',
         Data: {}
-    };
+     };
+
+    $scope.storePreDataNDD = {}
 
     $scope.filterPreData = function (chartId) {
       if ($scope.inputStartTime != "" || $scope.inputEndTime != "")
@@ -1021,7 +1023,7 @@
                     case "GIENGKHAITHAC":
                       setValue("giengkhaithac", e.Value);
                       break;
-                    case "LUULUONG":
+                    case "KHAITHAC":
                       setValue("khaithac", e.Value);
                           break;
                     case "MUCNUOC":
@@ -1338,25 +1340,36 @@
       $scope.currentPage = 1;
       if (construction !== undefined) {
         $scope.storePreData.ConstructionCode = construction.ConstructionCode;
-          $scope.ConsName = construction.ConstructionName;
+        $scope.ConsName = construction.ConstructionName;
         $scope.ConsID = construction.Id;
-          $scope.con = construction; 
+        $scope.con = construction;
 
-          if (construction.ConstructionCode === 'NDDCTTAKIIVN') {
-              // Clone object construction để tránh ghi đè
-              let consClone = angular.copy(construction);
-
-              // Set ConstructionCode cho từng bản riêng biệt
-              consClone.ConstructionCode = `${construction.ConstructionCode}_${constructionItem.Name}`;
-
-              // Gọi API cho từng clone (không ảnh hưởng nhau)
-              getPreData(consClone, yesterday, today, chartId);
-          } else {
-              getPreData(construction, yesterday, today, chartId);
-          }
-
-          
+        // Track which ConstructionItem is active (if any)
+        if (constructionItem !== undefined && constructionItem !== null) {
+          $scope.ActiveConstructionItem = constructionItem;
+          $scope.storePreDataNDD.ConstructionItemId = constructionItem.Id;
+          // Use a combined ConstructionCode for item-specific data
+            $scope.storePreDataNDD.ConstructionCode =
+                construction.ConstructionCode + "_" + constructionItem.Name;
+            $scope.storePreDataNDD.ConsItemName = constructionItem.Name;
+        } else {
+          $scope.ActiveConstructionItem = null;
+            $scope.storePreDataNDD.ConstructionItemId = null;
         }
+
+        if (construction.ConstructionCode === "NDDCTTAKIIVN" && constructionItem) {
+          // Clone object construction để tránh ghi đè
+          let consClone = angular.copy(construction);
+
+          // Set ConstructionCode cho từng bản riêng biệt
+          consClone.ConstructionCode = `${construction.ConstructionCode}_${constructionItem.Name}`;
+
+          // Gọi API cho từng clone (không ảnh hưởng nhau)
+          getPreData(consClone, yesterday, today, chartId);
+        } else {
+          getPreData(construction, yesterday, today, chartId);
+        }
+      }
 
         
 
@@ -1501,9 +1514,41 @@
 
         monitoringSystemService.saveStorePreData(result).then(function (msg) {
             toastr.success('Lưu số liệu thành công!', 'THÀNH CÔNG');
+            // Close aside/modal and hide manual entry modal if present
             closeAside('Hydroelectric_Online_Operate_Monitoring');
+            $("#manualDataEntry").hide();
+
+            // Reload page after 2 seconds
+            setTimeout(function () {
+                location.reload();
+            }, 1500);
         });
     }
+
+      // Save pre-data for NDD (use ConstructionItemId as ConstructionCode)
+      $scope.saveStorePreDataNDD = function () {
+
+          const result = Object.entries($scope.storePreDataNDD.Data || {}).map(([key, value]) => ({
+              ConstructionCode: $scope.storePreDataNDD.ConstructionCode,
+              Time: formatForSQLDatetime($scope.storePreDataNDD.Time),
+              StationCode: key,
+              Value: value,
+              DeviceStatus: 0,
+              Status: true
+          }));
+
+          monitoringSystemService.saveStorePreData(result).then(function (msg) {
+              toastr.success('Lưu số liệu thành công!', 'THÀNH CÔNG');
+              // Close aside/modal and hide manual entry modal if present
+              closeAside('Groundwater_Operate_Monitoring');
+              $("#manualDataEntry").hide();
+
+              // Reload page after 2 seconds
+              setTimeout(function () {
+                  location.reload();
+              }, 1500);
+          });
+      }
     
   }
 );
