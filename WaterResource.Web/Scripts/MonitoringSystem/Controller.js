@@ -914,6 +914,7 @@
 
               switch (typeOfCons) {
                 case 4:
+                case 5:
                   switch (e.StationCode) {
                     case "MUATHUONGLUU":
                       setValue("muathuongluu", e.Value);
@@ -948,23 +949,13 @@
                     case "MUCNUOCHODUKIEN12GIO":
                       setValue("mucnuochodukien12gio", e.Value);
                       break;
-                  }
-                  break;
-                case 5:
-                  switch (e.StationCode) {
-                    case "QUATRAN":
-                      setValue("qquatran", e.Value);
-                      break;
                     case "LUULUONG":
                       setValue("khaithac", e.Value);
-                      break;
-                    case "DCTT":
-                      setValue("qxatt", e.Value);
                       break;
                     case "MUCNUOC":
                       setValue("mucnuoc", e.Value);
                       break;
-                  }
+                      }
                   break;
                 case 6:
                 case 11:
