@@ -67,17 +67,71 @@
         Data: {}
      };
 
+    $scope.onKhaiThacChanged = function () {
+      // If user has provided explicit total, do not override
+      if ($scope.storePreDataNDD && $scope.storePreDataNDD._explicitTotal) return;
+      // compute sum of per-item KHAITHAC and set as TONGLUULUONG so the top input shows the value
+      var sum = 0;
+      if ($scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
+        $scope.con.ConstructionItems.forEach(function (ci) {
+          var key = 'KHAITHAC_' + ci.Id;
+          var v = $scope.storePreDataNDD.Data && $scope.storePreDataNDD.Data[key] ? parseFloat($scope.storePreDataNDD.Data[key]) : 0;
+          if (!isNaN(v)) sum += v;
+        });
+      }
+      // set computed total (do not set explicit flag)
+      $scope.storePreDataNDD.Data = $scope.storePreDataNDD.Data || {};
+      $scope.storePreDataNDD.Data.TONGLUULUONG = parseFloat(sum.toFixed(2));
+    };
+
+    $scope.onTotalInput = function () {
+      // set explicit flag depending on whether user filled total
+      $scope.storePreDataNDD._explicitTotal = !!($scope.storePreDataNDD.Data && ($scope.storePreDataNDD.Data.TONGLUULUONG !== undefined && $scope.storePreDataNDD.Data.TONGLUULUONG !== null && $scope.storePreDataNDD.Data.TONGLUULUONG !== ""));
+    };
+
+    // compute total khai thac across all items
+    $scope.getTotalKhaiThac = function () {
+      // If user explicitly provided total, prefer it
+      var explicit = $scope.storePreDataNDD.Data && $scope.storePreDataNDD.Data.TONGLUULUONG;
+      if (explicit !== undefined && explicit !== null && explicit !== "") {
+        var ev = parseFloat(explicit);
+        return isNaN(ev) ? 0 : ev;
+      }
+
+      var sum = 0;
+      if ($scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
+        $scope.con.ConstructionItems.forEach(function (ci) {
+          var key = 'KHAITHAC_' + ci.Id;
+          var v = $scope.storePreDataNDD.Data && $scope.storePreDataNDD.Data[key] ? parseFloat($scope.storePreDataNDD.Data[key]) : 0;
+          if (!isNaN(v)) sum += v;
+        });
+      }
+      return sum;
+    };
+
     $scope.storePreDataNDD = {}
 
     $scope.filterPreData = function (chartId) {
-      if ($scope.inputStartTime != "" || $scope.inputEndTime != "")
-        getPreData(
-          $scope.con,
-          $scope.inputStartTime,
-          $scope.inputEndTime,
-          chartId
-        );
-      else toastr.warning("Hãy nhập khoảng thời gian cần lọc", "Cảnh báo");
+      if ($scope.inputStartTime == "" && $scope.inputEndTime == "") {
+        toastr.warning("Hãy nhập khoảng thời gian cần lọc", "Cảnh báo");
+        return;
+      }
+
+      // If no specific item selected, show totals for base construction
+      if (!$scope.SelectedConstructionItemId) {
+        getPreData($scope.con, $scope.inputStartTime, $scope.inputEndTime, chartId);
+        return;
+      }
+
+      // If specific item selected, fetch combined base + item data
+      var selected = $scope.con.ConstructionItems.find(function(ci){ return ci.Id == $scope.SelectedConstructionItemId; });
+      if (!selected) {
+        toastr.warning('Hạng mục chưa hợp lệ', 'Cảnh báo');
+        return;
+      }
+      var consClone = angular.copy($scope.con);
+      consClone.ConstructionCode = consClone.ConstructionCode + '_' + selected.Name;
+      fetchCombinedPreData($scope.con, consClone, $scope.inputStartTime, $scope.inputEndTime, chartId);
     };
 
     $scope.filterConsByType = function (Id, Name) {
@@ -1057,6 +1111,29 @@
           );
 
             $scope.DataPre = result;
+            // populate total-only rows if present
+            $scope.TotalRows = $scope.DataPre.filter(function(e){ return e.tongluuluong !== undefined && e.tongluuluong !== null; });
+            $scope.HasTotalData = $scope.TotalRows && $scope.TotalRows.length > 0;
+            $scope.showingTotalDetail = false;
+
+            // Default display behavior: if totals exist, show total table; otherwise default to first construction item (if any)
+            if (!$scope.SelectedConstructionItemId) {
+              if ($scope.HasTotalData) {
+                $scope.DataPreForDisplay = $scope.TotalRows;
+              } else if ($scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
+                // automatically load first item details
+                var firstItem = $scope.con.ConstructionItems[0];
+                var consCloneFirst = angular.copy($scope.con);
+                consCloneFirst.ConstructionCode = consCloneFirst.ConstructionCode + '_' + firstItem.Name;
+                $scope.SelectedConstructionItemId = firstItem.Id;
+                fetchCombinedPreData($scope.con, consCloneFirst, startTime, endTime, chartId);
+              } else {
+                $scope.DataPreForDisplay = $scope.DataPre;
+              }
+            } else {
+              // if user already selected an item, show full data
+              $scope.DataPreForDisplay = $scope.DataPre;
+            }
 
           $scope.DataPre.forEach(function (e) {
             chartXaxisCategories.push(formatDateTime(e.Time));
@@ -1318,6 +1395,9 @@
         countOperatingCons();
         GetDataConstruction();
         GetWaterQualities("A1");
+        $scope.DataPreForDisplay = [];
+        $scope.showingTotalDetail = false;
+        $scope.HasTotalData = false;
       }
       }
 
@@ -1348,18 +1428,31 @@
             $scope.storePreDataNDD.ConstructionItemId = null;
         }
 
-        if (construction.ConstructionCode === "NDDCTTAKIIVN" && constructionItem) {
-          // Clone object construction để tránh ghi đè
-          let consClone = angular.copy(construction);
-
-          // Set ConstructionCode cho từng bản riêng biệt
-          consClone.ConstructionCode = `${construction.ConstructionCode}_${constructionItem.Name}`;
-
-          // Gọi API cho từng clone (không ảnh hưởng nhau)
-          getPreData(consClone, yesterday, today, chartId);
+        // Determine initial data load: if construction has a selected item, load combined; otherwise load base
+        if ($scope.SelectedConstructionItemId) {
+          var sel = construction.ConstructionItems ? construction.ConstructionItems.find(function(ci){ return ci.Id == $scope.SelectedConstructionItemId; }) : null;
+          if (sel) {
+            var consClone = angular.copy(construction);
+            consClone.ConstructionCode = `${construction.ConstructionCode}_${sel.Name}`;
+            fetchCombinedPreData(construction, consClone, yesterday, today, chartId);
+          } else {
+            getPreData(construction, yesterday, today, chartId);
+          }
         } else {
           getPreData(construction, yesterday, today, chartId);
         }
+        // initialize select control model for construction items
+        if (construction.ConstructionItems && construction.ConstructionItems.length > 0) {
+          // if a specific item was passed, select it; otherwise clear selection
+          $scope.SelectedConstructionItemId = constructionItem ? constructionItem.Id : "";
+        } else {
+          $scope.SelectedConstructionItemId = "";
+        }
+
+        // ensure Data object exists
+        $scope.storePreDataNDD.Data = $scope.storePreDataNDD.Data || {};
+        // explicit total flag: true if user previously entered a total
+        $scope.storePreDataNDD._explicitTotal = !!$scope.storePreDataNDD.Data.TONGLUULUONG;
       }
 
         
@@ -1404,6 +1497,143 @@
         $scope.title;
 
       openAside(asideId);
+    };
+
+    // called when user selects a construction item from the dropdown
+    $scope.onSelectConstructionItem = function (constructionItemId) {
+      // update selection model only; do not fetch data immediately
+      $scope.SelectedConstructionItemId = constructionItemId || "";
+      if (!constructionItemId) {
+        // clear item metadata and set ConstructionCode to base construction
+        $scope.storePreDataNDD.ConstructionItemId = null;
+        $scope.storePreDataNDD.ConstructionCode = $scope.con ? $scope.con.ConstructionCode : null;
+        $scope.storePreDataNDD.ConsItemName = null;
+        return;
+      }
+      // find the selected item object from current construction
+      var selected = null;
+      if ($scope.con && $scope.con.ConstructionItems) {
+        for (var i = 0; i < $scope.con.ConstructionItems.length; i++) {
+          if ($scope.con.ConstructionItems[i].Id == constructionItemId) {
+            selected = $scope.con.ConstructionItems[i];
+            break;
+          }
+        }
+      }
+      if (!selected) return;
+
+      // set storePreDataNDD metadata for manual entry (but don't fetch)
+      $scope.storePreDataNDD.ConstructionItemId = selected.Id;
+      $scope.storePreDataNDD.ConstructionCode = $scope.con.ConstructionCode + '_' + selected.Name;
+      $scope.storePreDataNDD.ConsItemName = selected.Name;
+    };
+
+    // Fetch base construction data and item-specific data, merge into a combined DataPre
+    function fetchCombinedPreData(baseConstruction, itemConstruction, startTime, endTime, chartId) {
+      // Fetch base (total) and item data in parallel
+      var pBase = monitoringSystemService.getStorePreData(baseConstruction.ConstructionCode, startTime, endTime, 1, 0);
+      var pItem = monitoringSystemService.getStorePreData(itemConstruction.ConstructionCode, startTime, endTime, 1, 0);
+
+      Promise.all([pBase, pItem]).then(function (results) {
+        var baseList = results[0].data.ListData || [];
+        var itemList = results[1].data.ListData || [];
+
+        var map = {};
+
+        var process = function (e, isBase) {
+          if (!e || !e.Time) return;
+          if (!map[e.Time]) {
+            map[e.Time] = {
+              Time: e.Time,
+              ConstructionCode: isBase ? baseConstruction.ConstructionCode : itemConstruction.ConstructionCode,
+              trangthaithietbi: e.DeviceStatus || 0,
+              Unit: e.Unit || ''
+            };
+          }
+
+          var target = map[e.Time];
+          var code = e.StationCode;
+          var val = parseFloat(e.Value);
+          if (isNaN(val)) val = e.Value;
+
+          switch (code) {
+            case 'TONGLUULUONG':
+              target.tongluuluong = val;
+              break;
+            case 'KHAITHAC':
+              target.khaithac = val;
+              break;
+            case 'GIENGKHAITHAC':
+              target.giengkhaithac = val;
+              break;
+            case 'GIENGQUANTRAC':
+              target.giengquantrac = val;
+              break;
+            case 'MUCNUOC':
+              // map to mucnuoc for item well water level
+              target.mucnuoc = val;
+              break;
+            default:
+              target[code] = val;
+              break;
+          }
+        };
+
+        baseList.forEach(function (e) { process(e, true); });
+        itemList.forEach(function (e) { process(e, false); });
+
+        var combined = Object.values(map).sort(function (a,b){ return new Date(b.Time) - new Date(a.Time); });
+        $scope.DataPre = combined;
+        $scope.TotalRows = combined.filter(function(e){ return e.tongluuluong !== undefined && e.tongluuluong !== null; });
+        $scope.HasTotalData = $scope.TotalRows && $scope.TotalRows.length > 0;
+        $scope.showingTotalDetail = true; // now showing combined detail
+        // default DataPreForDisplay: prefer total rows if present
+        $scope.DataPreForDisplay = $scope.HasTotalData ? $scope.TotalRows : $scope.DataPre;
+
+        // No additional getPreData call here: we already fetched base and item data.
+        // Chart rendering can be driven from the combined data without extra API calls.
+        $scope.$applyAsync();
+      });
+    }
+
+    $scope.showTotalTable = function () {
+      // show separate total-only table
+      if ($scope.TotalRows && $scope.TotalRows.length > 0) {
+        $scope.showingTotalDetail = false;
+        $scope.DataPreForDisplay = $scope.TotalRows;
+      } else {
+        $scope.DataPreForDisplay = $scope.DataPre;
+      }
+    };
+
+    $scope.showDetailedItems = function () {
+      $scope.showingTotalDetail = true;
+      $scope.DataPreForDisplay = $scope.DataPre;
+    };
+
+    $scope.showTotalRowDetail = function (totalRow) {
+      // Build a detailed per-item row list for the timestamp of totalRow
+      var time = totalRow.Time;
+      var details = [];
+      if ($scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
+        $scope.con.ConstructionItems.forEach(function(ci) {
+          // find matching entry in DataPre for the specific item's ConstructionCode
+          var itemCode = $scope.con.ConstructionCode + '_' + ci.Name;
+          // try to find in DataPre
+          var found = $scope.DataPre.find(function(d){ return d.ConstructionCode == itemCode && d.Time == time; });
+          if (found) {
+            details.push(found);
+          } else {
+            // fallback: create a row with KHAITHAC if stored in storePreDataNDD
+            var key = 'KHAITHAC_' + ci.Id;
+            var val = $scope.storePreDataNDD.Data && $scope.storePreDataNDD.Data[key] ? $scope.storePreDataNDD.Data[key] : null;
+            details.push({ Time: time, ConstructionCode: itemCode, khaithac: val, giengkhaithac: null, giengquantrac: null, Unit: totalRow.Unit });
+          }
+        });
+      }
+      // show details in DataPreForDisplay
+      $scope.DataPreForDisplay = details;
+      $scope.showingTotalDetail = true;
     };
 
     $scope.openAsideV2 = function (asideV2Id, asideV1Id) {
@@ -1518,27 +1748,90 @@
 
       // Save pre-data for NDD (use ConstructionItemId as ConstructionCode)
       $scope.saveStorePreDataNDD = function () {
+        var payload = [];
 
-          const result = Object.entries($scope.storePreDataNDD.Data || {}).map(([key, value]) => ({
+        // If construction has multiple items, keys in Data are suffixed with _{ItemId}
+        // Example: KHAITHAC_12 -> we should set ConstructionCode to ConstructionCode_{ItemName}
+        if ($scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 1) {
+          Object.entries($scope.storePreDataNDD.Data || {}).forEach(function ([key, value]) {
+            if (value === undefined || value === null || value === "") return;
+
+            // Skip total key here; total will be added once after iterating items
+            if (key === 'TONGLUULUONG') return;
+
+            // Attempt to extract itemId suffix
+            var parts = key.split("_");
+            var baseKey = parts[0];
+            var itemId = parts[1];
+
+            if (!itemId) {
+              // fallback to global ConstructionCode (use con.ConstructionCode if storePreDataNDD missing)
+              var codeFallback = $scope.storePreDataNDD.ConstructionCode || ($scope.con ? $scope.con.ConstructionCode : null);
+              payload.push({
+                ConstructionCode: codeFallback,
+                Time: formatForSQLDatetime($scope.storePreDataNDD.Time),
+                StationCode: key,
+                Value: value,
+                DeviceStatus: 0,
+                Status: true,
+              });
+            } else {
+              // find item name for id
+              var item = $scope.con.ConstructionItems.find(function (ci) { return ci.Id == itemId; });
+              var consCode = $scope.con.ConstructionCode + (item ? '_' + item.Name : '_' + itemId);
+              payload.push({
+                ConstructionCode: consCode,
+                Time: formatForSQLDatetime($scope.storePreDataNDD.Time),
+                StationCode: baseKey,
+                Value: value,
+                DeviceStatus: 0,
+                Status: true,
+              });
+            }
+          });
+          // add total TONGLUULUONG as a separate record (sum of all KHAITHAC_* values)
+          var total = $scope.getTotalKhaiThac();
+          payload.push({
+            ConstructionCode: $scope.con.ConstructionCode,
+            Time: formatForSQLDatetime($scope.storePreDataNDD.Time),
+            StationCode: 'TONGLUULUONG',
+            Value: parseFloat(total),
+            DeviceStatus: 0,
+            Status: true
+          });
+        } else {
+          // single item behaviour
+          payload = Object.entries($scope.storePreDataNDD.Data || {}).map(function ([key, value]) {
+            return {
               ConstructionCode: $scope.storePreDataNDD.ConstructionCode,
               Time: formatForSQLDatetime($scope.storePreDataNDD.Time),
               StationCode: key,
               Value: value,
               DeviceStatus: 0,
-              Status: true
-          }));
-
-          monitoringSystemService.saveStorePreData(result).then(function (msg) {
-              toastr.success('Lưu số liệu thành công!', 'THÀNH CÔNG');
-              // Close aside/modal and hide manual entry modal if present
-              closeAside('Groundwater_Operate_Monitoring');
-              $("#manualDataEntry").hide();
-
-              // Reload page after 2 seconds
-              setTimeout(function () {
-                  location.reload();
-              }, 1500);
+              Status: true,
+            };
           });
+        }
+
+        if (payload.length === 0) {
+          toastr.warning('Không có dữ liệu để lưu', 'CẢNH BÁO');
+          return;
+        }
+
+      // Validate time
+      if (!$scope.storePreDataNDD.Time) {
+        toastr.warning('Vui lòng nhập Thời gian trước khi lưu', 'CẢNH BÁO');
+        return;
+      }
+
+        monitoringSystemService.saveStorePreData(payload).then(function (msg) {
+          toastr.success('Lưu số liệu thành công!', 'THÀNH CÔNG');
+          closeAside('Groundwater_Operate_Monitoring');
+          $("#manualDataEntry").hide();
+          setTimeout(function () {
+            location.reload();
+          }, 1500);
+        });
       }
     
   }

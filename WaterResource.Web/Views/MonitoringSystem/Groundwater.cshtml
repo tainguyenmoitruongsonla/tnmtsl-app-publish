@@ -89,17 +89,17 @@
 
                                     <td class="sticky-col end-col">
                                         <div class="d-flex">
-                                            <div ng-if="item.ConstructionItems && item.ConstructionItems.length > 0 && item.TypeOfConstructionId !== 9">
+                                            <div ng-if="item.ConstructionItems && item.ConstructionItems.length == 1">
                                                 <a href="javascript:void(0)" class="px-2 text-nowrap cons-item-button"
                                                    ng-repeat="constructionItem in item.ConstructionItems"
                                                    ng-click="openAside('Groundwater_Operate_Monitoring', 8, item, 'operate_Groundwater', constructionItem)">
                                                     {{constructionItem.Name}}
                                                 </a>
                                             </div>
-                                            <div ng-if="!item.ConstructionItems || item.ConstructionItems.length === 0">
-                                                <a href="javascript:void(0)" class="px-2 text-nowrap" title="Xem chi tiết"
-                                                   ng-click="openAside('Groundwater_Operate_Monitoring', 8, item, 'operate_Groundwater')">
-                                                    Chi tiết
+                                            <div ng-if="item.ConstructionItems && item.ConstructionItems.length > 1">
+                                                <a href="javascript:void(0)" class="px-2 py-1 text-nowrap btn-success" title="Xem chi tiết"
+                                                   ng-click="openAside('Groundwater_Operate_Monitoring', 8, item, 'operate_Groundwater', '')">
+                                                    CHI TIẾT
                                                 </a>
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@
                             <div class="d-flex col-12 p-0 align-items-center">
                                 <div class="col-10 p-0">
                                     <div class="admission-title d-flex center-center">
-                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> SỐ LIỆU VẬN HÀNH CỦA CÔNG TRÌNH - {{ConsName}} ({{storePreDataNDD.ConsItemName}}) </p>
+                                        <p class="m-0 col-12 p-0 text-left text-uppercase font-16"> SỐ LIỆU VẬN HÀNH CỦA CÔNG TRÌNH - {{ConsName}} </p>
                                     </div>
                                 </div>
                                 <a href="javascript:void(0)" class="closebtn m-0 p-0 text-white" ng-click="closeAside('Groundwater_Operate_Monitoring')"><i class="fa fa-arrow-right font-20"></i></a>
@@ -144,6 +144,7 @@
                         <!-- GIAM SAT KET NOI -->
                         <div class="col-md-12 py-2">
                             <div class="card-header rounded-0 p-0">
+                                
                                 <ul class="nav nav-tabs" id="Irrigation_Operate-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link rounded-0 active" id="Groundwater_Operate_Monitoring_Data-tab" data-toggle="pill" href="#Groundwater_Operate_Monitoring_Data" role="tab" aria-controls="Groundwater_Operate_Monitoring_Data" aria-selected="false">Số liệu vận hành</a>
@@ -154,11 +155,17 @@
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="Groundwater_Operate_Monitoring_Data">
-                                        <div class="row m-0 justify-content-between align-items-center py-2">
-                                            <div class="row m-0 align-items-center">
-                                                <span class="px-2"><img src="~/LocalFiles/images/live.gif" class="mr-2" width="25" />Thời gian hiện tại: <span ng-bind-html="currentTime"></span> </span>
-                                            </div>
-                                            <div class="row m-0">
+                                        <div class="row m-0 justify-content-end align-items-center py-2">
+                                            <div class="row m-0 ">
+                                                <div ng-if="con && con.ConstructionItems && con.ConstructionItems.length > 1" class="row m-0 align-items-center">
+                                                    <div class="col-auto py-3 mr-2"><label class="m-0">Hạng mục:</label></div>
+                                                    <div class="col p-0">
+                                                        <select class="form-control form-control-sm" ng-model="SelectedConstructionItemId" ng-change="onSelectConstructionItem(SelectedConstructionItemId)">
+                                                            <option value="">-- Chọn hạng mục --</option>
+                                                            <option ng-repeat="ci in con.ConstructionItems" value="{{ci.Id}}">{{ci.Name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="row m-0 align-items-center">
                                                     <span class="px-2">Thời gian từ: </span>
                                                     <div class="row m-0">
@@ -170,13 +177,35 @@
                                                     </div>
                                                 </div>
                                                 <div class="row m-0 align-items-center p-1">
-                                                    <button ng-click="filterPreData('operate_Groundwater')" class="btn btn-sm btn-addnew px-4 mx-2">Lọc</button>
+                                                    <button ng-click="filterPreData('operate_Groundwater')" class="btn btn-sm btn-addnew px-4 mx-2">Áp dụng</button>
                                                     <button class="btn btn-sm btn-addnew px-4 mx-2">Thêm file xls</button>
                                                     <button class="btn btn-sm btn-addnew px-4 mx-2" data-toggle="modal" data-target="#manualDataEntry"><i class="fa-solid fa-desktop"></i> Nhập thủ công </button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-body p-0">
+                                            <!-- Total rows table: shown by default if totals exist -->
+                                            <div ng-if="HasTotalData" class="p-2">
+                                                <h6 class="mb-2">Bảng tổng lưu lượng</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover table-bordered">
+                                                        <thead class="custom-table-thead">
+                                                            <tr>
+                                                                <th class="text-center align-middle text-nowrap">Thời gian</th>
+                                                                <th class="text-center align-middle text-nowrap">Tổng lưu lượng</th>
+                                                                <th class="text-center align-middle text-nowrap">Đơn vị</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="t in TotalRows">
+                                                                <td class="text-center align-middle text-nowrap"><span ng-bind="t.Time | date:'dd/MM/yyyy HH:mm'"></span></td>
+                                                                <td class="text-center align-middle text-nowrap" ng-bind-html="checkValuePreData(t.tongluuluong)"></td>
+                                                                <td class="text-center align-middle text-nowrap" ng-bind="t.Unit"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                             <div class="table-responsive">
                                                 <table class="table no-margin table-hover table-bordered">
                                                     <thead class="custom-table-thead">
@@ -189,21 +218,21 @@
                                                             <th rowspan="2" class="text-center align-middle text-nowrap">Trạng thái vận hành </th>
                                                         </tr>
                                                         <tr>
-                                                            <th>Yêu cầu</th>
-                                                            <th>Thực tế</th>
-                                                            <th>Yêu cầu</th>
-                                                            <th>Thực tế</th>
-                                                            <th>Yêu cầu</th>
-                                                            <th>Thực tế</th>
+                                                            <th class="text-center align-middle text-nowrap">Yêu cầu</th>
+                                                            <th class="text-center align-middle text-nowrap">Thực tế</th>
+                                                            <th class="text-center align-middle text-nowrap">Yêu cầu</th>
+                                                            <th class="text-center align-middle text-nowrap">Thực tế</th>
+                                                            <th class="text-center align-middle text-nowrap">Yêu cầu</th>
+                                                            <th class="text-center align-middle text-nowrap">Thực tế</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="custom-table-tbody">
-                                                        <tr ng-repeat="item in DataPre">
+                                                        <tr ng-repeat="item in (DataPreForDisplay.length ? DataPreForDisplay : DataPre)">
                                                             <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
                                                             <td class="text-nowrap"><span ng-bind="item.Time | date:'dd/MM/yyyy HH:mm'"></span> <span ng-bind="item.StationCode"></span></td>
                                                             <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.qkhaithacyeucau)"></td>
                                                             <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.khaithac)"></td>
-                                                            
+
                                                             <td class="text-center align-middle" ng-bind-html="item.ConstructionCode === 'NDDCTTAKIIVN_TK04' || item.ConstructionCode === 'NDDCTTAKIIVN_TK03' || item.ConstructionCode === 'NDDCTTAKIIVN_TK02' || item.ConstructionCode === 'NDDCTTAKIIVN_TK01' ? '-' : checkValuePreData(item.mucnuocyeucau)"></td>
                                                             <td class="text-center align-middle" ng-bind-html="checkValuePreData(item.giengkhaithac)"></td>
                                                             
@@ -251,7 +280,8 @@
                             <!-- Thời gian nhập dữ liệu -->
                             <div class="mb-4">
                                 <label for="thoiGian" class="form-label">Thời gian nhập dữ liệu</label>
-                                <input type="datetime-local" class="form-control" id="thoiGian" ng-model="storePreDataNDD.Time">
+                                <input type="datetime-local" class="form-control" id="thoiGian" ng-model="storePreDataNDD.Time" required aria-required="true">
+                                <div class="invalid-feedback d-block" ng-if="!storePreDataNDD.Time">Vui lòng nhập thời gian trước khi lưu.</div>
                             </div>
 
                             <!-- 11 hàng dữ liệu -->
@@ -264,49 +294,78 @@
 
                             <!-- Loop 11 yếu tố -->
                             <div id="rowsContainer">
-                                <!-- Các dòng dữ liệu sẽ được lặp ra phía dưới -->
-                                <!-- Ví dụ dòng 1 -->
-                                <div class="row mb-2">
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" value="Tổng lưu lượng khai thác(của tất cả giếng)" readonly>
+                                <!-- If construction has multiple items, render inputs per item -->
+                                <div ng-if="con && con.ConstructionItems && con.ConstructionItems.length > 1">
+                                    <div class="row mb-2 p-2 border bg-light align-items-center">
+                                        <div class="col-md-8 d-flex align-items-center">
+                                            <label class="m-0 font-weight-bold">Tổng lưu lượng khai thác (của tất cả giếng)</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number" step="0.01" class="form-control form-control-sm text-left font-weight-bold" ng-model="storePreDataNDD.Data.TONGLUULUONG" ng-change="onTotalInput()" placeholder="(Nhập tổng nếu chỉ quan trắc tổng)">
+                                            <small class="form-text text-muted">Nếu để trống, tổng sẽ tự tính từ tổng lưu lượng từng giếng.</small>
+                                        </div>
+                                         <div class="col-md-1 d-flex align-items-center"> <span>(m<sup>3</sup>/s)</span>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control" value="TONGLUULUONG" readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.TONGLUULUONG" required>
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-center">
-                                        <span>(m<sup>3</sup>)/s</span>
+
+                                    <div ng-repeat="ci in con.ConstructionItems" class="border p-2 mb-2">
+                                        <div class="row mb-2 fw-bold">
+                                            <div class="col-12">Hạng mục: <strong ng-bind="ci.Name"></strong></div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng khai thác giếng {{ci.Name}}" readonly></div>
+                                            <div class="col-md-4"><input type="text" class="form-control" value="KHAITHAC" readonly></div>
+                                            <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data['KHAITHAC_' + ci.Id]" ng-change="onKhaiThacChanged()"></div>
+                                            <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><input type="text" class="form-control" value="GIENGKHAITHAC" readonly></div>
+                                            <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
+                                            <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data['GIENGKHAITHAC_' + ci.Id]"></div>
+                                            <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-md-4"><input type="text" class="form-control" value="GIENGQUANTRAC" readonly></div>
+                                            <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
+                                            <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data['GIENGQUANTRAC_' + ci.Id]"></div>
+                                            <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng khai thác giếng {{storePreDataNDD.ConsItemName}}" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="KHAITHAC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.KHAITHAC" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
-                                </div>
+                                <!-- Default single-item layout -->
+                                <div ng-if="!con || !con.ConstructionItems || con.ConstructionItems.length <= 1">
 
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="GIENGKHAITHAC" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.GIENGKHAITHAC" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
-                                </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng khai thác giếng {{storePreDataNDD.ConsItemName}}" readonly></div>
+                                        <div class="col-md-4"><input type="text" class="form-control" value="KHAITHAC" readonly></div>
+                                        <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.KHAITHAC" required></div>
+                                        <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
+                                    </div>
 
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="GIENGQUANTRAC" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.GIENGQUANTRAC" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-4"><input type="text" class="form-control" value="GIENGKHAITHAC" readonly></div>
+                                        <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
+                                        <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.GIENGKHAITHAC" required></div>
+                                        <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-4"><input type="text" class="form-control" value="GIENGQUANTRAC" readonly></div>
+                                        <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
+                                        <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.GIENGQUANTRAC" required></div>
+                                        <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
-                        <button type="button" class="btn btn-primary" ng-click="saveStorePreDataNDD()"><i class="fa-solid fa-floppy-disk"></i>&nbsp;LƯU</button>
+                        <button type="button" class="btn btn-primary" ng-click="saveStorePreDataNDD()" ng-disabled="!storePreDataNDD.Time"><i class="fa-solid fa-floppy-disk"></i>&nbsp;LƯU</button>
                     </div>
                 </div>
             </div>
