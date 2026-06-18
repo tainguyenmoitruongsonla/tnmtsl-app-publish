@@ -257,8 +257,8 @@
                                         </div>
                                         <div class="row m-0 align-items-center p-1">
                                             <button ng-click="filterPreData('operateHydroelectric')" class="btn btn-sm btn-addnew px-4 mx-2"><i class="fa-solid fa-filter"></i> Lọc</button>
-                                            <button class="btn btn-sm btn-addnew px-4 mx-2"> <i class="fa-regular fa-file"></i> Thêm file xls</button>
-                                            <button class="btn btn-sm btn-addnew px-4 mx-2" data-toggle="modal" data-target="#manualDataEntry"><i class="fa-solid fa-desktop"></i> Nhập thủ công </button>
+                                            @*<button class="btn btn-sm btn-addnew px-4 mx-2"> <i class="fa-regular fa-file"></i> Thêm file xls</button>*@
+                                            <button class="btn btn-sm btn-addnew px-4 mx-2" data-toggle="modal" data-target="#manualDataEntry"><i class="fa-solid fa-desktop"></i> Nhập số liệu vận hành </button>
                                         </div>
                                     </div>
                                 </div>
@@ -419,64 +419,34 @@
 
                                 <!-- Copy và thay thế cho các yếu tố còn lại -->
                                 <div class="row mb-2">
+                                    <div class="col-md-4"><input type="text" class="form-control" value="Mực nước hồ" readonly></div>
                                     <div class="col-md-4"><input type="text" class="form-control" value="THUONGLUU" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
                                     <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.THUONGLUU" required></div>
                                     <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="HALUU" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.HALUU" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="DUNGTICH" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.DUNGTICH" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(triệu m<sup>3</sup>)</span></div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="QDEN" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONG" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.QDEN" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="QUATRAN" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONG" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.QUATRAN" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="NHAMAY" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONG" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.NHAMAY" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
-                                </div>
-                                <div class="row mb-2">
+                                    <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng xả DCTT" readonly></div>
                                     <div class="col-md-4"><input type="text" class="form-control" value="DCTT" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONG" readonly></div>
                                     <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.DCTT" required></div>
                                     <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONGHADU" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONG" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.LUULUONGHADU" required></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng khai thác" readonly></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="KHAITHAC" readonly></div>
+                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.KHAITHAC" required></div>
                                     <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="DUKIENLUULUONGHADU" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="LUULUONG" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.DUKIENLUULUONGHADU" required></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng xả qua tràn" readonly></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="QUATRAN" readonly></div>
+                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.QUATRAN" required></div>
                                     <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOCHODUKIEN12GIO" readonly></div>
-                                    <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
-                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.MUCNUOCHODUKIEN12GIO" required></div>
-                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng đến hồ" readonly></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="QDEN" readonly></div>
+                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreData.Data.QDEN" required></div>
+                                    <div class="col-md-2 d-flex align-items-center"><span>(m<sup>3</sup>/s)</span></div>
                                 </div>
                             </div>
                         </form>

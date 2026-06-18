@@ -21,7 +21,7 @@
       Status = true,
       LicensingAuthorities = -1,
       yesterday = fromDateToString(
-        new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+        new Date(new Date().getTime() - 48 * 60 * 60 * 1000)
       ),
       today = fromDateToString(new Date());
 
@@ -859,7 +859,7 @@
         return (value == 'm3/s') ? 'm3/s' : 'm3/ngày đêm';
     }
 
-    function getPreData(construction, startTime, endTime, chartId) {
+      function getPreData(construction, startTime, endTime, chartId) {
       const typeOfCons = construction.TypeOfConstructionId;
       const chartXaxisCategories = [];
       const chartData = {

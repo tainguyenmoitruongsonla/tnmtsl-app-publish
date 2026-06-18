@@ -170,7 +170,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row m-0 align-items-center p-1">
-                                                    <button ng-click="filterPreData()" class="btn btn-sm btn-addnew px-4 mx-2">Lọc</button>
+                                                    <button ng-click="filterPreData('operate_Groundwater')" class="btn btn-sm btn-addnew px-4 mx-2">Lọc</button>
                                                     <button class="btn btn-sm btn-addnew px-4 mx-2">Thêm file xls</button>
                                                     <button class="btn btn-sm btn-addnew px-4 mx-2" data-toggle="modal" data-target="#manualDataEntry"><i class="fa-solid fa-desktop"></i> Nhập thủ công </button>
                                                 </div>
@@ -268,20 +268,26 @@
                                 <!-- Ví dụ dòng 1 -->
                                 <div class="row mb-2">
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" value="KHAITHAC" readonly>
+                                        <input type="text" class="form-control" value="Tổng lưu lượng khai thác(của tất cả giếng)" readonly>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" value="LUULUONG" readonly>
+                                        <input type="text" class="form-control" value="TONGLUULUONG" readonly>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.KHAITHAC" required>
+                                        <input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.TONGLUULUONG" required>
                                     </div>
                                     <div class="col-md-2 d-flex align-items-center">
                                         <span>(m<sup>3</sup>)/s</span>
                                     </div>
                                 </div>
 
-                                <!-- Copy và thay thế cho các yếu tố còn lại -->
+                                <div class="row mb-2">
+                                    <div class="col-md-4"><input type="text" class="form-control" value="Lưu lượng khai thác giếng {{storePreDataNDD.ConsItemName}}" readonly></div>
+                                    <div class="col-md-4"><input type="text" class="form-control" value="KHAITHAC" readonly></div>
+                                    <div class="col-md-2"><input type="number" class="form-control" placeholder="Nhập giá trị" ng-model="storePreDataNDD.Data.KHAITHAC" required></div>
+                                    <div class="col-md-2 d-flex align-items-center"><span>(m)</span></div>
+                                </div>
+
                                 <div class="row mb-2">
                                     <div class="col-md-4"><input type="text" class="form-control" value="GIENGKHAITHAC" readonly></div>
                                     <div class="col-md-4"><input type="text" class="form-control" value="MUCNUOC" readonly></div>
