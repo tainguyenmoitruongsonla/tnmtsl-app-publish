@@ -931,17 +931,18 @@
       };
         const chartHeight = chartId.startsWith("chartPreData_") ? 300 : 500;
 
+      // prevent race conditions: assign a token for this fetch
+      $scope.latestPreDataFetchToken = ($scope.latestPreDataFetchToken || 0) + 1;
+      const fetchToken = $scope.latestPreDataFetchToken;
+
       monitoringSystemService
-        .getStorePreData(
-          construction.ConstructionCode,
-          startTime,
-          endTime,
-          1,
-          0
-        )
+        .getStorePreData(construction.ConstructionCode, startTime, endTime, 1, 0)
         .then(function (items) {
+          // ignore response if a newer fetch started
+          if ($scope.latestPreDataFetchToken !== fetchToken) return;
+
           $scope.DataPre = [];
-            $scope.TotalItem = items.data.TotalCount;
+          $scope.TotalItem = items.data.TotalCount;
 
           const result = Object.values(
             items.data.ListData.reduce((item, e) => {
@@ -1116,12 +1117,14 @@
             $scope.HasTotalData = $scope.TotalRows && $scope.TotalRows.length > 0;
             $scope.showingTotalDetail = false;
 
-            // Default display behavior: if totals exist, show total table; otherwise default to first construction item (if any)
+            // Default display behavior: if totals exist, show total table;
+            // otherwise for Groundwater aside (operate_Groundwater) default to first construction item
             if (!$scope.SelectedConstructionItemId) {
               if ($scope.HasTotalData) {
-                $scope.DataPreForDisplay = $scope.TotalRows;
-              } else if ($scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
-                // automatically load first item details
+                  $scope.DataPreForDisplay = $scope.TotalRows;
+                console.log($scope.con)
+              } else if (chartId === 'operate_Groundwater' && $scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
+                // automatically load first item details only for Groundwater
                 var firstItem = $scope.con.ConstructionItems[0];
                 var consCloneFirst = angular.copy($scope.con);
                 consCloneFirst.ConstructionCode = consCloneFirst.ConstructionCode + '_' + firstItem.Name;
@@ -1240,6 +1243,8 @@
           );
 
           setTimeout(() => {
+            // ensure still the latest fetch
+            if ($scope.latestPreDataFetchToken !== fetchToken) return;
             chart.render();
             chart.updateOptions({
               series: getChartSeries(typeOfCons, chartData),
@@ -1420,9 +1425,9 @@
           $scope.ActiveConstructionItem = constructionItem;
           $scope.storePreDataNDD.ConstructionItemId = constructionItem.Id;
           // Use a combined ConstructionCode for item-specific data
-            $scope.storePreDataNDD.ConstructionCode =
-                construction.ConstructionCode + "_" + constructionItem.Name;
-            $scope.storePreDataNDD.ConsItemName = constructionItem.Name;
+          // Use item Id in code but keep item name for display
+          $scope.storePreDataNDD.ConstructionCode = construction.ConstructionCode + "_" + constructionItem.Name;
+          $scope.storePreDataNDD.ConsItemName = constructionItem.Name;
         } else {
           $scope.ActiveConstructionItem = null;
             $scope.storePreDataNDD.ConstructionItemId = null;
@@ -1530,11 +1535,16 @@
 
     // Fetch base construction data and item-specific data, merge into a combined DataPre
     function fetchCombinedPreData(baseConstruction, itemConstruction, startTime, endTime, chartId) {
+      // prevent race conditions
+      $scope.latestCombinedFetchToken = ($scope.latestCombinedFetchToken || 0) + 1;
+      var fetchToken = $scope.latestCombinedFetchToken;
+
       // Fetch base (total) and item data in parallel
       var pBase = monitoringSystemService.getStorePreData(baseConstruction.ConstructionCode, startTime, endTime, 1, 0);
       var pItem = monitoringSystemService.getStorePreData(itemConstruction.ConstructionCode, startTime, endTime, 1, 0);
 
       Promise.all([pBase, pItem]).then(function (results) {
+        if ($scope.latestCombinedFetchToken !== fetchToken) return;
         var baseList = results[0].data.ListData || [];
         var itemList = results[1].data.ListData || [];
 
