@@ -131,6 +131,9 @@
       }
       var consClone = angular.copy($scope.con);
       consClone.ConstructionCode = consClone.ConstructionCode + '_' + selected.Name;
+      // while combined data is fetched, ensure total-only table is hidden and detailed view is active
+      $scope.showingTotalDetail = true;
+      $scope.DataPreForDisplay = $scope.DataPre || [];
       fetchCombinedPreData($scope.con, consClone, $scope.inputStartTime, $scope.inputEndTime, chartId);
     };
 
@@ -1117,14 +1120,12 @@
             $scope.HasTotalData = $scope.TotalRows && $scope.TotalRows.length > 0;
             $scope.showingTotalDetail = false;
 
-            // Default display behavior: if totals exist, show total table;
-            // otherwise for Groundwater aside (operate_Groundwater) default to first construction item
+            // Default display behavior: if totals exist and no item selected, show total table only.
             if (!$scope.SelectedConstructionItemId) {
               if ($scope.HasTotalData) {
-                  $scope.DataPreForDisplay = $scope.TotalRows;
-                console.log($scope.con)
+                $scope.DataPreForDisplay = $scope.TotalRows;
               } else if (chartId === 'operate_Groundwater' && $scope.con && $scope.con.ConstructionItems && $scope.con.ConstructionItems.length > 0) {
-                // automatically load first item details only for Groundwater
+                // automatically load first item details only for Groundwater when no totals
                 var firstItem = $scope.con.ConstructionItems[0];
                 var consCloneFirst = angular.copy($scope.con);
                 consCloneFirst.ConstructionCode = consCloneFirst.ConstructionCode + '_' + firstItem.Name;
@@ -1134,7 +1135,7 @@
                 $scope.DataPreForDisplay = $scope.DataPre;
               }
             } else {
-              // if user already selected an item, show full data
+              // if user selected an item, show detailed data
               $scope.DataPreForDisplay = $scope.DataPre;
             }
 
@@ -1593,12 +1594,16 @@
         itemList.forEach(function (e) { process(e, false); });
 
         var combined = Object.values(map).sort(function (a,b){ return new Date(b.Time) - new Date(a.Time); });
-        $scope.DataPre = combined;
+          $scope.DataPre = combined; 
         $scope.TotalRows = combined.filter(function(e){ return e.tongluuluong !== undefined && e.tongluuluong !== null; });
         $scope.HasTotalData = $scope.TotalRows && $scope.TotalRows.length > 0;
         $scope.showingTotalDetail = true; // now showing combined detail
-        // default DataPreForDisplay: prefer total rows if present
-        $scope.DataPreForDisplay = $scope.HasTotalData ? $scope.TotalRows : $scope.DataPre;
+        // If an item is currently selected, show detailed combined data; otherwise prefer totals
+        if ($scope.SelectedConstructionItemId) {
+          $scope.DataPreForDisplay = $scope.DataPre;
+        } else {
+          $scope.DataPreForDisplay = $scope.HasTotalData ? $scope.TotalRows : $scope.DataPre;
+        }
 
         // No additional getPreData call here: we already fetched base and item data.
         // Chart rendering can be driven from the combined data without extra API calls.

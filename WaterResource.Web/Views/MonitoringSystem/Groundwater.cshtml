@@ -184,8 +184,8 @@
                                             </div>
                                         </div>
                                         <div class="card-body p-0">
-                                            <!-- Total rows table: shown by default if totals exist -->
-                                            <div ng-if="HasTotalData" class="p-2">
+                                            <!-- Total rows table: shown by default if totals exist and no item selected -->
+                                            <div ng-if="HasTotalData && !SelectedConstructionItemId" class="p-2">
                                                 <h6 class="mb-2">Bảng tổng lưu lượng</h6>
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-hover table-bordered">
@@ -206,7 +206,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="table-responsive">
+                                            <div class="table-responsive" ng-if="!HasTotalData || SelectedConstructionItemId">
                                                 <table class="table no-margin table-hover table-bordered">
                                                     <thead class="custom-table-thead">
                                                         <tr>
