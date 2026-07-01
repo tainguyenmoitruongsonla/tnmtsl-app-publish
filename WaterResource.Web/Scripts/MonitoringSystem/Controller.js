@@ -1172,7 +1172,7 @@
             } else if (typeOfCons == 8) {
               chartData.MinningFlow.push(checkNegative(e.khaithac));
               chartData.MiningWellWaterLevel.push(
-                checkNegative(e.mucnuoc)
+                checkNegative(e.giengkhaithac)
               );
               chartData.MonitoringWellWaterLevel.push(
                 checkNegative(e.giengquantrac)
@@ -1608,6 +1608,19 @@
         // No additional getPreData call here: we already fetched base and item data.
         // Chart rendering can be driven from the combined data without extra API calls.
         $scope.$applyAsync();
+
+        // Ensure the chart is updated when combined (base + item) data is fetched.
+        // Previously fetchCombinedPreData only prepared $scope.DataPre but did not render
+        // the chart. Call getPreData for the itemConstruction to drive ApexCharts
+        // rendering/update using the existing chart logic. Wrap in try/catch to avoid
+        // unhandled exceptions from chart rendering.
+        if (chartId) {
+          try {
+            getPreData(itemConstruction, startTime, endTime, chartId);
+          } catch (e) {
+            console.error("Error updating chart after combined fetch", e);
+          }
+        }
       });
     }
 

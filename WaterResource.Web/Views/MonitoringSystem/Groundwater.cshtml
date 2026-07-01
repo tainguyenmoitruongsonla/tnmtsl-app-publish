@@ -178,7 +178,6 @@
                                                 </div>
                                                 <div class="row m-0 align-items-center p-1">
                                                     <button ng-click="filterPreData('operate_Groundwater')" class="btn btn-sm btn-addnew px-4 mx-2">Áp dụng</button>
-                                                    <button class="btn btn-sm btn-addnew px-4 mx-2">Thêm file xls</button>
                                                     <button class="btn btn-sm btn-addnew px-4 mx-2" data-toggle="modal" data-target="#manualDataEntry"><i class="fa-solid fa-desktop"></i> Nhập thủ công </button>
                                                 </div>
                                             </div>
@@ -249,6 +248,32 @@
                                     </div>
                                     <div class="tab-pane" id="Groundwater_Operate_Monitoring_Chart">
                                         <div class="col-12 p-0">
+                                            <div class="row m-0 justify-content-end align-items-center py-2">
+                                                <div class="row m-0 ">
+                                                    <div ng-if="con && con.ConstructionItems && con.ConstructionItems.length > 1" class="row m-0 align-items-center">
+                                                        <div class="col-auto py-3 mr-2"><label class="m-0">Hạng mục:</label></div>
+                                                        <div class="col p-0">
+                                                            <select class="form-control form-control-sm" ng-model="SelectedConstructionItemId" ng-change="onSelectConstructionItem(SelectedConstructionItemId)">
+                                                                <option value="">-- Chọn hạng mục --</option>
+                                                                <option ng-repeat="ci in con.ConstructionItems" value="{{ci.Id}}">{{ci.Name}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row m-0 align-items-center">
+                                                        <span class="px-2">Thời gian từ: </span>
+                                                        <div class="row m-0">
+                                                            <input type="datetime-local" class="form-control form-control-sm col-md-12" ng-model="inputStartTime" id="inputStartTime">
+                                                        </div>
+                                                        <span class="px-2">Đến: </span>
+                                                        <div class="row m-0">
+                                                            <input type="datetime-local" class="form-control form-control-sm col-md-12" ng-model="inputEndTime" id="inputEndTime">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row m-0 align-items-center p-1">
+                                                        <button ng-click="filterPreData('operate_Groundwater')" class="btn btn-sm btn-addnew px-4 mx-2">Áp dụng</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div id="operate_Groundwater"></div>
                                         </div>
                                     </div>
