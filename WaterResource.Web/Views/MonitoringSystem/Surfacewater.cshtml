@@ -270,26 +270,12 @@
                                                     <th rowspan="2" class="text-center align-middle">STT</th>
                                                     <th rowspan="2" class="text-center align-middle">Thời gian </th>
                                                     <th rowspan="2" class="text-center align-middle">Lưu lượng khai thác</th>
-                                                    <th rowspan="2" class="text-center align-middle">Lượng mưa (mm)</th>
-                                                    <th rowspan="2" class="text-center align-middle">Mực nước hạ lưu (m)</th>
-                                                    <th rowspan="2" class="text-center align-middle">Dung tích hồ (triệu m<sup>3</sup>)</th>
-                                                    <th rowspan="2" class="text-center align-middle">Q đến hồ (m3/s)</th>
+                                                    <th rowspan="2" class="text-center align-middle">Lưu lượng đến hồ (m3/s)</th>
                                                     <th colspan="3" class="text-center align-middle">Mực nước thượng lưu hồ (m) <span class="text-danger">(*)</span></th>
                                                     <th colspan="3" class="text-center align-middle">Lưu lượng xả qua tràn  (m3/s)<span class="text-danger">(*)</span></th>
-                                                    <th colspan="3" class="text-center align-middle">Lưu lượng xả qua nhà máy (m3/s) <span class="text-danger">(*)</span></th>
                                                     <th colspan="3" class="text-center align-middle">Lưu lượng xả duy trì DCTT (m3/s) <span class="text-danger">(*)</span></th>
-                                                    <th colspan="3" class="text-center align-middle">Lưu lượng về hạ du (m3/s) <span class="text-danger">(*)</span></th>
-                                                    <th rowspan="2" class="text-center align-middle">Dự kiến Q về hạ du trong 12h tới (m3/s)</th>
-                                                    <th rowspan="2" class="text-center align-middle">Mực nước hồ dự kiến 12h tới (m)</th>
-                                                    <th rowspan="2" class="text-center align-middle">Trạng thái đo </th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Yêu cầu </th>
-                                                    <th>Thực tế </th>
-                                                    <th>Chênh lệch (+/-) </th>
-                                                    <th>Yêu cầu </th>
-                                                    <th>Thực tế </th>
-                                                    <th>Chênh lệch (+/-) </th>
                                                     <th>Yêu cầu </th>
                                                     <th>Thực tế </th>
                                                     <th>Chênh lệch (+/-) </th>
@@ -304,30 +290,18 @@
                                             <tbody class="custom-table-tbody">
                                                 <tr ng-repeat="item in DataPre">
                                                     <th class="text-center align-middle" ng-bind="(currentPage -1)*numPerPage+$index+1"> </th>
-                                                    <td class="text-nowrap" ng-bind="item.Time | date:'dd/MM/yyyy HH:mm'"></td>
-                                                    <td ng-bind-html="item.khaithac"></td>
-                                                    <td ng-bind-html="item.muathuongluu"></td>
-                                                    <td ng-bind-html="item.mucnuochaluu"></td>
-                                                    <td class="text-center" ng-bind-html="item.dungtich"></td>
-                                                    <td ng-bind-html="item.qden"></td>
-                                                    <td ng-bind-html="item.mucnuochoyeucau"></td>
-                                                    <td>{{item.mucnuocthuongluu}}</td>
+                                                    <td class="text-center text-nowrap" ng-bind="item.Time | date:'dd/MM/yyyy HH:mm'"></td>
+                                                    <td class="text-center" ng-bind-html="item.khaithac"></td>
+                                                    <td class="text-center" ng-bind-html="item.qden"></td>
+                                                    <td class="text-center" ng-bind-html="item.mucnuochoyeucau"></td>
+                                                    <td class="text-center" ng-bind-html="item.mucnuocthuongluu"></td>
                                                     <td class="text-center font-weight-bold {{item.mucnuochoyeucau > item.mucnuocthuongluu ? 'text-success' : 'text-danger'}}">{{item.mucnuocthuongluu - item.mucnuochoyeucau | number: 2}}</td>
-                                                    <td ng-bind-html="item.qquatranyeucau"></td>
-                                                    <td ng-bind-html="item.qquatran"></td>
+                                                    <td class="text-center" ng-bind-html="item.qquatranyeucau"></td>
+                                                    <td class="text-center" ng-bind-html="item.qquatran"></td>
                                                     <td class="text-center font-weight-bold {{item.qquatranyeucau > item.qquatran ? 'text-success' : 'text-danger'}}">{{item.qquatran - item.qquatranyeucau | number: 2}}</td>
-                                                    <td ng-bind-html="item.qnhamayyeucau"></td>
-                                                    <td>{{item.qnhamay}}</td>
-                                                    <td class="text-center font-weight-bold {{item.qnhamayyeucau > item.qnhamay ? 'text-success' : 'text-danger'}}">{{item.qnhamay - item.qnhamayyeucau | number: 2}}</td>
-                                                    <td ng-bind-html="item.qxattyeucau"></td>
-                                                    <td ng-bind-html="item.qxatt"></td>
+                                                    <td class="text-center" ng-bind-html="item.qxattyeucau"></td>
+                                                    <td class="text-center" ng-bind-html="item.qxatt"></td>
                                                     <td class="text-center font-weight-bold {{item.qxatt > item.qxattyeucau ? 'text-success' : 'text-danger'}}">{{item.qxatt - item.qxattyeucau | number: 2}}</td>
-                                                    <td>0</td>
-                                                    <td ng-bind-html="item.qhadu"></td>
-                                                    <td class="text-center font-weight-bold {{0 > item.qhadu ? 'text-success' : 'text-danger'}}">{{0 - item.qhadu | number: 2}}</td>
-                                                    <td ng-bind-html="item.qhadudukien"></td>
-                                                    <td ng-bind-html="item.mucnuochodukien12gio"></td>
-                                                    <td ng-bind-html="checkDeviceStatus(item.trangthaithietbi)"></td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -930,6 +930,7 @@
         MonitoringWellWaterLevel: [],
         WastewaterFlowAfterTreatment: [],
         WastewaterFlowAtTheReceivingSource: [],
+        IncomeFlow: [],
         Unit: ""
       };
         const chartHeight = chartId.startsWith("chartPreData_") ? 300 : 500;
@@ -1146,26 +1147,18 @@
 
             if (typeOfCons == 4) {
               chartData.LakeWaterLevel.push(checkNegative(e.mucnuocthuongluu));
-              chartData.MinimumDischargeMaintenanceFlow.push(
-                checkNegative(e.qxatt)
-              );
-              chartData.DownstreamFlow.push(checkNegative(e.qhadu));
-              chartData.DischargeFlowThroughTheFactory.push(
-                checkNegative(e.qnhamay)
-              );
-              chartData.DischargeFlowThroughOverflow.push(
-                checkNegative(e.qquatran)
-              );
+              chartData.MinimumDischargeMaintenanceFlow.push(checkNegative(e.qxatt));
+              chartData.MinningFlow.push(checkNegative(e.khaithac));
+              chartData.DischargeFlowThroughTheFactory.push(checkNegative(e.qnhamay));
+              chartData.DischargeFlowThroughOverflow.push(checkNegative(e.qquatran));
+              chartData.IncomeFlow.push(checkNegative(e.qden));
             } else if (typeOfCons == 5) {
               chartData.LakeWaterLevel.push(checkNegative(e.mucnuocthuongluu));
-              chartData.MinimumDischargeMaintenanceFlow.push(
-                checkNegative(e.qxatt)
-              );
+              chartData.MinimumDischargeMaintenanceFlow.push(checkNegative(e.qxatt));
               chartData.MinningFlow.push(checkNegative(e.khaithac));
-              chartData.DischargeFlowThroughOverflow.push(
-                checkNegative(e.qquatran)
-                );
-                chartData.Unit = formatUnit(e.Unit)
+              chartData.DischargeFlowThroughOverflow.push(checkNegative(e.qquatran));
+              chartData.IncomeFlow.push(checkNegative(e.qden));
+              chartData.Unit = formatUnit(e.Unit)
             } else if ([6, 11, 13, 14].includes(typeOfCons)) {
                 chartData.MinningFlow.push(checkNegative(e.khaithac));
                 chartData.Unit = formatUnit(e.Unit)
@@ -1269,8 +1262,8 @@
               yAxisIndex: 1,
             },
             {
-              name: "Lưu lượng xả qua nhà máy (m3/s)",
-              data: chartData.DischargeFlowThroughTheFactory.reverse(),
+              name: "Lưu lượng khai thác (m3/s)",
+              data: chartData.MinningFlow.reverse(),
               yAxisIndex: 1,
             },
             {
@@ -1279,8 +1272,8 @@
               yAxisIndex: 1,
             },
             {
-              name: "Lưu lượng về hạ du (m3/s)",
-              data: chartData.DownstreamFlow.reverse(),
+              name: "Lưu lượng đến hồ (m3/s)",
+              data: chartData.IncomeFlow.reverse(),
               yAxisIndex: 1,
             },
           ];
